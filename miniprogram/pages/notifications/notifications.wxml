@@ -1,0 +1,37 @@
+<view class="container container--no-tab">
+  <view wx:if="{{!detail}}">
+    <view class="toolbar" wx:if="{{notifications.length}}">
+      <text class="unread-tip" wx:if="{{unreadCount > 0}}">{{unreadCount}} 条未读</text>
+      <text class="mark-all" bindtap="onMarkAllRead">全部已读</text>
+    </view>
+
+    <view wx:if="{{loading}}" class="empty">加载中...</view>
+    <view wx:elif="{{notifications.length === 0}}" class="empty">暂无消息</view>
+
+    <view
+      wx:for="{{notifications}}"
+      wx:key="id"
+      class="card item {{item.is_read ? '' : 'unread'}}"
+      data-id="{{item.id}}"
+      bindtap="onTapItem"
+    >
+      <view class="item-title">
+        <text wx:if="{{item.typeLabel}}" class="signal-tag {{item.typeClass}}">{{item.typeLabel}}</text>
+        <text wx:if="{{!item.is_read}}" class="dot">●</text>
+        {{item.title}}
+      </view>
+      <view class="item-preview">{{item.preview}}</view>
+      <view class="item-time">{{item.timeText}}</view>
+    </view>
+  </view>
+
+  <view wx:else class="card detail-card">
+    <view class="detail-title">
+      <text wx:if="{{detail.typeLabel}}" class="signal-tag {{detail.typeClass}}">{{detail.typeLabel}}</text>
+      {{detail.title}}
+    </view>
+    <view class="detail-time">{{detail.timeText}}</view>
+    <view class="detail-content">{{detail.content}}</view>
+    <button class="btn-outline" bindtap="onCloseDetail">返回列表</button>
+  </view>
+</view>

@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/kline/kline",
+    "pages/news/news",
+    "pages/chat/chat",
+    "pages/index/index",
+    "pages/risk-message/risk-message",
+    "pages/profile/profile",
+    "pages/favorites/favorites",
+    "pages/analysis/analysis",
+    "pages/report/report",
+    "pages/membership/membership",
+    "pages/notifications/notifications",
+    "pages/recharge/recharge"
+  ],
+  "window": {
+    "navigationBarTitleText": "Ares 智能投研",
+    "navigationBarBackgroundColor": "#1a1a2e",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f0f2f8"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#9ca3af",
+    "selectedColor": "#c9a227",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/kline/kline",
+        "text": "行情"
+      },
+      {
+        "pagePath": "pages/news/news",
+        "text": "新闻"
+      },
+      {
+        "pagePath": "pages/chat/chat",
+        "text": "问股"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "研报"
+      },
+      {
+        "pagePath": "pages/risk-message/risk-message",
+        "text": "风控"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

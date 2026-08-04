@@ -1,0 +1,131 @@
+2026-06-30 19:26:45,798 | dataflows            | WARNING  | data_source_manager:_check_available_sources:492 | ⚠️ [数据源配置] 从数据库读取失败: No module named 'motor'，将检查所有已安装的数据源
+2026-06-30 19:26:45,907 | agents               | WARNING  | mongodb_cache_adapter:_init_mongodb_connection:41 | ⚠️ MongoDB客户端不可用，回退到传统模式
+2026-06-30 19:26:45,908 | dataflows            | WARNING  | data_source_manager:_check_available_sources:505 | ⚠️ MongoDB数据源不可用: 数据库未连接
+2026-06-30 19:26:45,909 | dataflows            | WARNING  | data_source_manager:_get_datasource_configs_from_db:584 | ⚠️ 从数据库读取数据源配置失败: No module named 'motor'
+2026-06-30 19:26:47,565 | dataflows            | WARNING  | data_source_manager:get_stock_info:1537 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:26:47,566 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1607 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:26:47,568 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1651 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:26:48,081 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1714 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:26:48,359 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1648 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:27:09,420 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1731 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:27:09,422 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1648 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:27:09,422 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1655 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:27:09,588 | dataflows            | WARNING  | data_source_manager:_get_data_source_priority_order:210 | ⚠️ [数据源优先级] 从数据库读取失败: No module named 'motor'，使用默认顺序
+2026-06-30 19:27:10,188 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:27:12,855 | tradingagents.dataflows.providers.china.akshare | ERROR    | akshare:_get_stock_list_cached:417 | ❌ 获取股票列表失败: Excel file format cannot be determined, you must specify an engine manually.
+2026-06-30 19:29:11,726 | dataflows            | WARNING  | data_source_manager:_check_available_sources:492 | ⚠️ [数据源配置] 从数据库读取失败: No module named 'motor'，将检查所有已安装的数据源
+2026-06-30 19:29:11,762 | agents               | WARNING  | mongodb_cache_adapter:_init_mongodb_connection:41 | ⚠️ MongoDB客户端不可用，回退到传统模式
+2026-06-30 19:29:11,764 | dataflows            | WARNING  | data_source_manager:_check_available_sources:505 | ⚠️ MongoDB数据源不可用: 数据库未连接
+2026-06-30 19:29:11,765 | dataflows            | WARNING  | data_source_manager:_get_datasource_configs_from_db:584 | ⚠️ 从数据库读取数据源配置失败: No module named 'motor'
+2026-06-30 19:29:12,533 | dataflows            | WARNING  | data_source_manager:get_stock_info:1538 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:29:12,534 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1608 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:29:12,535 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1652 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:29:12,921 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1715 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:29:12,933 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:29:33,997 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1732 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:29:33,999 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:29:34,000 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1656 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:29:34,001 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:626 | ⚠️ [A股数据-异步] API 直接获取失败: 股票代码 002281 不存在或信息无效，尝试数据库同步后重试
+2026-06-30 19:29:34,003 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:634 | ⚠️ [A股数据-异步] 数据库数据不完整: MongoDB缓存未启用
+2026-06-30 19:29:34,007 | stock_validator      | WARNING  | stock_validator:_get_data_source_priority_for_sync:1003 | ⚠️ [数据源优先级] MongoDB未启用，使用默认顺序
+2026-06-30 19:29:34,102 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:953 | ⚠️ [数据同步] tushare同步异常: No module named 'motor'
+2026-06-30 19:29:34,140 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:953 | ⚠️ [数据同步] akshare同步异常: No module named 'motor'
+2026-06-30 19:29:34,145 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:851 | ⚠️ [数据同步] BaoStock不支持单个股票同步，跳过
+2026-06-30 19:29:34,146 | stock_validator      | ERROR    | stock_validator:_trigger_data_sync_async:961 | ❌ [数据同步] 所有数据源同步失败，最后错误: baostock: 不支持单个股票同步
+2026-06-30 19:29:34,147 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:644 | ⚠️ [A股数据-异步] 数据同步失败: 所有数据源同步失败，最后错误: baostock: 不支持单个股票同步
+2026-06-30 19:29:34,154 | dataflows            | WARNING  | data_source_manager:get_stock_info:1538 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:29:34,155 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1608 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:29:34,158 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1652 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:29:34,654 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1715 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:29:34,662 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:29:55,721 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1732 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:29:55,723 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:29:55,724 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1656 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:29:55,726 | stock_validator      | ERROR    | stock_validator:_prepare_china_stock_data_async:660 | ❌ [A股数据-异步] 数据准备失败: 股票代码 002281 不存在或信息无效
+2026-06-30 19:30:30,320 | dataflows            | WARNING  | data_source_manager:_check_available_sources:492 | ⚠️ [数据源配置] 从数据库读取失败: No module named 'motor'，将检查所有已安装的数据源
+2026-06-30 19:30:30,364 | agents               | WARNING  | mongodb_cache_adapter:_init_mongodb_connection:41 | ⚠️ MongoDB客户端不可用，回退到传统模式
+2026-06-30 19:30:30,364 | dataflows            | WARNING  | data_source_manager:_check_available_sources:505 | ⚠️ MongoDB数据源不可用: 数据库未连接
+2026-06-30 19:30:30,365 | dataflows            | WARNING  | data_source_manager:_get_datasource_configs_from_db:584 | ⚠️ 从数据库读取数据源配置失败: No module named 'motor'
+2026-06-30 19:30:31,085 | dataflows            | WARNING  | data_source_manager:get_stock_info:1538 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:30:31,085 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1608 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:30:31,085 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1652 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:30:31,572 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1715 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:30:31,572 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:30:52,622 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1732 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:30:52,623 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:30:52,623 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1656 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:31:20,534 | dataflows            | WARNING  | data_source_manager:_check_available_sources:492 | ⚠️ [数据源配置] 从数据库读取失败: No module named 'motor'，将检查所有已安装的数据源
+2026-06-30 19:31:20,573 | agents               | WARNING  | mongodb_cache_adapter:_init_mongodb_connection:41 | ⚠️ MongoDB客户端不可用，回退到传统模式
+2026-06-30 19:31:20,573 | dataflows            | WARNING  | data_source_manager:_check_available_sources:505 | ⚠️ MongoDB数据源不可用: 数据库未连接
+2026-06-30 19:31:20,575 | dataflows            | WARNING  | data_source_manager:_get_datasource_configs_from_db:584 | ⚠️ 从数据库读取数据源配置失败: No module named 'motor'
+2026-06-30 19:31:21,253 | dataflows            | WARNING  | data_source_manager:get_stock_info:1538 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:31:21,253 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1608 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:31:21,254 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1652 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:31:21,619 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1715 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:31:21,620 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:31:42,655 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1732 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:31:42,656 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:31:42,656 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1656 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:31:42,663 | dataflows            | WARNING  | data_source_manager:_get_data_source_priority_order:210 | ⚠️ [数据源优先级] 从数据库读取失败: No module named 'motor'，使用默认顺序
+2026-06-30 19:31:42,781 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:31:43,149 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:get_historical_data:974 | ⚠️ 002281 第1次尝试失败，2秒后重试: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:31:45,268 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:31:45,649 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:get_historical_data:974 | ⚠️ 002281 第2次尝试失败，4秒后重试: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:31:49,760 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:31:50,100 | tradingagents.dataflows.providers.china.akshare | ERROR    | akshare:get_historical_data:982 | ❌ 002281 网络连接中断，建议稍后重试或减小时间范围
+2026-06-30 19:31:50,101 | dataflows            | WARNING  | data_source_manager:_get_akshare_data:1334 | ⚠️ [AKShare] 数据为空: 耗时=7.44s
+2026-06-30 19:31:50,101 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.AKSHARE] 返回错误结果: 002281
+2026-06-30 19:31:50,140 | tradingagents.dataflows.providers.base_provider.Tushare | ERROR    | tushare:_get_token_from_database:82 | ❌ [DB查询] 从数据库读取 Token 失败: No module named 'motor'
+2026-06-30 19:31:50,145 | tradingagents.dataflows.providers.base_provider.Tushare | ERROR    | tushare:_get_token_from_database:84 | ❌ [DB查询] 堆栈跟踪:
+Traceback (most recent call last):
+  File "D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\tradingagents\dataflows\providers\china\tushare.py", line 49, in _get_token_from_database
+    from app.core.database import get_mongo_db_sync
+  File "D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\app\core\database.py", line 9, in <module>
+    from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+ModuleNotFoundError: No module named 'motor'
+
+2026-06-30 19:31:50,225 | tradingagents.dataflows.providers.base_provider.Tushare | ERROR    | tushare:connect_sync:152 | ❌ [步骤4.1] .env Token 测试失败: 您的token不对，请确认。
+2026-06-30 19:31:50,226 | dataflows            | WARNING  | data_source_manager:_get_tushare_data:1292 | ⚠️ [Tushare] 未获取到数据，耗时=0.12s
+2026-06-30 19:31:50,226 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.TUSHARE] 返回错误结果: 002281
+2026-06-30 19:33:11,279 | tradingagents.dataflows.providers.china.baostock | ERROR    | baostock:get_historical_data:635 | ❌ BaoStock获取002281历史数据失败: 登录失败: 网络接收错误。
+2026-06-30 19:33:11,280 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.BAOSTOCK] 返回错误结果: 002281
+2026-06-30 19:33:11,280 | dataflows            | ERROR    | data_source_manager:_try_fallback_sources:1432 | ❌ [所有数据源失败] 无法获取daily数据: 002281
+2026-06-30 19:33:11,280 | dataflows            | WARNING  | data_source_manager:get_stock_data:1157 | ⚠️ [数据来源: DataSourceCode.MONGODB失败] 数据质量异常，尝试降级到其他数据源: 002281
+2026-06-30 19:33:11,283 | dataflows            | WARNING  | data_source_manager:_get_data_source_priority_order:210 | ⚠️ [数据源优先级] 从数据库读取失败: No module named 'motor'，使用默认顺序
+2026-06-30 19:33:11,402 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:33:11,790 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:get_historical_data:974 | ⚠️ 002281 第1次尝试失败，2秒后重试: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:33:13,892 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:33:14,444 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:get_historical_data:974 | ⚠️ 002281 第2次尝试失败，4秒后重试: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:33:18,568 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:33:18,994 | tradingagents.dataflows.providers.china.akshare | ERROR    | akshare:get_historical_data:982 | ❌ 002281 网络连接中断，建议稍后重试或减小时间范围
+2026-06-30 19:33:18,995 | dataflows            | WARNING  | data_source_manager:_get_akshare_data:1334 | ⚠️ [AKShare] 数据为空: 耗时=7.71s
+2026-06-30 19:33:18,996 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.AKSHARE] 返回错误结果: 002281
+2026-06-30 19:33:18,999 | dataflows            | WARNING  | data_source_manager:_get_tushare_data:1292 | ⚠️ [Tushare] 未获取到数据，耗时=0.00s
+2026-06-30 19:33:18,999 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.TUSHARE] 返回错误结果: 002281
+2026-06-30 19:34:40,045 | tradingagents.dataflows.providers.china.baostock | ERROR    | baostock:get_historical_data:635 | ❌ BaoStock获取002281历史数据失败: 登录失败: 网络接收错误。
+2026-06-30 19:34:40,045 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.BAOSTOCK] 返回错误结果: 002281
+2026-06-30 19:34:40,045 | dataflows            | ERROR    | data_source_manager:_try_fallback_sources:1432 | ❌ [所有数据源失败] 无法获取daily数据: 002281
+2026-06-30 19:34:40,046 | dataflows            | ERROR    | data_source_manager:get_stock_data:1175 | ❌ [数据来源: 所有数据源失败] 所有数据源都无法获取有效数据: 002281
+2026-06-30 19:34:40,046 | agents               | WARNING  | interface:get_china_stock_data_unified:1603 | ⚠️ [统一接口] 中国股票数据质量异常
+2026-06-30 19:34:40,046 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:638 | ⚠️ [A股数据-异步] API 直接获取失败: 股票代码 002281 不存在或信息无效，尝试数据库同步后重试
+2026-06-30 19:34:40,047 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:646 | ⚠️ [A股数据-异步] 数据库数据不完整: MongoDB缓存未启用
+2026-06-30 19:34:40,047 | stock_validator      | WARNING  | stock_validator:_get_data_source_priority_for_sync:1015 | ⚠️ [数据源优先级] MongoDB未启用，使用默认顺序
+2026-06-30 19:34:40,053 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:965 | ⚠️ [数据同步] tushare同步异常: No module named 'motor'
+2026-06-30 19:34:40,058 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:965 | ⚠️ [数据同步] akshare同步异常: No module named 'motor'
+2026-06-30 19:34:40,061 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:863 | ⚠️ [数据同步] BaoStock不支持单个股票同步，跳过
+2026-06-30 19:34:40,061 | stock_validator      | ERROR    | stock_validator:_trigger_data_sync_async:973 | ❌ [数据同步] 所有数据源同步失败，最后错误: baostock: 不支持单个股票同步
+2026-06-30 19:34:40,061 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:656 | ⚠️ [A股数据-异步] 数据同步失败: 所有数据源同步失败，最后错误: baostock: 不支持单个股票同步
+2026-06-30 19:34:40,062 | dataflows            | WARNING  | data_source_manager:get_stock_info:1538 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:34:40,062 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1608 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:34:40,062 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1652 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:34:40,178 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:34:40,532 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1715 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:34:40,532 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:36:01,591 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1732 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:36:01,592 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:36:01,592 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1656 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:36:01,602 | dataflows            | WARNING  | data_source_manager:_get_data_source_priority_order:210 | ⚠️ [数据源优先级] 从数据库读取失败: No module named 'motor'，使用默认顺序
+2026-06-30 19:36:02,219 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:36:06,174 | tradingagents.dataflows.providers.china.akshare | ERROR    | akshare:_get_stock_list_cached:417 | ❌ 获取股票列表失败: Excel file format cannot be determined, you must specify an engine manually.
+2026-07-30 11:19:48,463 | app.services.auth_service | WARNING  | auth_service:verify_token:65 | Token type mismatch: got=refresh expected=access
+2026-07-30 11:19:48,464 | app.services.auth_service | WARNING  | auth_service:verify_token:65 | Token type mismatch: got=access expected=refresh

@@ -1,0 +1,4 @@
+{
+  "desc": "Ares智能研报小程序",
+  "rules": [{ "action": "allow", "page": "*" }]
+}

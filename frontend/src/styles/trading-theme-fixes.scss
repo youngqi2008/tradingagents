@@ -1,0 +1,802 @@
+/**
+ * 交易风格主题修复
+ * 统一所有页面的配色，确保符合黑色交易主题
+ */
+
+@use './variables.scss' as *;
+
+// ==================== 404错误页面 ====================
+.error-404 {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+  
+  .suggestions {
+    background: $bg-card !important;
+    border: 1px solid $border-color !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    
+    h3 {
+      color: $text-primary !important;
+    }
+    
+    .suggestion-links .el-link {
+      background: $bg-tertiary !important;
+      color: $text-primary !important;
+      
+      &:hover {
+        background: rgba($primary-color, 0.2) !important;
+        color: $primary-color !important;
+      }
+    }
+  }
+}
+
+// ==================== 登录页面 ====================
+.login-page {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+  
+  .login-card {
+    background: $bg-card !important;
+    border: 1px solid $border-color !important;
+  }
+}
+
+// ==================== 风险提示框 ====================
+.risk-disclaimer {
+  :deep(.el-alert) {
+    background: linear-gradient(135deg, #2a1a00 0%, #3d2800 100%) !important;
+    border: 1px solid #ffa726 !important;
+    color: $text-primary !important;
+    
+    .el-alert__icon {
+      color: #ffa726 !important;
+    }
+  }
+  
+  .disclaimer-text {
+    color: $text-secondary !important;
+    
+    strong {
+      color: #ffa726 !important;
+    }
+  }
+  
+  .disclaimer-icon {
+    color: #ffa726 !important;
+  }
+}
+
+// ==================== 单股分析页面 ====================
+.single-analysis {
+  .page-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+    border: 1px solid $border-color !important;
+  }
+  
+  // 步骤指示器
+  .step-indicator {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+  }
+  
+  // 表单区域
+  .form-section {
+    background: $bg-card !important;
+    border: 1px solid $border-color !important;
+  }
+  
+  // 成功状态
+  .success-state {
+    background: linear-gradient(135deg, rgba($success-color, 0.1) 0%, rgba($success-color, 0.05) 100%) !important;
+    border: 1px solid rgba($success-color, 0.3) !important;
+  }
+  
+  // 加载状态
+  .loading-state {
+    background: $bg-card !important;
+  }
+  
+  // 报告容器
+  .report-container {
+    background: $bg-card !important;
+    border: 1px solid $border-color !important;
+  }
+}
+
+// ==================== 批量分析页面 ====================
+.batch-analysis {
+  .page-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+    border: 1px solid $border-color !important;
+  }
+  
+  .batch-form {
+    background: $bg-card !important;
+    border: 1px solid $border-color !important;
+  }
+  
+  .progress-section {
+    background: $bg-card !important;
+    border: 1px solid $border-color !important;
+  }
+}
+
+// ==================== 报告详情页 ====================
+.report-detail {
+  color: $text-primary !important;
+  background-color: $bg-primary !important;
+
+  .report-header {
+    background: $bg-card !important;
+    border: 1px solid $border-color !important;
+    color: $text-primary !important;
+
+    .report-title,
+    .report-meta,
+    .meta-item {
+      color: $text-primary !important;
+    }
+  }
+
+  .report-content-wrapper {
+    background: $bg-card !important;
+    border: 1px solid $border-color !important;
+    color: $text-primary !important;
+  }
+
+  .metrics-card,
+  .summary-card,
+  .modules-card {
+    background: $bg-card !important;
+    border: 1px solid $border-color !important;
+    color: $text-primary !important;
+
+    .el-card__header {
+      color: $text-primary !important;
+      border-color: $border-color !important;
+    }
+    .el-card__body {
+      color: $text-primary !important;
+    }
+  }
+
+  .metrics-content {
+    background: $bg-card !important;
+    color: $text-primary !important;
+  }
+
+  /* 报告正文：Markdown 与模块内容，确保文字不被背景遮住 */
+  .summary-content,
+  .module-content,
+  .markdown-content {
+    color: $text-primary !important;
+  }
+
+  .module-content :deep(.markdown-content),
+  .module-content :deep(.markdown-content p),
+  .module-content :deep(.markdown-content li),
+  .module-content :deep(.markdown-content h1),
+  .module-content :deep(.markdown-content h2),
+  .module-content :deep(.markdown-content h3),
+  .module-content :deep(.markdown-content h4),
+  .module-content :deep(.markdown-content blockquote),
+  .module-content :deep(.markdown-content code),
+  .module-content :deep(.markdown-content pre),
+  .module-content :deep(.markdown-content table),
+  .module-content :deep(.markdown-content th),
+  .module-content :deep(.markdown-content td),
+  .module-content :deep(.markdown-content strong),
+  .module-content :deep(.json-content pre) {
+    color: $text-primary !important;
+  }
+
+  .module-content :deep(.markdown-content code),
+  .module-content :deep(.markdown-content pre) {
+    background: $bg-tertiary !important;
+    border-color: $border-color !important;
+  }
+
+  .modules-card :deep(.el-tabs__content),
+  .modules-card :deep(.el-tabs--border-card .el-tabs__content) {
+    background: $bg-card !important;
+    color: $text-primary !important;
+  }
+
+  .modules-card :deep(.el-tabs__item) {
+    color: $text-secondary !important;
+  }
+  .modules-card :deep(.el-tabs__item.is-active) {
+    color: $primary-color !important;
+  }
+}
+
+// ==================== 设置页面组件 ====================
+.sortable-ghost {
+  background: rgba($primary-color, 0.1) !important;
+}
+
+.sortable-chosen {
+  background: rgba($primary-color, 0.15) !important;
+}
+
+.sortable-drag {
+  background: $bg-card !important;
+  border: 1px solid $border-color !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+// ==================== 系统管理页面 ====================
+// 代码块和预格式化文本
+pre,
+code {
+  background: $bg-tertiary !important;
+  color: $text-primary !important;
+  border: 1px solid $border-color !important;
+}
+
+// 信息提示框
+.info-box {
+  background: rgba($primary-color, 0.1) !important;
+  border: 1px solid rgba($primary-color, 0.3) !important;
+  color: $text-primary !important;
+}
+
+// 命令示例框
+.command-box {
+  background: $bg-tertiary !important;
+  border: 1px solid $border-color !important;
+  color: $text-primary !important;
+  
+  code {
+    color: $primary-color !important;
+  }
+}
+
+// ==================== 股票详情页 ====================
+.stock-detail {
+  .summary-section {
+    background: rgba($primary-color, 0.1) !important;
+    border-left-color: $primary-color !important;
+    
+    .summary-title {
+      color: $primary-color !important;
+    }
+    
+    .summary-text {
+      color: $text-primary !important;
+    }
+  }
+  
+  .sync-status {
+    background: rgba($primary-color, 0.1) !important;
+    border-color: rgba($primary-color, 0.3) !important;
+    color: $primary-color !important;
+  }
+}
+
+// ==================== 队列管理页面 ====================
+.queue-management {
+  .queue-status {
+    &.pending {
+      background: linear-gradient(135deg, rgba($info-color, 0.2) 0%, rgba($info-color, 0.1) 100%) !important;
+    }
+    
+    &.processing {
+      background: linear-gradient(135deg, rgba($warning-color, 0.2) 0%, rgba($warning-color, 0.1) 100%) !important;
+    }
+    
+    &.completed {
+      background: linear-gradient(135deg, rgba($success-color, 0.2) 0%, rgba($success-color, 0.1) 100%) !important;
+    }
+    
+    &.failed {
+      background: linear-gradient(135deg, rgba($danger-color, 0.2) 0%, rgba($danger-color, 0.1) 100%) !important;
+    }
+  }
+}
+
+// ==================== 学习中心 ====================
+.learning-page {
+  .hero-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+    border: 1px solid $border-color !important;
+  }
+  
+  .category-card {
+    background: $bg-card !important;
+    border: 1px solid $border-color !important;
+    
+    &:hover {
+      border-color: $primary-color !important;
+      box-shadow: 0 4px 12px rgba($primary-color, 0.2) !important;
+    }
+  }
+}
+
+// ==================== 通用美化 ====================
+// 所有浅色背景的卡片
+.el-card,
+.card,
+.panel {
+  background: $bg-card !important;
+  border-color: $border-color !important;
+  color: $text-primary !important;
+}
+
+// 所有浅色背景的区域
+.section,
+.container,
+.wrapper {
+  background: transparent !important;
+}
+
+// 所有浅色背景的输入框
+.el-input__wrapper,
+.el-textarea__inner {
+  background: $bg-tertiary !important;
+  border-color: $border-color !important;
+  color: $text-primary !important;
+}
+
+// 所有浅色背景的选择器
+.el-select-dropdown,
+.el-popper {
+  background: $bg-card !important;
+  border-color: $border-color !important;
+}
+
+// 所有浅色背景的对话框
+.el-dialog {
+  background: $bg-card !important;
+  border-color: $border-color !important;
+}
+
+// 所有浅色背景的抽屉
+.el-drawer {
+  background: $bg-card !important;
+}
+
+// 所有浅色背景的工具提示
+.el-tooltip__popper {
+  background: $bg-tertiary !important;
+  border-color: $border-color !important;
+  color: $text-primary !important;
+  
+  // 确保所有文字都是白色（包括所有子元素）
+  * {
+    color: $text-primary !important;
+  }
+  
+  // tooltip 内容区域
+  .el-tooltip__content {
+    color: $text-primary !important;
+    
+    // 确保内容区域内的所有文字都是白色
+    * {
+      color: $text-primary !important;
+    }
+  }
+  
+  // tooltip 箭头
+  .el-popper__arrow {
+    &::before {
+      background: $bg-tertiary !important;
+      border-color: $border-color !important;
+    }
+  }
+  
+  // 深色主题下的 tooltip（effect="dark"）
+  &.is-dark {
+    background: $bg-tertiary !important;
+    color: $text-primary !important;
+    
+    .el-tooltip__content {
+      color: $text-primary !important;
+      
+      * {
+        color: $text-primary !important;
+      }
+    }
+    
+    .el-popper__arrow {
+      &::before {
+        background: $bg-tertiary !important;
+        border-color: $border-color !important;
+      }
+    }
+  }
+  
+  // 浅色主题下的 tooltip（effect="light"，强制使用白色文字）
+  &.is-light {
+    background: $bg-tertiary !important;
+    color: $text-primary !important;
+    
+    .el-tooltip__content {
+      color: $text-primary !important;
+      
+      * {
+        color: $text-primary !important;
+      }
+    }
+    
+    .el-popper__arrow {
+      &::before {
+        background: $bg-tertiary !important;
+        border-color: $border-color !important;
+      }
+    }
+  }
+}
+
+// Element Plus tooltip 的通用样式覆盖
+.el-popper[role="tooltip"] {
+  background: $bg-tertiary !important;
+  border-color: $border-color !important;
+  color: $text-primary !important;
+  
+  * {
+    color: $text-primary !important;
+  }
+}
+
+// 菜单 tooltip 特殊处理
+.el-menu-tooltip__popper {
+  background: $bg-tertiary !important;
+  border-color: $border-color !important;
+  color: $text-primary !important;
+  
+  * {
+    color: $text-primary !important;
+  }
+}
+
+// 所有浅色背景的弹出菜单
+.el-popover {
+  background: $bg-card !important;
+  border-color: $border-color !important;
+}
+
+// 表格行悬停效果
+.el-table {
+  tr:hover > td {
+    background: $bg-tertiary !important;
+  }
+}
+
+// 标签页
+.el-tabs__content {
+  background: transparent !important;
+}
+
+// 折叠面板
+.el-collapse-item__header {
+  background: $bg-card !important;
+  color: $text-primary !important;
+}
+
+.el-collapse-item__content {
+  background: transparent !important;
+  color: $text-primary !important;
+}
+
+// 描述列表
+.el-descriptions {
+  background: transparent !important;
+  
+  .el-descriptions__label {
+    color: $text-secondary !important;
+  }
+  
+  .el-descriptions__content {
+    color: $text-primary !important;
+  }
+}
+
+// 步骤条
+.el-steps {
+  .el-step__title {
+    color: $text-primary !important;
+  }
+  
+  .el-step__description {
+    color: $text-secondary !important;
+  }
+}
+
+// 时间线
+.el-timeline-item__timestamp {
+  color: $text-tertiary !important;
+}
+
+.el-timeline-item__title {
+  color: $text-primary !important;
+}
+
+.el-timeline-item__content {
+  color: $text-secondary !important;
+}
+
+// 空状态
+.el-empty {
+  .el-empty__description {
+    color: $text-secondary !important;
+  }
+}
+
+// 结果页
+.el-result {
+  .el-result__title {
+    color: $text-primary !important;
+  }
+  
+  .el-result__subtitle {
+    color: $text-secondary !important;
+  }
+}
+
+// 消息提示
+.el-message {
+  background: $bg-card !important;
+  border-color: $border-color !important;
+  color: $text-primary !important;
+}
+
+// 通知
+.el-notification {
+  background: $bg-card !important;
+  border-color: $border-color !important;
+  color: $text-primary !important;
+}
+
+// 加载遮罩
+.el-loading-mask {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+
+// 骨架屏
+.el-skeleton {
+  background: $bg-tertiary !important;
+  
+  .el-skeleton__item {
+    background: linear-gradient(90deg, $bg-tertiary 25%, $bg-secondary 50%, $bg-tertiary 75%) !important;
+  }
+}
+
+// 分页器
+.el-pagination {
+  .el-pagination__total,
+  .el-pagination__jump {
+    color: $text-secondary !important;
+  }
+  
+  .btn-prev,
+  .btn-next,
+  .number {
+    background: $bg-tertiary !important;
+    color: $text-primary !important;
+    border-color: $border-color !important;
+    
+    &:hover {
+      color: $primary-color !important;
+    }
+    
+    &.active {
+      background: $primary-color !important;
+      color: $text-primary !important;
+      border-color: $primary-color !important;
+    }
+  }
+}
+
+// 面包屑
+.el-breadcrumb {
+  .el-breadcrumb__inner {
+    color: $text-secondary !important;
+    
+    &.is-link {
+      color: $text-secondary !important;
+      
+      &:hover {
+        color: $primary-color !important;
+      }
+    }
+  }
+  
+  .el-breadcrumb__separator {
+    color: $text-tertiary !important;
+  }
+}
+
+// 标签
+.el-tag {
+  background: $bg-tertiary !important;
+  border-color: $border-color !important;
+  color: $text-primary !important;
+  
+  &.el-tag--success {
+    background: rgba($success-color, 0.2) !important;
+    border-color: $success-color !important;
+    color: $success-color !important;
+  }
+  
+  &.el-tag--warning {
+    background: rgba($warning-color, 0.2) !important;
+    border-color: $warning-color !important;
+    color: $warning-color !important;
+  }
+  
+  &.el-tag--danger {
+    background: rgba($danger-color, 0.2) !important;
+    border-color: $danger-color !important;
+    color: $danger-color !important;
+  }
+  
+  &.el-tag--info {
+    background: rgba($info-color, 0.2) !important;
+    border-color: $info-color !important;
+    color: $info-color !important;
+  }
+}
+
+// 徽章
+.el-badge {
+  .el-badge__content {
+    background: $danger-color !important;
+    color: $text-primary !important;
+  }
+}
+
+// 进度条
+.el-progress-bar__outer {
+  background: $bg-tertiary !important;
+}
+
+// 滑块
+.el-slider__runway {
+  background: $bg-tertiary !important;
+}
+
+.el-slider__bar {
+  background: $primary-color !important;
+}
+
+.el-slider__button {
+  background: $primary-color !important;
+  border-color: $primary-color !important;
+}
+
+// 开关
+.el-switch__core {
+  background: $bg-tertiary !important;
+  
+  &.is-checked {
+    background: $primary-color !important;
+  }
+}
+
+// 单选框
+.el-radio {
+  .el-radio__label {
+    color: $text-primary !important;
+  }
+  
+  &.is-checked {
+    .el-radio__label {
+      color: $primary-color !important;
+    }
+  }
+}
+
+// 复选框
+.el-checkbox {
+  .el-checkbox__label {
+    color: $text-primary !important;
+  }
+  
+  &.is-checked {
+    .el-checkbox__label {
+      color: $primary-color !important;
+    }
+  }
+}
+
+// 级联选择器
+.el-cascader-menu {
+  background: $bg-card !important;
+  border-color: $border-color !important;
+}
+
+// 日期选择器
+.el-date-picker {
+  background: $bg-card !important;
+  border-color: $border-color !important;
+}
+
+// 时间选择器
+.el-time-picker {
+  background: $bg-card !important;
+  border-color: $border-color !important;
+}
+
+// 颜色选择器
+.el-color-picker {
+  .el-color-picker__trigger {
+    border-color: $border-color !important;
+  }
+}
+
+// 上传组件
+.el-upload {
+  background: $bg-tertiary !important;
+  border-color: $border-color !important;
+  
+  &:hover {
+    border-color: $primary-color !important;
+  }
+}
+
+// 评分
+.el-rate {
+  .el-rate__icon {
+    color: $text-tertiary !important;
+    
+    &.is-active {
+      color: #ffa726 !important;
+    }
+  }
+}
+
+// 穿梭框
+.el-transfer-panel {
+  background: $bg-card !important;
+  border-color: $border-color !important;
+  
+  .el-transfer-panel__header {
+    background: $bg-secondary !important;
+    border-bottom-color: $border-color !important;
+    color: $text-primary !important;
+  }
+}
+
+// 树形控件
+.el-tree {
+  background: transparent !important;
+  color: $text-primary !important;
+  
+  .el-tree-node__content {
+    &:hover {
+      background: $bg-tertiary !important;
+    }
+  }
+  
+  .el-tree-node.is-current > .el-tree-node__content {
+    background: rgba($primary-color, 0.2) !important;
+    color: $primary-color !important;
+  }
+}
+
+// 图像预览
+.el-image-viewer__wrapper {
+  background: rgba(0, 0, 0, 0.9) !important;
+}
+
+// 走马灯
+.el-carousel__arrow {
+  background: rgba($bg-card, 0.8) !important;
+  border-color: $border-color !important;
+  color: $text-primary !important;
+  
+  &:hover {
+    background: $bg-card !important;
+    color: $primary-color !important;
+  }
+}
+
+// 轮播指示器
+.el-carousel__indicator {
+  .el-carousel__button {
+    background: $bg-tertiary !important;
+    
+    &.is-active {
+      background: $primary-color !important;
+    }
+  }
+}

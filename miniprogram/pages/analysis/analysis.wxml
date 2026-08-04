@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="card">
+    <view class="stock">{{stockCode}} 研报生成</view>
+    <view class="price-info" wx:if="{{billing}}">
+      <text wx:if="{{billing.free_remaining > 0}}">本月免费剩余 {{billing.free_remaining}} 次</text>
+      <text wx:else>本次费用 ¥{{billing.per_generation_price}} · 余额 ¥{{billing.balance}}</text>
+    </view>
+    <view class="progress-box" wx:if="{{taskId}}">
+      <progress
+        percent="{{progress}}"
+        stroke-width="8"
+        activeColor="{{isFailed ? '#e74c3c' : '#c9a227'}}"
+        active="{{!isFailed && status !== 'completed'}}"
+      />
+      <text class="status-msg {{isFailed ? 'status-error' : ''}}">{{message}}</text>
+    </view>
+    <button
+      class="btn-primary {{isFailed ? 'btn-retry' : ''}}"
+      bindtap="submit"
+      loading="{{submitting}}"
+      disabled="{{submitting || (!!taskId && status !== 'completed' && status !== 'failed' && status !== 'cancelled')}}"
+    >
+      {{buttonText}}
+    </button>
+    <navigator wx:if="{{isFailed}}" url="/pages/index/index" class="link-back">返回首页查看历史研报</navigator>
+  </view>
+</view>

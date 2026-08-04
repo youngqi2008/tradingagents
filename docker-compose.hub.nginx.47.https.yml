@@ -1,0 +1,20 @@
+# HTTPS overlay for 47.95.5.18
+# 用法:
+#   export COMPOSE_FILE=docker-compose.hub.nginx.47.yml
+#   export COMPOSE_OVERRIDE=docker-compose.hub.nginx.47.dify-redis.yml:docker-compose.hub.nginx.47.https.yml
+#   # 或:
+#   docker compose -f docker-compose.hub.nginx.47.yml \
+#     -f docker-compose.hub.nginx.47.dify-redis.yml \
+#     -f docker-compose.hub.nginx.47.https.yml up -d --force-recreate nginx
+#
+# 前置: 把证书放到 nginx/certs/fullchain.pem 与 nginx/certs/privkey.pem
+# 阿里云安全组放行 TCP 443；微信合法域名填 https://你的域名（不要端口）
+
+services:
+  nginx:
+    ports:
+      - "${NGINX_PORT:-18888}:80"
+      - "${NGINX_HTTPS_PORT:-443}:443"
+    volumes:
+      - ./nginx/nginx.https.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro

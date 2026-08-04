@@ -1,0 +1,92 @@
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16rpx 24rpx 0;
+  font-size: 26rpx;
+}
+.unread-tip {
+  color: #c9a227;
+  font-weight: 600;
+}
+.mark-all {
+  color: #666;
+}
+.empty {
+  text-align: center;
+  color: #999;
+  padding: 80rpx 0;
+}
+.item {
+  margin-top: 16rpx;
+}
+.item.unread {
+  border-left: 6rpx solid #c9a227;
+}
+.item-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+.signal-tag {
+  font-size: 20rpx;
+  font-weight: 600;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  line-height: 1.4;
+}
+.signal-tag.buy {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+.signal-tag.sell {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+.signal-tag.risk {
+  background: rgba(201, 162, 39, 0.18);
+  color: #b45309;
+}
+.dot {
+  color: #c9a227;
+  margin-right: 8rpx;
+}
+.item-preview {
+  color: #666;
+  font-size: 26rpx;
+  margin-top: 12rpx;
+  line-height: 1.5;
+}
+.item-time {
+  color: #999;
+  font-size: 22rpx;
+  margin-top: 12rpx;
+}
+.detail-card {
+  margin-top: 16rpx;
+}
+.detail-title {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+.detail-time {
+  color: #999;
+  font-size: 24rpx;
+  margin: 16rpx 0 24rpx;
+}
+.detail-content {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 32rpx;
+}
+.btn-outline {
+  background: #fff;
+  color: #1a1a2e;
+  border: 1px solid #c9a227;
+  border-radius: 12rpx;
+}

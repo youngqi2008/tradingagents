@@ -1,0 +1,23 @@
+# 与 docker-compose.hub.nginx.47.yml 叠加使用
+# 让 backend 加入 Dify 网络，通过服务名 redis 访问 Dify Redis
+#
+# 用法:
+#   export COMPOSE_FILE=docker-compose.hub.nginx.47.yml
+#   docker compose -f docker-compose.hub.nginx.47.yml -f docker-compose.hub.nginx.47.dify-redis.yml up -d
+#
+# 先查 Dify 网络名:
+#   docker ps --format '{{.Names}}' | grep -i redis
+#   docker inspect <redis容器名> --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+
+services:
+  backend:
+    environment:
+      REDIS_HOST: "${REDIS_HOST:-redis}"
+      REDIS_URL: "redis://:${REDIS_PASSWORD}@${REDIS_HOST:-redis}:${REDIS_PORT:-6379}/${REDIS_DB:-1}"
+    networks:
+      - dify-network
+
+networks:
+  dify-network:
+    external: true
+    name: ${DIFY_DOCKER_NETWORK:-docker_default}

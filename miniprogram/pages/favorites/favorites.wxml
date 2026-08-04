@@ -1,0 +1,57 @@
+<view class="page">
+  <view class="login-tip" wx:if="{{!isLoggedIn}}">
+    <text>登录后可订阅自选股，并接收日报推送</text>
+    <button class="btn" bindtap="goLogin">去登录</button>
+  </view>
+
+  <block wx:else>
+    <view class="add-bar">
+      <input
+        class="input"
+        placeholder="输入股票代码，如 600519"
+        value="{{keyword}}"
+        bindinput="onInput"
+        confirm-type="search"
+        bindconfirm="onSearch"
+      />
+      <button class="btn-add" size="mini" bindtap="onSearch">搜索</button>
+    </view>
+
+    <view class="suggest" wx:if="{{suggests.length}}">
+      <view
+        class="suggest-item"
+        wx:for="{{suggests}}"
+        wx:key="code"
+        bindtap="onAdd"
+        data-code="{{item.code}}"
+        data-name="{{item.name}}"
+      >
+        <text class="code">{{item.code}}</text>
+        <text class="name">{{item.name}}</text>
+        <text class="plus">+订阅</text>
+      </view>
+    </view>
+
+    <view class="section-title">已订阅（{{favorites.length}}）</view>
+    <view class="empty" wx:if="{{!loading && !favorites.length}}">暂无自选，搜索代码添加</view>
+    <view class="list" wx:if="{{favorites.length}}">
+      <view class="row" wx:for="{{favorites}}" wx:key="stock_code">
+        <view class="row-main" bindtap="goKline" data-code="{{item.stock_code}}" data-name="{{item.stock_name}}">
+          <view class="row-top">
+            <text class="code">{{item.stock_code}}</text>
+            <text class="name">{{item.stock_name}}</text>
+          </view>
+          <view class="row-bot">
+            <text class="price">{{item.current_price != null ? item.current_price : '-'}}</text>
+            <text class="pct {{item.change_percent > 0 ? 'up' : (item.change_percent < 0 ? 'down' : '')}}">
+              {{item.change_percent != null ? item.change_percent + '%' : '-'}}
+            </text>
+          </view>
+        </view>
+        <view class="remove" catchtap="onRemove" data-code="{{item.stock_code}}">取消</view>
+      </view>
+    </view>
+
+    <view class="hint">工作日将按您的自选股生成日报，推送到「消息中心」。</view>
+  </block>
+</view>

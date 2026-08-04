@@ -1,0 +1,148 @@
+.page {
+  min-height: 100vh;
+  padding: 24rpx 24rpx calc(140rpx + env(safe-area-inset-bottom));
+  background: #f0f2f8;
+  box-sizing: border-box;
+}
+.denied {
+  margin-top: 160rpx;
+  text-align: center;
+}
+.denied-title {
+  display: block;
+  font-size: 34rpx;
+  color: #1a1a2e;
+  font-weight: 600;
+}
+.denied-desc {
+  display: block;
+  margin-top: 16rpx;
+  color: #9ca3af;
+  font-size: 26rpx;
+}
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 28rpx rgba(26, 26, 46, 0.05);
+}
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+.field {
+  margin-top: 24rpx;
+}
+.label {
+  display: block;
+  font-size: 24rpx;
+  color: #6b7280;
+  margin-bottom: 12rpx;
+}
+.input,
+.textarea,
+.picker {
+  width: 100%;
+  min-width: 0;
+  display: block;
+  box-sizing: border-box;
+  background: #f5f7fb;
+  border-radius: 12rpx;
+  padding: 20rpx 22rpx;
+  font-size: 28rpx;
+  color: #1a1a2e;
+  line-height: 1.5;
+}
+.title-input {
+  min-height: 88rpx;
+  width: 100%;
+}
+.textarea {
+  min-height: 200rpx;
+  width: 100%;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+.chips.wrap {
+  flex-wrap: wrap;
+}
+.chip {
+  padding: 12rpx 24rpx;
+  border-radius: 999rpx;
+  background: #f5f7fb;
+  color: #6b7280;
+  font-size: 24rpx;
+  border: 1rpx solid #e5e7eb;
+}
+.chip.on {
+  background: #1a1a2e;
+  color: #c9a227;
+  border-color: #1a1a2e;
+}
+.level-hint {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+.btn-send {
+  margin-top: 32rpx;
+  background: linear-gradient(135deg, #c9a227, #e8c547);
+  color: #1a1a2e;
+  font-weight: 600;
+  border-radius: 14rpx;
+}
+.history-hd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.refresh {
+  font-size: 24rpx;
+  color: #c9a227;
+}
+.empty {
+  text-align: center;
+  color: #9ca3af;
+  padding: 40rpx 0;
+  font-size: 26rpx;
+}
+.hist-item {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #eef1f6;
+}
+.hist-hd {
+  display: flex;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+.hist-title {
+  font-size: 28rpx;
+  color: #1a1a2e;
+  font-weight: 500;
+  flex: 1;
+}
+.hist-time {
+  font-size: 22rpx;
+  color: #9ca3af;
+}
+.hist-meta {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #c9a227;
+}
+.hist-content {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #6b7280;
+  line-height: 1.5;
+}

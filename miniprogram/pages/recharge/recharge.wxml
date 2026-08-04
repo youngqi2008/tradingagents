@@ -1,0 +1,15 @@
+<view class="container container--no-tab">
+  <view class="card">
+    <view class="title">选择充值金额</view>
+    <view class="amount-grid">
+      <view
+        wx:for="{{amounts}}"
+        wx:key="*this"
+        class="amount-item {{selected === item ? 'active' : ''}}"
+        bindtap="selectAmount"
+        data-amount="{{item}}"
+      >¥{{item}}</view>
+    </view>
+    <button class="btn-primary" bindtap="pay" loading="{{paying}}">微信支付</button>
+  </view>
+</view>

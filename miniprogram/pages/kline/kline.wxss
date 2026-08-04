@@ -1,0 +1,239 @@
+.page {
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+.login-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 48rpx;
+}
+
+.login-hero {
+  text-align: center;
+  margin-bottom: 64rpx;
+}
+
+.login-logo {
+  display: block;
+  font-size: 64rpx;
+  font-weight: 800;
+  color: var(--color-accent);
+}
+
+.login-title {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.login-desc {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+}
+
+.btn-login {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+  color: var(--color-primary);
+  font-weight: 600;
+  border-radius: 44rpx;
+  border: none;
+}
+
+.btn-login::after {
+  border: none;
+}
+
+.search-card {
+  margin: 24rpx;
+  padding: 24rpx;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-row {
+  display: flex;
+  gap: 16rpx;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  height: 76rpx;
+  padding: 0 28rpx;
+  background: #f5f7fb;
+  border-radius: 38rpx;
+  font-size: 28rpx;
+}
+
+.btn-search {
+  flex-shrink: 0;
+  height: 76rpx;
+  line-height: 76rpx;
+  padding: 0 32rpx;
+  margin: 0;
+  background: linear-gradient(135deg, #1a1a2e, #2d3561);
+  color: #fff;
+  font-size: 26rpx;
+  border-radius: 38rpx;
+  border: none;
+}
+
+.btn-search::after {
+  border: none;
+}
+
+.suggest-list {
+  margin-top: 16rpx;
+  border-top: 1rpx solid var(--color-border);
+}
+
+.suggest-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx 8rpx;
+  border-bottom: 1rpx solid #f0f2f8;
+}
+
+.suggest-code {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-primary);
+  width: 140rpx;
+}
+
+.suggest-name {
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+}
+
+.quote-card {
+  margin: 0 24rpx 16rpx;
+  padding: 28rpx;
+  background: linear-gradient(135deg, #1a1a2e 0%, #2d3561 100%);
+  border-radius: var(--radius-lg);
+  color: #fff;
+  box-shadow: 0 12rpx 40rpx rgba(26, 26, 46, 0.18);
+}
+
+.quote-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16rpx;
+}
+
+.quote-name {
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.quote-code {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.quote-price-row {
+  margin-top: 16rpx;
+  display: flex;
+  align-items: baseline;
+  gap: 20rpx;
+}
+
+.quote-price {
+  font-size: 56rpx;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.quote-chg {
+  font-size: 28rpx;
+}
+
+.quote-price-row.up .quote-price,
+.quote-price-row.up .quote-chg {
+  color: #f87171;
+}
+
+.quote-price-row.down .quote-price,
+.quote-price-row.down .quote-chg {
+  color: #4ade80;
+}
+
+.quote-meta {
+  margin-top: 20rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx 28rpx;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.period-bar {
+  display: flex;
+  margin: 0 24rpx 16rpx;
+  padding: 8rpx;
+  background: var(--color-surface);
+  border-radius: 40rpx;
+  box-shadow: var(--shadow-sm);
+}
+
+.period-item {
+  flex: 1;
+  text-align: center;
+  height: 64rpx;
+  line-height: 64rpx;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  border-radius: 32rpx;
+}
+
+.period-item.active {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.chart-card {
+  margin: 0 24rpx;
+  padding: 20rpx 12rpx 16rpx;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  min-height: 480rpx;
+}
+
+.chart-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 40%;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 26rpx;
+  z-index: 1;
+}
+
+.kline-canvas {
+  width: 100%;
+  display: block;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: space-between;
+  padding: 8rpx 16rpx 0;
+  font-size: 22rpx;
+  color: var(--color-text-muted);
+}

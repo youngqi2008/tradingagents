@@ -1,0 +1,10 @@
+.title { font-weight: 600; margin-bottom: 24rpx; }
+.amount-grid { display: flex; flex-wrap: wrap; gap: 16rpx; margin-bottom: 32rpx; }
+.amount-item {
+  width: calc(33% - 12rpx);
+  text-align: center;
+  padding: 24rpx 0;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+}
+.amount-item.active { border-color: #c9a227; background: #fffbe6; color: #c9a227; font-weight: 600; }

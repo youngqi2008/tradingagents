@@ -1,0 +1,77 @@
+/* Ares 设计系统 */
+page {
+  --color-bg: #f0f2f8;
+  --color-surface: #ffffff;
+  --color-primary: #1a1a2e;
+  --color-accent: #c9a227;
+  --color-accent-light: #e8c547;
+  --color-text: #1f2430;
+  --color-text-secondary: #6b7280;
+  --color-text-muted: #9ca3af;
+  --color-border: #e8ecf4;
+  --color-user-bubble: #fff4d6;
+  --color-ai-bubble: #f3f5fa;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --shadow-sm: 0 4rpx 20rpx rgba(26, 26, 46, 0.06);
+  --tab-height: 110rpx;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 28rpx;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+.container {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-bottom: calc(var(--tab-height) + env(safe-area-inset-bottom));
+}
+
+.container--no-tab {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 28rpx;
+  margin: 24rpx;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+  color: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 28rpx;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.btn-outline {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border: 2rpx solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 28rpx;
+}
+
+.btn-outline::after {
+  border: none;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 20rpx;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+  font-size: 24rpx;
+}

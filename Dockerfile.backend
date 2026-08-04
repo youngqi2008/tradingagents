@@ -1,0 +1,96 @@
+# Backend Dockerfile for FastAPI service (Ares 智能研报 v1.0.0-preview)
+# 前后端分离架构 - 后端服务
+# 支持多架构: amd64, arm64
+
+# 使用 Debian Bookworm (稳定版) 而不是 Trixie (测试版)
+FROM python:3.10-slim-bookworm
+
+# 获取构建架构信息
+ARG TARGETARCH
+ARG APT_MIRROR=mirrors.aliyun.com
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    TZ=Asia/Shanghai
+
+WORKDIR /app
+
+# 创建必需的目录并安装系统依赖
+# - curl: 健康检查
+# - pandoc: Debian 仓库（避免从 GitHub 下载，国内服务器极慢）
+# - wkhtmltopdf: GitHub deb（带镜像回退）
+# - 中文字体: 用于 PDF 中文显示
+RUN mkdir -p /app/logs /app/data /app/config && \
+    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+        sed -i "s|deb.debian.org|${APT_MIRROR}|g; s|security.debian.org|${APT_MIRROR}|g" /etc/apt/sources.list.d/debian.sources; \
+    elif [ -f /etc/apt/sources.list ]; then \
+        sed -i "s|deb.debian.org|${APT_MIRROR}|g; s|security.debian.org|${APT_MIRROR}|g" /etc/apt/sources.list; \
+    fi && \
+    echo 'Acquire::Retries "3";' > /etc/apt/apt.conf.d/80-retries && \
+    echo 'Acquire::http::Timeout "60";' >> /etc/apt/apt.conf.d/80-retries && \
+    echo 'Acquire::https::Timeout "60";' >> /etc/apt/apt.conf.d/80-retries && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        fontconfig \
+        fonts-noto-cjk \
+        pandoc \
+        wget \
+        xvfb && \
+    if [ "$TARGETARCH" = "arm64" ]; then \
+        WKHTMLTOPDF_ARCH="arm64"; \
+    else \
+        WKHTMLTOPDF_ARCH="amd64"; \
+    fi && \
+    WKHTML_DEB="wkhtmltox_0.12.6.1-3.bookworm_${WKHTMLTOPDF_ARCH}.deb" && \
+    WKHTML_URL="https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/${WKHTML_DEB}" && \
+    (wget --timeout=120 --tries=3 -O "${WKHTML_DEB}" "${WKHTML_URL}" \
+        || wget --timeout=120 --tries=3 -O "${WKHTML_DEB}" "https://mirror.ghproxy.com/${WKHTML_URL}" \
+        || wget --timeout=120 --tries=3 -O "${WKHTML_DEB}" "https://ghfast.top/${WKHTML_URL}") && \
+    apt-get install -y --no-install-recommends "./${WKHTML_DEB}" && \
+    rm -f "${WKHTML_DEB}" && \
+    fc-cache -fv && \
+    rm -rf /var/lib/apt/lists/*
+
+# 复制pyproject.toml和README.md（pip安装需要）
+COPY pyproject.toml README.md ./
+
+# 安装Python依赖
+# 1. 默认清华镜像；403 时依次回退阿里云 → 官方 PyPI
+# 2. 预装构建工具 + --no-build-isolation，避免子进程重复拉取 setuptools
+# 3. 可通过 --build-arg PIP_INDEX_URL=... 覆盖
+ARG PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+ARG PIP_FALLBACK_URL=https://mirrors.aliyun.com/pypi/simple/
+RUN set -eux; \
+    pip_install() { \
+        pip install --prefer-binary "$@" \
+            -i "${PIP_INDEX_URL}" --trusted-host pypi.tuna.tsinghua.edu.cn \
+        || pip install --prefer-binary "$@" \
+            -i "${PIP_FALLBACK_URL}" --trusted-host mirrors.aliyun.com \
+        || pip install --prefer-binary "$@" -i https://pypi.org/simple; \
+    }; \
+    pip_install "setuptools>=61.0" wheel; \
+    pip_install --no-build-isolation .; \
+    pip_install pdfkit
+
+# 复制后端代码和必需模块
+COPY app ./app
+COPY tradingagents ./tradingagents
+COPY config ./config
+COPY scripts ./scripts
+COPY docs ./docs
+COPY install ./install
+
+# 复制Docker环境配置文件
+COPY .env.docker ./.env
+
+# 暴露后端端口（与docker-compose.v1.0.0.yml一致）
+EXPOSE 8000
+
+# Docker环境标识
+ENV DOCKER_CONTAINER=true
+
+# 启动FastAPI服务
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

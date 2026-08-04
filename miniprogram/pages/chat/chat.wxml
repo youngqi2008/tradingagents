@@ -1,0 +1,159 @@
+<view class="page">
+  <!-- 未登录 -->
+  <view class="login-wrap" wx:if="{{!isLoggedIn}}">
+    <view class="login-hero">
+      <text class="login-logo">Ares</text>
+      <text class="login-title">AI 智能问股</text>
+      <text class="login-desc">多策略分析 · 实时解答 · 深度投研助手</text>
+    </view>
+    <view class="login-features">
+      <view class="feature-item">
+        <text class="feature-dot">◆</text>
+        <text>支持 A 股代码智能识别</text>
+      </view>
+      <view class="feature-item">
+        <text class="feature-dot">◆</text>
+        <text>11 种专业分析策略可选</text>
+      </view>
+      <view class="feature-item">
+        <text class="feature-dot">◆</text>
+        <text>多轮对话，追问更便捷</text>
+      </view>
+    </view>
+    <button class="btn-login" bindtap="onLoginTap">微信一键登录</button>
+  </view>
+
+  <!-- 已登录主界面 -->
+  <block wx:else>
+    <!-- 顶栏 -->
+    <view class="top-bar">
+      <view class="top-left" bindtap="toggleSessions">
+        <view class="menu-icon"></view>
+        <text class="session-title">{{currentSessionTitle}}</text>
+      </view>
+      <picker mode="selector" range="{{strategyNames}}" value="{{strategyIndex}}" bindchange="onStrategyChange">
+        <view class="strategy-chip">
+          <text class="chip-label">{{strategyNames[strategyIndex] || '策略'}}</text>
+          <text class="chip-arrow">▾</text>
+        </view>
+      </picker>
+      <view class="top-right" bindtap="onNewSession">
+        <text class="new-icon">+</text>
+      </view>
+    </view>
+
+    <!-- 额度提示 -->
+    <view class="quota-bar" wx:if="{{userQuota}}">
+      <text>问股免费 {{userQuota.ask_free_remaining}}/{{userQuota.ask_free_limit}}</text>
+      <text class="quota-divider">|</text>
+      <text>余额 ¥{{userQuota.balance}}</text>
+    </view>
+
+    <!-- 消息区 -->
+    <scroll-view
+      class="message-area"
+      scroll-y
+      scroll-into-view="{{scrollIntoView}}"
+      enhanced
+      show-scrollbar="{{false}}"
+    >
+      <!-- 空状态欢迎 -->
+      <view wx:if="{{messages.length === 0 && !sending}}" class="welcome">
+        <view class="welcome-icon">AI</view>
+        <text class="welcome-title">有什么可以帮您？</text>
+        <text class="welcome-sub">输入股票代码或问题，开始智能分析</text>
+        <view class="quick-prompts">
+          <view
+            wx:for="{{quickPrompts}}"
+            wx:key="*this"
+            class="prompt-chip"
+            data-text="{{item}}"
+            bindtap="onQuickPrompt"
+          >{{item}}</view>
+        </view>
+      </view>
+
+      <view
+        wx:for="{{messages}}"
+        wx:key="id"
+        id="msg-{{item.id}}"
+        class="msg-row {{item.role}}"
+      >
+        <view class="avatar {{item.role}}">{{item.role === 'user' ? '我' : 'AI'}}</view>
+        <view class="bubble-wrap">
+          <view class="bubble">{{item.content}}</view>
+        </view>
+      </view>
+
+      <view wx:if="{{sending}}" class="msg-row assistant">
+        <view class="avatar assistant">AI</view>
+        <view class="bubble-wrap">
+          <view class="bubble typing">
+            <text class="dot"></text><text class="dot"></text><text class="dot"></text>
+            <text class="typing-hint">{{progressStatus || '分析中，请稍候…'}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{followUpSuggestions.length && !sending}}" class="follow-up-block">
+        <text class="follow-up-label">继续追问</text>
+        <view class="follow-up-chips">
+          <view
+            wx:for="{{followUpSuggestions}}"
+            wx:key="*this"
+            class="follow-chip"
+            data-text="{{item}}"
+            bindtap="onFollowUpTap"
+          >{{item}}</view>
+        </view>
+      </view>
+
+      <view class="scroll-bottom" id="scroll-bottom"></view>
+    </scroll-view>
+
+    <!-- 输入区 -->
+    <view class="composer">
+      <view class="composer-inner">
+        <input
+          class="composer-input"
+          placeholder="问股票、看趋势、要策略…"
+          value="{{inputText}}"
+          bindinput="onInput"
+          confirm-type="send"
+          bindconfirm="onSend"
+          disabled="{{sending}}"
+          adjust-position="{{true}}"
+        />
+        <button
+          class="send-btn {{inputText ? 'active' : ''}}"
+          bindtap="onSend"
+          loading="{{sending}}"
+          disabled="{{sending || !inputText}}"
+        >发送</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- 会话侧栏 -->
+  <view class="drawer-mask {{showSessions ? 'show' : ''}}" bindtap="toggleSessions"></view>
+  <view class="drawer {{showSessions ? 'show' : ''}}">
+    <view class="drawer-header">
+      <text class="drawer-title">历史会话</text>
+      <text class="drawer-close" bindtap="toggleSessions">✕</text>
+    </view>
+    <scroll-view class="drawer-list" scroll-y>
+      <view wx:if="{{sessions.length === 0}}" class="drawer-empty">暂无历史会话</view>
+      <view
+        wx:for="{{sessions}}"
+        wx:key="session_id"
+        class="session-item {{sessionId === item.session_id ? 'active' : ''}}"
+        data-id="{{item.session_id}}"
+        bindtap="onSelectSession"
+      >
+        <text class="session-name">{{item.title || item.stock_code || '问股会话'}}</text>
+        <text class="session-meta">{{item.message_count}} 条消息</text>
+      </view>
+    </scroll-view>
+    <button class="drawer-new btn-primary" bindtap="onNewSessionFromDrawer">新建会话</button>
+  </view>
+</view>

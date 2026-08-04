@@ -1,0 +1,214 @@
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(110rpx + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex;
+  background: #ffffff;
+  border-top: 1rpx solid #e8ecf4;
+  box-shadow: 0 -8rpx 32rpx rgba(26, 26, 46, 0.06);
+  z-index: 9999;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+}
+
+.tab-icon {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 12rpx;
+  background: #e8ecf4;
+  position: relative;
+}
+
+.tab-item.active .tab-icon {
+  background: linear-gradient(135deg, #c9a227, #e8c547);
+}
+
+/* 行情 */
+.tab-icon-kline::before {
+  content: '';
+  position: absolute;
+  width: 3rpx;
+  height: 22rpx;
+  left: 14rpx;
+  top: 11rpx;
+  background: #6b7280;
+}
+.tab-icon-kline::after {
+  content: '';
+  position: absolute;
+  width: 10rpx;
+  height: 14rpx;
+  left: 10.5rpx;
+  top: 15rpx;
+  background: #6b7280;
+  box-shadow: 16rpx -2rpx 0 0 #6b7280, 16rpx -6rpx 0 -3.5rpx #6b7280, 16rpx 8rpx 0 -3.5rpx #6b7280;
+}
+.tab-item.active .tab-icon-kline::before,
+.tab-item.active .tab-icon-kline::after {
+  background: #1a1a2e;
+}
+.tab-item.active .tab-icon-kline::after {
+  box-shadow: 16rpx -2rpx 0 0 #1a1a2e, 16rpx -6rpx 0 -3.5rpx #1a1a2e, 16rpx 8rpx 0 -3.5rpx #1a1a2e;
+}
+
+/* 新闻 */
+.tab-icon-news::before {
+  content: '';
+  position: absolute;
+  width: 20rpx;
+  height: 16rpx;
+  left: 12rpx;
+  top: 14rpx;
+  border: 3rpx solid #6b7280;
+  border-radius: 4rpx;
+  box-sizing: border-box;
+}
+.tab-icon-news::after {
+  content: '';
+  position: absolute;
+  width: 10rpx;
+  height: 3rpx;
+  left: 17rpx;
+  top: 19rpx;
+  background: #6b7280;
+  box-shadow: 0 5rpx 0 #6b7280;
+}
+.tab-item.active .tab-icon-news::before {
+  border-color: #1a1a2e;
+}
+.tab-item.active .tab-icon-news::after {
+  background: #1a1a2e;
+  box-shadow: 0 5rpx 0 #1a1a2e;
+}
+
+/* 问股 */
+.tab-icon-chat::before,
+.tab-icon-chat::after {
+  content: '';
+  position: absolute;
+  background: #6b7280;
+  border-radius: 4rpx;
+}
+.tab-icon-chat::before {
+  width: 22rpx;
+  height: 16rpx;
+  left: 8rpx;
+  top: 12rpx;
+  border-radius: 8rpx 8rpx 8rpx 2rpx;
+}
+.tab-icon-chat::after {
+  width: 14rpx;
+  height: 10rpx;
+  right: 8rpx;
+  bottom: 10rpx;
+  border-radius: 8rpx 8rpx 2rpx 8rpx;
+}
+.tab-item.active .tab-icon-chat::before,
+.tab-item.active .tab-icon-chat::after {
+  background: #1a1a2e;
+}
+
+/* 研报 */
+.tab-icon-report::before {
+  content: '';
+  position: absolute;
+  width: 20rpx;
+  height: 26rpx;
+  left: 12rpx;
+  top: 9rpx;
+  border: 3rpx solid #6b7280;
+  border-radius: 4rpx;
+}
+.tab-icon-report::after {
+  content: '';
+  position: absolute;
+  width: 12rpx;
+  height: 3rpx;
+  left: 16rpx;
+  top: 18rpx;
+  background: #6b7280;
+  box-shadow: 0 6rpx 0 #6b7280, 0 12rpx 0 #6b7280;
+}
+.tab-item.active .tab-icon-report::before {
+  border-color: #1a1a2e;
+}
+.tab-item.active .tab-icon-report::after {
+  background: #1a1a2e;
+  box-shadow: 0 6rpx 0 #1a1a2e, 0 12rpx 0 #1a1a2e;
+}
+
+/* 风控 */
+.tab-icon-risk::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: 10rpx;
+  top: 10rpx;
+  border-left: 12rpx solid transparent;
+  border-right: 12rpx solid transparent;
+  border-bottom: 22rpx solid #6b7280;
+}
+.tab-icon-risk::after {
+  content: '';
+  position: absolute;
+  width: 3rpx;
+  height: 10rpx;
+  left: 20.5rpx;
+  top: 16rpx;
+  background: #e8ecf4;
+  box-shadow: 0 12rpx 0 1rpx #e8ecf4;
+}
+.tab-item.active .tab-icon-risk::before {
+  border-bottom-color: #1a1a2e;
+}
+.tab-item.active .tab-icon-risk::after {
+  background: #c9a227;
+  box-shadow: 0 12rpx 0 1rpx #c9a227;
+}
+
+/* 我的 */
+.tab-icon-me::before {
+  content: '';
+  position: absolute;
+  width: 14rpx;
+  height: 14rpx;
+  left: 15rpx;
+  top: 8rpx;
+  border-radius: 50%;
+  background: #6b7280;
+}
+.tab-icon-me::after {
+  content: '';
+  position: absolute;
+  width: 26rpx;
+  height: 14rpx;
+  left: 9rpx;
+  bottom: 8rpx;
+  border-radius: 12rpx 12rpx 0 0;
+  background: #6b7280;
+}
+.tab-item.active .tab-icon-me::before,
+.tab-item.active .tab-icon-me::after {
+  background: #1a1a2e;
+}
+
+.tab-text {
+  font-size: 22rpx;
+  color: #9ca3af;
+}
+
+.tab-item.active .tab-text {
+  color: #c9a227;
+  font-weight: 600;
+}

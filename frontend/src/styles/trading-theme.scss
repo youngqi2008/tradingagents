@@ -1,0 +1,356 @@
+/**
+ * 同花顺风格交易主题
+ * 黑色背景、绿涨红跌配色方案
+ */
+
+// 导入变量
+@use './variables.scss' as *;
+
+// 全局交易风格样式
+html {
+  background-color: $bg-primary !important;
+}
+
+body {
+  background-color: $bg-primary !important;
+  color: $text-primary !important;
+}
+
+// 交易风格主容器
+.app-container {
+  background-color: $bg-primary !important;
+}
+
+// 交易风格布局
+.basic-layout {
+  background-color: $bg-primary !important;
+}
+
+// 交易风格侧边栏
+.sidebar {
+  background-color: $bg-secondary !important;
+  border-right-color: $border-color !important;
+}
+
+// 交易风格主内容区
+.main-container {
+  background-color: $bg-primary !important;
+}
+
+// 交易风格主内容
+.main-content {
+  background-color: $bg-primary !important;
+  
+  .content-wrapper {
+    background-color: transparent !important;
+  }
+}
+
+// 确保所有页面容器都是黑色背景
+.page-container,
+.view-container,
+.dashboard,
+.about,
+.single-analysis,
+.batch-analysis {
+  background-color: transparent !important;
+  
+  // 覆盖 Element Plus 默认的白色背景
+  * {
+    &::before,
+    &::after {
+      background-color: transparent !important;
+    }
+  }
+}
+
+// 覆盖 Element Plus 的默认背景色变量
+:root {
+  --el-bg-color-page: #{$bg-primary} !important;
+  --el-bg-color: #{$bg-secondary} !important;
+  --el-fill-color-blank: #{$bg-tertiary} !important;
+}
+
+// 暗色主题下的背景色覆盖
+html.dark {
+  --el-bg-color-page: #{$bg-primary} !important;
+  --el-bg-color: #{$bg-secondary} !important;
+  --el-fill-color-blank: #{$bg-tertiary} !important;
+  
+  .content-wrapper {
+    background-color: transparent !important;
+  }
+  
+  .main-content {
+    background-color: $bg-primary !important;
+  }
+}
+
+// 交易风格头部
+.header {
+  background-color: $bg-secondary !important;
+  border-bottom-color: $border-color !important;
+}
+
+// 交易风格页脚
+.footer {
+  background-color: $bg-secondary !important;
+  border-top-color: $border-color !important;
+}
+
+// 交易风格卡片
+.el-card {
+  background-color: $bg-card !important;
+  border-color: $border-color !important;
+  
+  .el-card__header {
+    background-color: $bg-card !important;
+    border-bottom-color: $border-color !important;
+    color: $text-primary !important;
+  }
+  
+  .el-card__body {
+    background-color: $bg-card !important;
+    color: $text-primary !important;
+  }
+}
+
+// 交易风格按钮
+.el-button {
+  // 主要按钮 - 深蓝色
+  &.el-button--primary {
+    background-color: $primary-color !important;
+    border-color: $primary-color !important;
+    color: $text-primary !important;
+    
+    &:hover {
+      background-color: lighten($primary-color, 10%) !important;
+      border-color: lighten($primary-color, 10%) !important;
+    }
+  }
+  
+  // 成功按钮 - 上涨绿色
+  &.el-button--success {
+    background-color: $success-color !important;
+    border-color: $success-color !important;
+    color: $text-primary !important;
+    
+    &:hover {
+      background-color: lighten($success-color, 10%) !important;
+      border-color: lighten($success-color, 10%) !important;
+    }
+  }
+  
+  // 危险按钮 - 下跌红色
+  &.el-button--danger {
+    background-color: $danger-color !important;
+    border-color: $danger-color !important;
+    color: $text-primary !important;
+    
+    &:hover {
+      background-color: lighten($danger-color, 10%) !important;
+      border-color: lighten($danger-color, 10%) !important;
+    }
+  }
+  
+  // 默认按钮
+  &.el-button--default {
+    background-color: $bg-tertiary !important;
+    border-color: $border-color !important;
+    color: $text-primary !important;
+    
+    &:hover {
+      background-color: lighten($bg-tertiary, 5%) !important;
+      border-color: $primary-color !important;
+      color: $primary-color !important;
+    }
+  }
+}
+
+// 交易风格输入框
+.el-input {
+  .el-input__wrapper {
+    background-color: $bg-tertiary !important;
+    border-color: $border-color !important;
+    
+    .el-input__inner {
+      color: $text-primary !important;
+      
+      &::placeholder {
+        color: $text-tertiary !important;
+      }
+    }
+  }
+  
+  &:hover .el-input__wrapper {
+    border-color: $primary-color !important;
+  }
+}
+
+// 交易风格表格
+.el-table {
+  background-color: $bg-card !important;
+  color: $text-primary !important;
+  border-color: $border-color !important;
+  
+  th.el-table__cell {
+    background-color: $bg-secondary !important;
+    color: $text-primary !important;
+    border-color: $border-color !important;
+  }
+  
+  td.el-table__cell {
+    background-color: $bg-card !important;
+    color: $text-primary !important;
+    border-color: $border-color !important;
+  }
+  
+  tr:hover > td {
+    background-color: $bg-tertiary !important;
+  }
+  
+  // 上涨绿色
+  .price-up {
+    color: $success-color !important;
+  }
+  
+  // 下跌红色
+  .price-down {
+    color: $danger-color !important;
+  }
+}
+
+// 交易风格菜单
+.el-menu {
+  background-color: $bg-secondary !important;
+  border-color: $border-color !important;
+  
+  .el-menu-item,
+  .el-sub-menu__title {
+    color: $text-secondary !important;
+    
+    &:hover {
+      background-color: $bg-tertiary !important;
+      color: $text-primary !important;
+    }
+    
+    &.is-active {
+      background-color: rgba($primary-color, 0.2) !important;
+      color: $primary-color !important;
+    }
+  }
+}
+
+// 交易风格标签页
+.el-tabs {
+  .el-tabs__header {
+    border-bottom-color: $border-color !important;
+  }
+  
+  .el-tabs__item {
+    color: $text-secondary !important;
+    
+    &:hover {
+      color: $text-primary !important;
+    }
+    
+    &.is-active {
+      color: $primary-color !important;
+    }
+  }
+  
+  .el-tabs__active-bar {
+    background-color: $primary-color !important;
+  }
+}
+
+// 交易风格对话框
+.el-dialog {
+  background-color: $bg-card !important;
+  border: 1px solid $border-color !important;
+  
+  .el-dialog__header {
+    border-bottom-color: $border-color !important;
+    
+    .el-dialog__title {
+      color: $text-primary !important;
+    }
+  }
+  
+  .el-dialog__body {
+    color: $text-primary !important;
+  }
+}
+
+// 交易风格下拉菜单
+.el-dropdown-menu {
+  background-color: $bg-card !important;
+  border-color: $border-color !important;
+  
+  .el-dropdown-menu__item {
+    color: $text-primary !important;
+    
+    &:hover {
+      background-color: $bg-tertiary !important;
+      color: $primary-color !important;
+    }
+  }
+}
+
+// 交易风格滚动条
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $bg-tertiary;
+  border-radius: 4px;
+  
+  &:hover {
+    background: lighten($bg-tertiary, 10%);
+  }
+}
+
+// 交易风格链接
+a {
+  color: $primary-color !important;
+  
+  &:hover {
+    color: lighten($primary-color, 10%) !important;
+  }
+}
+
+// 交易风格文字颜色工具类
+.text-up {
+  color: $success-color !important; // 上涨绿色
+}
+
+.text-down {
+  color: $danger-color !important; // 下跌红色
+}
+
+.text-primary {
+  color: $text-primary !important;
+}
+
+.text-secondary {
+  color: $text-secondary !important;
+}
+
+// 交易风格背景工具类
+.bg-card {
+  background-color: $bg-card !important;
+}
+
+.bg-secondary {
+  background-color: $bg-secondary !important;
+}
+
+.bg-tertiary {
+  background-color: $bg-tertiary !important;
+}

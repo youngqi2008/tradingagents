@@ -1,0 +1,89 @@
+<view class="page container">
+  <!-- 未登录 -->
+  <view class="login-wrap" wx:if="{{!isLoggedIn}}">
+    <view class="login-hero">
+      <text class="login-logo">Ares</text>
+      <text class="login-title">行情 · K线</text>
+      <text class="login-desc">默认沪指，亦可查看个股日/周/月 K 线</text>
+    </view>
+    <button class="btn-login" bindtap="onLoginTap">微信登录</button>
+  </view>
+
+  <block wx:else>
+    <!-- 搜索 -->
+    <view class="search-card">
+      <view class="search-row">
+        <input
+          class="search-input"
+          placeholder="默认沪指，输入个股代码如 600519"
+          value="{{keyword}}"
+          bindinput="onKeywordInput"
+          bindconfirm="onSearchConfirm"
+          confirm-type="search"
+        />
+        <button class="btn-search" bindtap="onSearchConfirm">查询</button>
+      </view>
+      <view class="suggest-list" wx:if="{{suggests.length}}">
+        <view
+          class="suggest-item"
+          wx:for="{{suggests}}"
+          wx:key="code"
+          data-code="{{item.code}}"
+          data-name="{{item.name}}"
+          bindtap="onSelectSuggest"
+        >
+          <text class="suggest-code">{{item.code}}</text>
+          <text class="suggest-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 报价头 -->
+    <view class="quote-card" wx:if="{{quote}}">
+      <view class="quote-main">
+        <view class="quote-name-row">
+          <text class="quote-name">{{quote.name || stockName || '-'}}</text>
+          <text class="quote-code">{{stockCode}}</text>
+        </view>
+        <view class="quote-price-row {{quoteUp ? 'up' : (quoteDown ? 'down' : '')}}">
+          <text class="quote-price">{{priceText}}</text>
+          <text class="quote-chg">{{chgText}}</text>
+        </view>
+      </view>
+      <view class="quote-meta">
+        <text>开 {{openText}}</text>
+        <text>高 {{highText}}</text>
+        <text>低 {{lowText}}</text>
+        <text>额 {{amountText}}</text>
+      </view>
+    </view>
+
+    <!-- 周期 -->
+    <view class="period-bar">
+      <view
+        wx:for="{{periods}}"
+        wx:key="value"
+        class="period-item {{period === item.value ? 'active' : ''}}"
+        data-period="{{item.value}}"
+        bindtap="onPeriodChange"
+      >{{item.label}}</view>
+    </view>
+
+    <!-- K 线 -->
+    <view class="chart-card">
+      <view class="chart-hint" wx:if="{{loading}}">加载中…</view>
+      <view class="chart-hint" wx:elif="{{errorMsg}}">{{errorMsg}}</view>
+      <view class="chart-hint" wx:elif="{{!hasData}}">暂无 K 线数据</view>
+      <canvas
+        type="2d"
+        id="klineCanvas"
+        class="kline-canvas"
+        style="width: {{canvasWidth}}px; height: {{canvasHeight}}px;"
+      ></canvas>
+      <view class="chart-legend" wx:if="{{hasData}}">
+        <text>{{periodLabel}} · {{barCount}} 根</text>
+        <text wx:if="{{lastTime}}">最近 {{lastTime}}</text>
+      </view>
+    </view>
+  </block>
+</view>

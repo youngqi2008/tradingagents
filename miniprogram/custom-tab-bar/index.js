@@ -1,0 +1,60 @@
+const { buildTabList } = require('../utils/tabbar')
+const { isRiskOfficer } = require('../utils/auth')
+
+Component({
+  data: {
+    selected: 0,
+    // 默认仅基础 5 Tab，绝不默认带「风控」
+    list: buildTabList(false),
+    showRisk: false,
+  },
+  lifetimes: {
+    attached() {
+      this.refreshByRole()
+    },
+  },
+  pageLifetimes: {
+    show() {
+      this.refreshByRole()
+    },
+  },
+  methods: {
+    refreshByRole() {
+      var showRisk = isRiskOfficer()
+      this.updateForRole(showRisk)
+    },
+    updateForRole(isRisk) {
+      var showRisk = !!isRisk && isRiskOfficer()
+      var list = buildTabList(showRisk)
+      this.setData({
+        showRisk: showRisk,
+        list: list,
+      })
+    },
+    setSelectedByPath(path) {
+      var list = this.data.list || []
+      var idx = -1
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].pagePath === path) {
+          idx = i
+          break
+        }
+      }
+      if (idx >= 0) {
+        this.setData({ selected: idx })
+      }
+    },
+    switchTab(e) {
+      var path = e.currentTarget.dataset.path
+      var index = e.currentTarget.dataset.index
+      // 非风控专员禁止进入风控页
+      if (path.indexOf('risk-message') >= 0 && !isRiskOfficer()) {
+        wx.showToast({ title: '仅风控专员可用', icon: 'none' })
+        this.updateForRole(false)
+        return
+      }
+      wx.switchTab({ url: path })
+      this.setData({ selected: index })
+    },
+  },
+})

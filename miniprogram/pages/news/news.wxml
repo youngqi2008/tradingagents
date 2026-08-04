@@ -1,0 +1,46 @@
+<view class="page">
+  <view class="toolbar">
+    <view class="chip {{onlyFav ? 'on' : ''}}" bindtap="toggleOnlyFav">只看自选</view>
+    <view class="chip" bindtap="onRefresh">刷新</view>
+  </view>
+
+  <view class="login-tip" wx:if="{{!isLoggedIn}}">
+    <text>登录后可标记您的自选相关新闻</text>
+    <button class="btn" bindtap="goLogin">去登录</button>
+  </view>
+
+  <view class="empty" wx:if="{{isLoggedIn && !loading && !displayList.length}}">
+    暂无最近财经新闻，请稍后刷新
+  </view>
+
+  <view class="list" wx:if="{{displayList.length}}">
+    <view
+      class="card {{item.highlight ? 'fav' : ''}}"
+      wx:for="{{displayList}}"
+      wx:key="id"
+      bindtap="onOpen"
+      data-url="{{item.url}}"
+      data-symbol="{{item.symbol}}"
+      data-name="{{item.stock_name}}"
+    >
+      <view class="card-hd">
+        <view class="badges">
+          <text class="tag fav-tag" wx:if="{{item.highlight}}">自选</text>
+          <text class="tag code" wx:if="{{item.symbol}}">{{item.symbol}}</text>
+          <text class="tag name" wx:if="{{item.stock_name}}">{{item.stock_name}}</text>
+        </view>
+        <text class="time">{{item.timeText}}</text>
+      </view>
+      <text class="title">{{item.title}}</text>
+      <text class="summary" wx:if="{{item.summary}}">{{item.summary}}</text>
+      <view class="card-ft">
+        <text class="source">{{item.source || '财经资讯'}}</text>
+        <text class="more" wx:if="{{item.favorite_symbols && item.favorite_symbols.length}}">
+          关联 {{item.favorite_symbolsText}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+</view>

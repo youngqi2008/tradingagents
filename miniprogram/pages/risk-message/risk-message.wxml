@@ -1,0 +1,71 @@
+<view class="page">
+  <view class="denied" wx:if="{{!allowed && !checking}}">
+    <text class="denied-title">无权限</text>
+    <text class="denied-desc">仅风控专员可发送风控消息</text>
+  </view>
+
+  <block wx:if="{{allowed}}">
+    <view class="card">
+      <text class="card-title">发送风控消息</text>
+      <view class="field">
+        <text class="label">标题</text>
+        <textarea
+          class="input title-input"
+          maxlength="128"
+          auto-height
+          show-confirm-bar="{{false}}"
+          placeholder="请输入标题"
+          value="{{title}}"
+          bindinput="onTitle"
+        />
+      </view>
+      <view class="field">
+        <text class="label">内容</text>
+        <textarea
+          class="textarea"
+          maxlength="1000"
+          placeholder="请输入风控提示内容"
+          value="{{content}}"
+          bindinput="onContent"
+        />
+      </view>
+      <view class="field">
+        <text class="label">发送范围</text>
+        <view class="chips">
+          <view class="chip {{targetType === 'all' ? 'on' : ''}}" data-type="all" bindtap="onTargetType">全部用户</view>
+          <view class="chip {{targetType === 'membership' ? 'on' : ''}}" data-type="membership" bindtap="onTargetType">按会员等级</view>
+        </view>
+      </view>
+      <view class="field" wx:if="{{targetType === 'membership'}}">
+        <text class="label">会员等级（可多选）</text>
+        <view class="chips wrap">
+          <view
+            wx:for="{{levels}}"
+            wx:key="id"
+            class="chip {{item.selected ? 'on' : ''}}"
+            data-id="{{item.id}}"
+            bindtap="onToggleLevel"
+          >{{item.name}}</view>
+        </view>
+        <text class="level-hint">{{selectedLevelNamesText}}</text>
+      </view>
+      <button class="btn-send" loading="{{sending}}" bindtap="onSend">发送消息</button>
+    </view>
+
+    <view class="card history">
+      <view class="history-hd">
+        <text class="card-title">我发送的</text>
+        <text class="refresh" bindtap="loadHistory">刷新</text>
+      </view>
+      <view class="empty" wx:if="{{!historyLoading && !history.length}}">暂无发送记录</view>
+      <view class="hist-item" wx:for="{{history}}" wx:key="id">
+        <view class="hist-hd">
+          <text class="hist-title">{{item.title}}</text>
+          <text class="hist-time">{{item.timeText}}</text>
+        </view>
+        <text class="hist-meta">{{item.targetText}} · 触达 {{item.recipient_count}} · 已读 {{item.read_count}}</text>
+        <text class="hist-content">{{item.preview}}</text>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,678 @@
+2026-06-30 19:26:31,883 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-06-30 19:26:31,924 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-06-30 19:26:31,946 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-06-30 19:26:31,946 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-06-30 19:26:31,948 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-06-30 19:26:31,950 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-06-30 19:26:45,790 | agents               | INFO     | interface:get_china_stock_info_unified:1646 | 📊 [统一接口] 获取002281基本信息...
+2026-06-30 19:26:45,793 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:26:45,798 | dataflows            | WARNING  | data_source_manager:_check_available_sources:492 | ⚠️ [数据源配置] 从数据库读取失败: No module named 'motor'，将检查所有已安装的数据源
+2026-06-30 19:26:45,803 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:26:45,903 | tradingagents.config.database_manager | INFO     | database_manager:_load_env_config:76 | MongoDB启用: False
+2026-06-30 19:26:45,903 | tradingagents.config.database_manager | INFO     | database_manager:_load_env_config:77 | Redis启用: False
+2026-06-30 19:26:45,903 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:161 | 开始检测数据库可用性...
+2026-06-30 19:26:45,903 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:170 | ❌ MongoDB: MongoDB未启用 (MONGODB_ENABLED=false)
+2026-06-30 19:26:45,905 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:179 | ❌ Redis: Redis未启用 (REDIS_ENABLED=false)
+2026-06-30 19:26:45,907 | tradingagents.config.database_manager | INFO     | database_manager:_update_config_based_on_detection:194 | 主要缓存后端: file
+2026-06-30 19:26:45,907 | tradingagents.config.database_manager | INFO     | database_manager:__init__:34 | 数据库管理器初始化完成 - MongoDB: False, Redis: False
+2026-06-30 19:26:45,907 | agents               | WARNING  | mongodb_cache_adapter:_init_mongodb_connection:41 | ⚠️ MongoDB客户端不可用，回退到传统模式
+2026-06-30 19:26:45,908 | agents               | INFO     | mongodb_cache_adapter:__init__:28 | 🔄 MongoDB缓存适配器已启用 - 优先使用MongoDB数据
+2026-06-30 19:26:45,908 | dataflows            | WARNING  | data_source_manager:_check_available_sources:505 | ⚠️ MongoDB数据源不可用: 数据库未连接
+2026-06-30 19:26:45,909 | dataflows            | WARNING  | data_source_manager:_get_datasource_configs_from_db:584 | ⚠️ 从数据库读取数据源配置失败: No module named 'motor'
+2026-06-30 19:26:45,910 | dataflows            | INFO     | data_source_manager:_check_available_sources:523 | ✅ Tushare数据源可用且已启用 (API Key来源: 环境变量)
+2026-06-30 19:26:47,510 | dataflows            | INFO     | data_source_manager:_check_available_sources:536 | ✅ AKShare数据源可用且已启用
+2026-06-30 19:26:47,547 | dataflows            | INFO     | data_source_manager:_check_available_sources:547 | ✅ BaoStock数据源可用且已启用
+2026-06-30 19:26:47,549 | agents               | INFO     | file_cache:__init__:95 | 📁 缓存管理器初始化完成，缓存目录: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\tradingagents\dataflows\cache\data_cache
+2026-06-30 19:26:47,552 | agents               | INFO     | file_cache:__init__:96 | 🗄️ 数据库缓存管理器初始化完成
+2026-06-30 19:26:47,553 | agents               | INFO     | file_cache:__init__:97 |    美股数据: ✅ 已配置
+2026-06-30 19:26:47,554 | agents               | INFO     | file_cache:__init__:98 |    A股数据: ✅ 已配置
+2026-06-30 19:26:47,555 | tradingagents.dataflows.cache.adaptive | INFO     | adaptive:__init__:43 | 自适应缓存系统初始化 - 主要后端: file
+2026-06-30 19:26:47,555 | dataflows            | INFO     | integrated:__init__:48 | ✅ 自适应缓存系统已启用
+2026-06-30 19:26:47,555 | dataflows            | INFO     | integrated:_log_cache_status:65 | 📊 缓存配置:
+2026-06-30 19:26:47,557 | dataflows            | INFO     | integrated:_log_cache_status:66 |   主要后端: file
+2026-06-30 19:26:47,557 | dataflows            | INFO     | integrated:_log_cache_status:67 |   MongoDB: ❌ 不可用
+2026-06-30 19:26:47,557 | dataflows            | INFO     | integrated:_log_cache_status:68 |   Redis: ❌ 不可用
+2026-06-30 19:26:47,558 | dataflows            | INFO     | integrated:_log_cache_status:69 |   降级支持: ✅ 启用
+2026-06-30 19:26:47,559 | agents               | INFO     | __init__:get_cache:103 | ✅ 使用集成缓存系统（支持 MongoDB/Redis/File 自动选择）
+2026-06-30 19:26:47,559 | dataflows            | INFO     | data_source_manager:__init__:125 | ✅ 统一缓存管理器已启用
+2026-06-30 19:26:47,560 | dataflows            | INFO     | data_source_manager:__init__:129 | 📊 数据源管理器初始化完成
+2026-06-30 19:26:47,561 | dataflows            | INFO     | data_source_manager:__init__:130 |    MongoDB缓存: ✅ 已启用
+2026-06-30 19:26:47,562 | dataflows            | INFO     | data_source_manager:__init__:131 |    统一缓存: ✅ 已启用
+2026-06-30 19:26:47,563 | dataflows            | INFO     | data_source_manager:__init__:132 |    默认数据源: DataSourceCode.MONGODB
+2026-06-30 19:26:47,563 | dataflows            | INFO     | data_source_manager:__init__:133 |    可用数据源: [<DataSourceCode.TUSHARE: 'tushare'>, <DataSourceCode.AKSHARE: 'akshare'>, <DataSourceCode.BAOSTOCK: 'baostock'>]
+2026-06-30 19:26:47,563 | dataflows            | INFO     | data_source_manager:get_stock_info:1439 | 📊 [数据来源: DataSourceCode.MONGODB] 开始获取股票信息: 002281
+2026-06-30 19:26:47,564 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:26:47,564 | dataflows            | INFO     | data_source_manager:get_stock_info:1445 | 🔧 [配置检查] use_app_cache_enabled() 返回值: True
+2026-06-30 19:26:47,565 | dataflows            | INFO     | data_source_manager:get_stock_info:1450 | 🔧 [配置] ta_use_app_cache=True, current_source=DataSourceCode.MONGODB
+2026-06-30 19:26:47,565 | dataflows            | WARNING  | data_source_manager:get_stock_info:1537 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:26:47,566 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1607 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:26:47,567 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1620 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.TUSHARE
+2026-06-30 19:26:47,568 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1651 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:26:47,574 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1620 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.AKSHARE
+2026-06-30 19:26:48,081 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1714 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:26:48,359 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1648 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:26:48,360 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1620 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.BAOSTOCK
+2026-06-30 19:27:09,420 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1731 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:27:09,422 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1648 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:27:09,422 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1655 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:27:09,555 | agents               | INFO     | interface:get_china_stock_data_unified:1542 | 📅 [配置验证] ===== MARKET_ANALYST_LOOKBACK_DAYS 配置检查 =====
+2026-06-30 19:27:09,556 | agents               | INFO     | interface:get_china_stock_data_unified:1543 | 📅 [配置验证] 从配置文件读取: 30天
+2026-06-30 19:27:09,556 | agents               | INFO     | interface:get_china_stock_data_unified:1544 | 📅 [配置验证] 配置来源: app.core.config.Settings
+2026-06-30 19:27:09,557 | agents               | INFO     | interface:get_china_stock_data_unified:1545 | 📅 [配置验证] 环境变量: MARKET_ANALYST_LOOKBACK_DAYS=30
+2026-06-30 19:27:09,557 | agents               | INFO     | interface:get_china_stock_data_unified:1554 | 📅 [智能日期] ===== 日期范围计算结果 =====
+2026-06-30 19:27:09,558 | agents               | INFO     | interface:get_china_stock_data_unified:1555 | 📅 [智能日期] 原始输入: 2025-06-30 至 2026-06-30
+2026-06-30 19:27:09,558 | agents               | INFO     | interface:get_china_stock_data_unified:1556 | 📅 [智能日期] 回溯天数: 30天
+2026-06-30 19:27:09,559 | agents               | INFO     | interface:get_china_stock_data_unified:1557 | 📅 [智能日期] 计算结果: 2026-05-31 至 2026-06-30
+2026-06-30 19:27:09,559 | agents               | INFO     | interface:get_china_stock_data_unified:1558 | 📅 [智能日期] 实际天数: 30天
+2026-06-30 19:27:09,559 | agents               | INFO     | interface:get_china_stock_data_unified:1559 | 💡 [智能日期] 说明: 自动扩展日期范围以处理周末、节假日和数据延迟
+2026-06-30 19:27:09,560 | agents               | INFO     | interface:get_china_stock_data_unified:1562 | 📊 [统一接口] 开始获取中国股票数据
+2026-06-30 19:27:09,560 | agents               | INFO     | interface:get_china_stock_data_unified:1572 | 🔍 [股票代码追踪] get_china_stock_data_unified 接收到的原始股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:27:09,560 | agents               | INFO     | interface:get_china_stock_data_unified:1573 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:27:09,561 | agents               | INFO     | interface:get_china_stock_data_unified:1574 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:27:09,562 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2167 | 🔍 [股票代码追踪] data_source_manager.get_china_stock_data_unified 接收到的股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:27:09,562 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2168 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:27:09,562 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2169 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:27:09,562 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2172 | 🔍 [股票代码追踪] 调用 manager.get_stock_data，传入参数: symbol='002281', start_date='2026-05-31', end_date='2026-06-30'
+2026-06-30 19:27:09,563 | dataflows            | INFO     | data_source_manager:get_stock_data:1094 | 📊 [数据来源: DataSourceCode.MONGODB] 开始获取daily数据: 002281
+2026-06-30 19:27:09,563 | dataflows            | INFO     | data_source_manager:get_stock_data:1105 | 🔍 [股票代码追踪] DataSourceManager.get_stock_data 接收到的股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:27:09,564 | dataflows            | INFO     | data_source_manager:get_stock_data:1106 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:27:09,564 | dataflows            | INFO     | data_source_manager:get_stock_data:1107 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:27:09,564 | dataflows            | INFO     | data_source_manager:get_stock_data:1108 | 🔍 [股票代码追踪] 当前数据源: DataSourceCode.MONGODB
+2026-06-30 19:27:09,565 | dataflows            | INFO     | data_source_manager:_get_mongodb_data:1224 | 🔄 [MongoDB] 未找到daily数据: 002281，开始尝试备用数据源
+2026-06-30 19:27:09,565 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1398 | 🔄 [DataSourceCode.MONGODB] 失败，尝试备用数据源获取daily数据: 002281
+2026-06-30 19:27:09,588 | dataflows            | WARNING  | data_source_manager:_get_data_source_priority_order:210 | ⚠️ [数据源优先级] 从数据库读取失败: No module named 'motor'，使用默认顺序
+2026-06-30 19:27:09,589 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1407 | 🔄 [备用数据源] 尝试 DataSourceCode.AKSHARE 获取daily数据: 002281
+2026-06-30 19:27:09,589 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_initialize_akshare:47 | 🔧 检测到 curl_cffi，将使用它来模拟真实浏览器 TLS 指纹
+2026-06-30 19:27:09,591 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_initialize_akshare:150 | 🔧 已修复AKShare的headers问题，使用 curl_cffi 模拟真实浏览器（Chrome 120）
+2026-06-30 19:27:09,591 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_configure_timeout:272 | 🔧 AKShare超时配置完成: 60秒
+2026-06-30 19:27:09,592 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_initialize_akshare:160 | ✅ AKShare连接成功
+2026-06-30 19:27:10,188 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:27:12,855 | tradingagents.dataflows.providers.china.akshare | ERROR    | akshare:_get_stock_list_cached:417 | ❌ 获取股票列表失败: Excel file format cannot be determined, you must specify an engine manually.
+2026-06-30 19:27:13,017 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:748 | 📊 [技术指标] 开始计算技术指标，原始数据: 21条
+2026-06-30 19:27:13,036 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:805 | ✅ [技术指标] 技术指标计算完成
+2026-06-30 19:27:13,038 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:813 | 🔍 [技术指标详情] ===== 最近5个交易日数据 =====
+2026-06-30 19:27:13,041 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:815 | 🔍 [技术指标详情] 第1天 (2026-06-24 00:00:00):
+2026-06-30 19:27:13,043 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:816 |    价格: 开=262.47, 高=272.44, 低=260.00, 收=266.36
+2026-06-30 19:27:13,044 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:817 |    MA: MA5=263.51, MA10=238.60, MA20=229.10, MA60=229.10
+2026-06-30 19:27:13,044 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:818 |    MACD: DIF=15.1068, DEA=8.8850, MACD=12.4435
+2026-06-30 19:27:13,044 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:819 |    RSI: RSI6=75.03, RSI12=73.86, RSI24=72.65 (同花顺风格)
+2026-06-30 19:27:13,045 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:820 |    RSI14: 66.81 (国际标准)
+2026-06-30 19:27:13,045 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:821 |    BOLL: 上=279.56, 中=229.10, 下=178.64
+2026-06-30 19:27:13,046 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:815 | 🔍 [技术指标详情] 第2天 (2026-06-25 00:00:00):
+2026-06-30 19:27:13,046 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:816 |    价格: 开=266.50, 高=271.12, 低=256.00, 收=261.46
+2026-06-30 19:27:13,047 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:817 |    MA: MA5=267.40, MA10=244.48, MA20=230.90, MA60=230.90
+2026-06-30 19:27:13,047 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:818 |    MACD: DIF=15.4597, DEA=10.1999, MACD=10.5195
+2026-06-30 19:27:13,048 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:819 |    RSI: RSI6=67.35, RSI12=69.39, RSI24=69.39 (同花顺风格)
+2026-06-30 19:27:13,048 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:820 |    RSI14: 66.05 (国际标准)
+2026-06-30 19:27:13,048 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:821 |    BOLL: 上=282.17, 中=230.90, 下=179.63
+2026-06-30 19:27:13,049 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:815 | 🔍 [技术指标详情] 第3天 (2026-06-26 00:00:00):
+2026-06-30 19:27:13,052 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:816 |    价格: 开=256.00, 高=256.27, 低=237.00, 收=240.34
+2026-06-30 19:27:13,052 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:817 |    MA: MA5=262.23, MA10=247.98, MA20=231.40, MA60=231.40
+2026-06-30 19:27:13,052 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:818 |    MACD: DIF=13.8752, DEA=10.9350, MACD=5.8804
+2026-06-30 19:27:13,052 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:819 |    RSI: RSI6=44.04, RSI12=54.02, RSI24=57.72 (同花顺风格)
+2026-06-30 19:27:13,052 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:820 |    RSI14: 54.51 (国际标准)
+2026-06-30 19:27:13,052 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:821 |    BOLL: 上=281.41, 中=231.40, 下=181.38
+2026-06-30 19:27:13,054 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:815 | 🔍 [技术指标详情] 第4天 (2026-06-29 00:00:00):
+2026-06-30 19:27:13,056 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:816 |    价格: 开=240.34, 高=248.93, 低=225.00, 收=235.94
+2026-06-30 19:27:13,056 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:817 |    MA: MA5=254.20, MA10=251.08, MA20=231.62, MA60=231.62
+2026-06-30 19:27:13,056 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:818 |    MACD: DIF=12.1247, DEA=11.1729, MACD=1.9035
+2026-06-30 19:27:13,057 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:819 |    RSI: RSI6=40.53, RSI12=51.43, RSI24=55.69 (同花顺风格)
+2026-06-30 19:27:13,057 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:820 |    RSI14: 61.55 (国际标准)
+2026-06-30 19:27:13,057 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:821 |    BOLL: 上=280.35, 中=231.62, 下=182.90
+2026-06-30 19:27:13,057 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:815 | 🔍 [技术指标详情] 第5天 (2026-06-30 00:00:00):
+2026-06-30 19:27:13,058 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:816 |    价格: 开=237.11, 高=259.00, 低=230.30, 收=256.94
+2026-06-30 19:27:13,059 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:817 |    MA: MA5=252.21, MA10=254.22, MA20=234.26, MA60=232.83
+2026-06-30 19:27:13,059 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:818 |    MACD: DIF=12.2903, DEA=11.3964, MACD=1.7877
+2026-06-30 19:27:13,059 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:819 |    RSI: RSI6=59.16, RSI12=61.13, RSI24=62.31 (同花顺风格)
+2026-06-30 19:27:13,059 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:820 |    RSI14: 66.32 (国际标准)
+2026-06-30 19:27:13,059 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:821 |    BOLL: 上=282.45, 中=234.26, 下=186.06
+2026-06-30 19:27:13,059 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:823 | 🔍 [技术指标详情] ===== 数据详情结束 =====
+2026-06-30 19:27:13,062 | dataflows            | INFO     | data_source_manager:_get_volume_safely:1380 | ✅ 找到成交量列: volume
+2026-06-30 19:27:13,064 | dataflows            | INFO     | data_source_manager:_get_akshare_data:1329 | ✅ [AKShare] 已计算技术指标: MA5/10/20/60, MACD, RSI, BOLL
+2026-06-30 19:27:13,065 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1422 | ✅ [备用数据源-DataSourceCode.AKSHARE] 成功获取daily数据: 002281
+2026-06-30 19:27:13,066 | dataflows            | INFO     | data_source_manager:get_stock_data:1142 | ✅ [数据来源: DataSourceCode.AKSHARE] 成功获取股票数据: 002281 (573字符, 耗时3.50秒)
+2026-06-30 19:27:13,067 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2178 | 🔍 [股票代码追踪] 返回结果统计: 总行数=36, 数据行数=0, 结果长度=573字符
+2026-06-30 19:27:13,068 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2179 | 🔍 [股票代码追踪] 返回结果前500字符: 📊 股票002281(002281) - 技术分析数据
+数据期间: 2026-05-31 至 2026-06-30
+数据条数: 21条 (展示最近5个交易日)
+
+💰 最新价格: ¥256.94
+📈 涨跌额: +21.00 (+8.90%)
+
+📊 移动平均线 (MA):
+   MA5:  ¥252.21 (价格在MA5上方 ↑)
+   MA10: ¥254.22 (价格在MA10上方 ↑)
+   MA20: ¥234.26 (价格在MA20上方 ↑)
+   MA60: ¥232.83 (价格在MA60上方 ↑)
+
+📈 MACD指标:
+   DIF:  12.290
+   DEA:  11.396
+   MACD: 1.788 (多头 ↑)
+
+📉 RSI指标 (同花顺风格):
+   RSI6:  59.16
+   RSI12: 61.13
+   RSI24: 62.31
+   趋势: 空头排列 ↓
+
+📊 布林带 (BOLL):
+   上轨: ¥282.45
+   中轨: ¥234.26
+   下轨: ¥186.06
+   价格位置: 73.5% (中性区域)
+
+📊 价格统计 (最近5个交易
+2026-06-30 19:27:13,069 | agents               | INFO     | interface:get_china_stock_data_unified:1589 | ✅ [统一接口] 中国股票数据获取成功
+2026-06-30 19:29:08,433 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-06-30 19:29:08,436 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-06-30 19:29:08,461 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-06-30 19:29:08,463 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-06-30 19:29:08,464 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-06-30 19:29:08,465 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-06-30 19:29:08,531 | stock_validator      | INFO     | stock_validator:prepare_stock_data_async:1385 | 📊 [数据准备-异步] 开始准备股票数据: 002281 (市场: A股, 时长: 30天)
+2026-06-30 19:29:08,561 | stock_validator      | INFO     | stock_validator:_prepare_china_stock_data_async:601 | 📊 [A股数据-异步] 开始准备002281的数据 (时长: 30天)
+2026-06-30 19:29:08,903 | stock_validator      | INFO     | stock_validator:_prepare_china_stock_data_async:610 | 📅 [A股数据-异步] 实际数据范围: 2026-05-31 到 2026-06-30 (30天)
+2026-06-30 19:29:08,903 | stock_validator      | INFO     | stock_validator:_prepare_china_stock_data_async:613 | 🚀 [A股数据-异步] 优先尝试 API 直接获取: 002281
+2026-06-30 19:29:11,722 | agents               | INFO     | interface:get_china_stock_info_unified:1648 | 📊 [统一接口] 获取002281基本信息...
+2026-06-30 19:29:11,725 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:29:11,726 | dataflows            | WARNING  | data_source_manager:_check_available_sources:492 | ⚠️ [数据源配置] 从数据库读取失败: No module named 'motor'，将检查所有已安装的数据源
+2026-06-30 19:29:11,727 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:29:11,759 | tradingagents.config.database_manager | INFO     | database_manager:_load_env_config:76 | MongoDB启用: False
+2026-06-30 19:29:11,759 | tradingagents.config.database_manager | INFO     | database_manager:_load_env_config:77 | Redis启用: False
+2026-06-30 19:29:11,759 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:161 | 开始检测数据库可用性...
+2026-06-30 19:29:11,759 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:170 | ❌ MongoDB: MongoDB未启用 (MONGODB_ENABLED=false)
+2026-06-30 19:29:11,761 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:179 | ❌ Redis: Redis未启用 (REDIS_ENABLED=false)
+2026-06-30 19:29:11,762 | tradingagents.config.database_manager | INFO     | database_manager:_update_config_based_on_detection:194 | 主要缓存后端: file
+2026-06-30 19:29:11,762 | tradingagents.config.database_manager | INFO     | database_manager:__init__:34 | 数据库管理器初始化完成 - MongoDB: False, Redis: False
+2026-06-30 19:29:11,762 | agents               | WARNING  | mongodb_cache_adapter:_init_mongodb_connection:41 | ⚠️ MongoDB客户端不可用，回退到传统模式
+2026-06-30 19:29:11,763 | agents               | INFO     | mongodb_cache_adapter:__init__:28 | 🔄 MongoDB缓存适配器已启用 - 优先使用MongoDB数据
+2026-06-30 19:29:11,764 | dataflows            | WARNING  | data_source_manager:_check_available_sources:505 | ⚠️ MongoDB数据源不可用: 数据库未连接
+2026-06-30 19:29:11,765 | dataflows            | WARNING  | data_source_manager:_get_datasource_configs_from_db:584 | ⚠️ 从数据库读取数据源配置失败: No module named 'motor'
+2026-06-30 19:29:11,766 | dataflows            | INFO     | data_source_manager:_check_available_sources:523 | ✅ Tushare数据源可用且已启用 (API Key来源: 环境变量)
+2026-06-30 19:29:12,500 | dataflows            | INFO     | data_source_manager:_check_available_sources:536 | ✅ AKShare数据源可用且已启用
+2026-06-30 19:29:12,520 | dataflows            | INFO     | data_source_manager:_check_available_sources:547 | ✅ BaoStock数据源可用且已启用
+2026-06-30 19:29:12,521 | agents               | INFO     | file_cache:__init__:95 | 📁 缓存管理器初始化完成，缓存目录: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\tradingagents\dataflows\cache\data_cache
+2026-06-30 19:29:12,523 | agents               | INFO     | file_cache:__init__:96 | 🗄️ 数据库缓存管理器初始化完成
+2026-06-30 19:29:12,523 | agents               | INFO     | file_cache:__init__:97 |    美股数据: ✅ 已配置
+2026-06-30 19:29:12,524 | agents               | INFO     | file_cache:__init__:98 |    A股数据: ✅ 已配置
+2026-06-30 19:29:12,525 | tradingagents.dataflows.cache.adaptive | INFO     | adaptive:__init__:43 | 自适应缓存系统初始化 - 主要后端: file
+2026-06-30 19:29:12,525 | dataflows            | INFO     | integrated:__init__:48 | ✅ 自适应缓存系统已启用
+2026-06-30 19:29:12,526 | dataflows            | INFO     | integrated:_log_cache_status:65 | 📊 缓存配置:
+2026-06-30 19:29:12,526 | dataflows            | INFO     | integrated:_log_cache_status:66 |   主要后端: file
+2026-06-30 19:29:12,526 | dataflows            | INFO     | integrated:_log_cache_status:67 |   MongoDB: ❌ 不可用
+2026-06-30 19:29:12,527 | dataflows            | INFO     | integrated:_log_cache_status:68 |   Redis: ❌ 不可用
+2026-06-30 19:29:12,529 | dataflows            | INFO     | integrated:_log_cache_status:69 |   降级支持: ✅ 启用
+2026-06-30 19:29:12,529 | agents               | INFO     | __init__:get_cache:103 | ✅ 使用集成缓存系统（支持 MongoDB/Redis/File 自动选择）
+2026-06-30 19:29:12,530 | dataflows            | INFO     | data_source_manager:__init__:125 | ✅ 统一缓存管理器已启用
+2026-06-30 19:29:12,530 | dataflows            | INFO     | data_source_manager:__init__:129 | 📊 数据源管理器初始化完成
+2026-06-30 19:29:12,531 | dataflows            | INFO     | data_source_manager:__init__:130 |    MongoDB缓存: ✅ 已启用
+2026-06-30 19:29:12,531 | dataflows            | INFO     | data_source_manager:__init__:131 |    统一缓存: ✅ 已启用
+2026-06-30 19:29:12,532 | dataflows            | INFO     | data_source_manager:__init__:132 |    默认数据源: DataSourceCode.MONGODB
+2026-06-30 19:29:12,532 | dataflows            | INFO     | data_source_manager:__init__:133 |    可用数据源: [<DataSourceCode.TUSHARE: 'tushare'>, <DataSourceCode.AKSHARE: 'akshare'>, <DataSourceCode.BAOSTOCK: 'baostock'>]
+2026-06-30 19:29:12,532 | dataflows            | INFO     | data_source_manager:get_stock_info:1440 | 📊 [数据来源: DataSourceCode.MONGODB] 开始获取股票信息: 002281
+2026-06-30 19:29:12,532 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:29:12,533 | dataflows            | INFO     | data_source_manager:get_stock_info:1446 | 🔧 [配置检查] use_app_cache_enabled() 返回值: True
+2026-06-30 19:29:12,533 | dataflows            | INFO     | data_source_manager:get_stock_info:1451 | 🔧 [配置] ta_use_app_cache=True, current_source=DataSourceCode.MONGODB
+2026-06-30 19:29:12,533 | dataflows            | WARNING  | data_source_manager:get_stock_info:1538 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:29:12,534 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1608 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:29:12,534 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.TUSHARE
+2026-06-30 19:29:12,535 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1652 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:29:12,537 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.AKSHARE
+2026-06-30 19:29:12,921 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1715 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:29:12,933 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:29:12,934 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.BAOSTOCK
+2026-06-30 19:29:33,997 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1732 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:29:33,999 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:29:34,000 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1656 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:29:34,001 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:626 | ⚠️ [A股数据-异步] API 直接获取失败: 股票代码 002281 不存在或信息无效，尝试数据库同步后重试
+2026-06-30 19:29:34,003 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:634 | ⚠️ [A股数据-异步] 数据库数据不完整: MongoDB缓存未启用
+2026-06-30 19:29:34,004 | stock_validator      | INFO     | stock_validator:_prepare_china_stock_data_async:635 | 🔄 [A股数据-异步] 自动触发数据同步: 002281
+2026-06-30 19:29:34,005 | stock_validator      | INFO     | stock_validator:_trigger_data_sync_async:837 | 🔄 [数据同步] 开始同步002281的数据（历史+财务+实时）...
+2026-06-30 19:29:34,007 | stock_validator      | WARNING  | stock_validator:_get_data_source_priority_for_sync:1003 | ⚠️ [数据源优先级] MongoDB未启用，使用默认顺序
+2026-06-30 19:29:34,009 | stock_validator      | INFO     | stock_validator:_trigger_data_sync_async:841 | 📊 [数据同步] 数据源优先级: ['tushare', 'akshare', 'baostock']
+2026-06-30 19:29:34,010 | stock_validator      | INFO     | stock_validator:_trigger_data_sync_async:847 | 🔄 [数据同步] 尝试使用数据源: tushare
+2026-06-30 19:29:34,102 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:953 | ⚠️ [数据同步] tushare同步异常: No module named 'motor'
+2026-06-30 19:29:34,108 | stock_validator      | INFO     | stock_validator:_trigger_data_sync_async:847 | 🔄 [数据同步] 尝试使用数据源: akshare
+2026-06-30 19:29:34,140 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:953 | ⚠️ [数据同步] akshare同步异常: No module named 'motor'
+2026-06-30 19:29:34,144 | stock_validator      | INFO     | stock_validator:_trigger_data_sync_async:847 | 🔄 [数据同步] 尝试使用数据源: baostock
+2026-06-30 19:29:34,145 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:851 | ⚠️ [数据同步] BaoStock不支持单个股票同步，跳过
+2026-06-30 19:29:34,146 | stock_validator      | ERROR    | stock_validator:_trigger_data_sync_async:961 | ❌ [数据同步] 所有数据源同步失败，最后错误: baostock: 不支持单个股票同步
+2026-06-30 19:29:34,147 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:644 | ⚠️ [A股数据-异步] 数据同步失败: 所有数据源同步失败，最后错误: baostock: 不支持单个股票同步
+2026-06-30 19:29:34,149 | agents               | INFO     | interface:get_china_stock_info_unified:1648 | 📊 [统一接口] 获取002281基本信息...
+2026-06-30 19:29:34,150 | dataflows            | INFO     | data_source_manager:get_stock_info:1440 | 📊 [数据来源: DataSourceCode.MONGODB] 开始获取股票信息: 002281
+2026-06-30 19:29:34,152 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:29:34,152 | dataflows            | INFO     | data_source_manager:get_stock_info:1446 | 🔧 [配置检查] use_app_cache_enabled() 返回值: True
+2026-06-30 19:29:34,153 | dataflows            | INFO     | data_source_manager:get_stock_info:1451 | 🔧 [配置] ta_use_app_cache=True, current_source=DataSourceCode.MONGODB
+2026-06-30 19:29:34,154 | dataflows            | WARNING  | data_source_manager:get_stock_info:1538 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:29:34,155 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1608 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:29:34,156 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.TUSHARE
+2026-06-30 19:29:34,158 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1652 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:29:34,162 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.AKSHARE
+2026-06-30 19:29:34,654 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1715 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:29:34,662 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:29:34,663 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.BAOSTOCK
+2026-06-30 19:29:55,721 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1732 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:29:55,723 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:29:55,724 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1656 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:29:55,726 | stock_validator      | ERROR    | stock_validator:_prepare_china_stock_data_async:660 | ❌ [A股数据-异步] 数据准备失败: 股票代码 002281 不存在或信息无效
+2026-06-30 19:30:27,508 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-06-30 19:30:27,509 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-06-30 19:30:27,537 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-06-30 19:30:27,537 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-06-30 19:30:27,537 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-06-30 19:30:27,537 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-06-30 19:30:30,316 | agents               | INFO     | interface:get_china_stock_info_unified:1648 | 📊 [统一接口] 获取002281基本信息...
+2026-06-30 19:30:30,316 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:30:30,320 | dataflows            | WARNING  | data_source_manager:_check_available_sources:492 | ⚠️ [数据源配置] 从数据库读取失败: No module named 'motor'，将检查所有已安装的数据源
+2026-06-30 19:30:30,320 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:30:30,363 | tradingagents.config.database_manager | INFO     | database_manager:_load_env_config:76 | MongoDB启用: False
+2026-06-30 19:30:30,363 | tradingagents.config.database_manager | INFO     | database_manager:_load_env_config:77 | Redis启用: False
+2026-06-30 19:30:30,363 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:161 | 开始检测数据库可用性...
+2026-06-30 19:30:30,363 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:170 | ❌ MongoDB: MongoDB未启用 (MONGODB_ENABLED=false)
+2026-06-30 19:30:30,363 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:179 | ❌ Redis: Redis未启用 (REDIS_ENABLED=false)
+2026-06-30 19:30:30,363 | tradingagents.config.database_manager | INFO     | database_manager:_update_config_based_on_detection:194 | 主要缓存后端: file
+2026-06-30 19:30:30,364 | tradingagents.config.database_manager | INFO     | database_manager:__init__:34 | 数据库管理器初始化完成 - MongoDB: False, Redis: False
+2026-06-30 19:30:30,364 | agents               | WARNING  | mongodb_cache_adapter:_init_mongodb_connection:41 | ⚠️ MongoDB客户端不可用，回退到传统模式
+2026-06-30 19:30:30,364 | agents               | INFO     | mongodb_cache_adapter:__init__:28 | 🔄 MongoDB缓存适配器已启用 - 优先使用MongoDB数据
+2026-06-30 19:30:30,364 | dataflows            | WARNING  | data_source_manager:_check_available_sources:505 | ⚠️ MongoDB数据源不可用: 数据库未连接
+2026-06-30 19:30:30,365 | dataflows            | WARNING  | data_source_manager:_get_datasource_configs_from_db:584 | ⚠️ 从数据库读取数据源配置失败: No module named 'motor'
+2026-06-30 19:30:30,365 | dataflows            | INFO     | data_source_manager:_check_available_sources:523 | ✅ Tushare数据源可用且已启用 (API Key来源: 环境变量)
+2026-06-30 19:30:31,068 | dataflows            | INFO     | data_source_manager:_check_available_sources:536 | ✅ AKShare数据源可用且已启用
+2026-06-30 19:30:31,082 | dataflows            | INFO     | data_source_manager:_check_available_sources:547 | ✅ BaoStock数据源可用且已启用
+2026-06-30 19:30:31,082 | agents               | INFO     | file_cache:__init__:95 | 📁 缓存管理器初始化完成，缓存目录: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\tradingagents\dataflows\cache\data_cache
+2026-06-30 19:30:31,082 | agents               | INFO     | file_cache:__init__:96 | 🗄️ 数据库缓存管理器初始化完成
+2026-06-30 19:30:31,082 | agents               | INFO     | file_cache:__init__:97 |    美股数据: ✅ 已配置
+2026-06-30 19:30:31,083 | agents               | INFO     | file_cache:__init__:98 |    A股数据: ✅ 已配置
+2026-06-30 19:30:31,083 | tradingagents.dataflows.cache.adaptive | INFO     | adaptive:__init__:43 | 自适应缓存系统初始化 - 主要后端: file
+2026-06-30 19:30:31,083 | dataflows            | INFO     | integrated:__init__:48 | ✅ 自适应缓存系统已启用
+2026-06-30 19:30:31,083 | dataflows            | INFO     | integrated:_log_cache_status:65 | 📊 缓存配置:
+2026-06-30 19:30:31,083 | dataflows            | INFO     | integrated:_log_cache_status:66 |   主要后端: file
+2026-06-30 19:30:31,083 | dataflows            | INFO     | integrated:_log_cache_status:67 |   MongoDB: ❌ 不可用
+2026-06-30 19:30:31,083 | dataflows            | INFO     | integrated:_log_cache_status:68 |   Redis: ❌ 不可用
+2026-06-30 19:30:31,083 | dataflows            | INFO     | integrated:_log_cache_status:69 |   降级支持: ✅ 启用
+2026-06-30 19:30:31,083 | agents               | INFO     | __init__:get_cache:103 | ✅ 使用集成缓存系统（支持 MongoDB/Redis/File 自动选择）
+2026-06-30 19:30:31,084 | dataflows            | INFO     | data_source_manager:__init__:125 | ✅ 统一缓存管理器已启用
+2026-06-30 19:30:31,084 | dataflows            | INFO     | data_source_manager:__init__:129 | 📊 数据源管理器初始化完成
+2026-06-30 19:30:31,084 | dataflows            | INFO     | data_source_manager:__init__:130 |    MongoDB缓存: ✅ 已启用
+2026-06-30 19:30:31,084 | dataflows            | INFO     | data_source_manager:__init__:131 |    统一缓存: ✅ 已启用
+2026-06-30 19:30:31,084 | dataflows            | INFO     | data_source_manager:__init__:132 |    默认数据源: DataSourceCode.MONGODB
+2026-06-30 19:30:31,084 | dataflows            | INFO     | data_source_manager:__init__:133 |    可用数据源: [<DataSourceCode.TUSHARE: 'tushare'>, <DataSourceCode.AKSHARE: 'akshare'>, <DataSourceCode.BAOSTOCK: 'baostock'>]
+2026-06-30 19:30:31,084 | dataflows            | INFO     | data_source_manager:get_stock_info:1440 | 📊 [数据来源: DataSourceCode.MONGODB] 开始获取股票信息: 002281
+2026-06-30 19:30:31,084 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:30:31,085 | dataflows            | INFO     | data_source_manager:get_stock_info:1446 | 🔧 [配置检查] use_app_cache_enabled() 返回值: True
+2026-06-30 19:30:31,085 | dataflows            | INFO     | data_source_manager:get_stock_info:1451 | 🔧 [配置] ta_use_app_cache=True, current_source=DataSourceCode.MONGODB
+2026-06-30 19:30:31,085 | dataflows            | WARNING  | data_source_manager:get_stock_info:1538 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:30:31,085 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1608 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:30:31,085 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.TUSHARE
+2026-06-30 19:30:31,085 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1652 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:30:31,085 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.AKSHARE
+2026-06-30 19:30:31,572 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1715 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:30:31,572 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:30:31,572 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.BAOSTOCK
+2026-06-30 19:30:52,622 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1732 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:30:52,623 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:30:52,623 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1656 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:31:17,212 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-06-30 19:31:17,212 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-06-30 19:31:17,232 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-06-30 19:31:17,232 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-06-30 19:31:17,232 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-06-30 19:31:17,232 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-06-30 19:31:17,258 | stock_validator      | INFO     | stock_validator:prepare_stock_data_async:1397 | 📊 [数据准备-异步] 开始准备股票数据: 002281 (市场: A股, 时长: 30天)
+2026-06-30 19:31:17,258 | stock_validator      | INFO     | stock_validator:_prepare_china_stock_data_async:613 | 📊 [A股数据-异步] 开始准备002281的数据 (时长: 30天)
+2026-06-30 19:31:17,691 | stock_validator      | INFO     | stock_validator:_prepare_china_stock_data_async:622 | 📅 [A股数据-异步] 实际数据范围: 2026-05-31 到 2026-06-30 (30天)
+2026-06-30 19:31:17,691 | stock_validator      | INFO     | stock_validator:_prepare_china_stock_data_async:625 | 🚀 [A股数据-异步] 优先尝试 API 直接获取: 002281
+2026-06-30 19:31:20,533 | agents               | INFO     | interface:get_china_stock_info_unified:1648 | 📊 [统一接口] 获取002281基本信息...
+2026-06-30 19:31:20,533 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:31:20,534 | dataflows            | WARNING  | data_source_manager:_check_available_sources:492 | ⚠️ [数据源配置] 从数据库读取失败: No module named 'motor'，将检查所有已安装的数据源
+2026-06-30 19:31:20,534 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:31:20,573 | tradingagents.config.database_manager | INFO     | database_manager:_load_env_config:76 | MongoDB启用: False
+2026-06-30 19:31:20,573 | tradingagents.config.database_manager | INFO     | database_manager:_load_env_config:77 | Redis启用: False
+2026-06-30 19:31:20,573 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:161 | 开始检测数据库可用性...
+2026-06-30 19:31:20,573 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:170 | ❌ MongoDB: MongoDB未启用 (MONGODB_ENABLED=false)
+2026-06-30 19:31:20,573 | tradingagents.config.database_manager | INFO     | database_manager:_detect_databases:179 | ❌ Redis: Redis未启用 (REDIS_ENABLED=false)
+2026-06-30 19:31:20,573 | tradingagents.config.database_manager | INFO     | database_manager:_update_config_based_on_detection:194 | 主要缓存后端: file
+2026-06-30 19:31:20,573 | tradingagents.config.database_manager | INFO     | database_manager:__init__:34 | 数据库管理器初始化完成 - MongoDB: False, Redis: False
+2026-06-30 19:31:20,573 | agents               | WARNING  | mongodb_cache_adapter:_init_mongodb_connection:41 | ⚠️ MongoDB客户端不可用，回退到传统模式
+2026-06-30 19:31:20,573 | agents               | INFO     | mongodb_cache_adapter:__init__:28 | 🔄 MongoDB缓存适配器已启用 - 优先使用MongoDB数据
+2026-06-30 19:31:20,573 | dataflows            | WARNING  | data_source_manager:_check_available_sources:505 | ⚠️ MongoDB数据源不可用: 数据库未连接
+2026-06-30 19:31:20,575 | dataflows            | WARNING  | data_source_manager:_get_datasource_configs_from_db:584 | ⚠️ 从数据库读取数据源配置失败: No module named 'motor'
+2026-06-30 19:31:20,575 | dataflows            | INFO     | data_source_manager:_check_available_sources:523 | ✅ Tushare数据源可用且已启用 (API Key来源: 环境变量)
+2026-06-30 19:31:21,228 | dataflows            | INFO     | data_source_manager:_check_available_sources:536 | ✅ AKShare数据源可用且已启用
+2026-06-30 19:31:21,250 | dataflows            | INFO     | data_source_manager:_check_available_sources:547 | ✅ BaoStock数据源可用且已启用
+2026-06-30 19:31:21,251 | agents               | INFO     | file_cache:__init__:95 | 📁 缓存管理器初始化完成，缓存目录: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\tradingagents\dataflows\cache\data_cache
+2026-06-30 19:31:21,252 | agents               | INFO     | file_cache:__init__:96 | 🗄️ 数据库缓存管理器初始化完成
+2026-06-30 19:31:21,252 | agents               | INFO     | file_cache:__init__:97 |    美股数据: ✅ 已配置
+2026-06-30 19:31:21,252 | agents               | INFO     | file_cache:__init__:98 |    A股数据: ✅ 已配置
+2026-06-30 19:31:21,252 | tradingagents.dataflows.cache.adaptive | INFO     | adaptive:__init__:43 | 自适应缓存系统初始化 - 主要后端: file
+2026-06-30 19:31:21,252 | dataflows            | INFO     | integrated:__init__:48 | ✅ 自适应缓存系统已启用
+2026-06-30 19:31:21,252 | dataflows            | INFO     | integrated:_log_cache_status:65 | 📊 缓存配置:
+2026-06-30 19:31:21,252 | dataflows            | INFO     | integrated:_log_cache_status:66 |   主要后端: file
+2026-06-30 19:31:21,252 | dataflows            | INFO     | integrated:_log_cache_status:67 |   MongoDB: ❌ 不可用
+2026-06-30 19:31:21,253 | dataflows            | INFO     | integrated:_log_cache_status:68 |   Redis: ❌ 不可用
+2026-06-30 19:31:21,253 | dataflows            | INFO     | integrated:_log_cache_status:69 |   降级支持: ✅ 启用
+2026-06-30 19:31:21,253 | agents               | INFO     | __init__:get_cache:103 | ✅ 使用集成缓存系统（支持 MongoDB/Redis/File 自动选择）
+2026-06-30 19:31:21,253 | dataflows            | INFO     | data_source_manager:__init__:125 | ✅ 统一缓存管理器已启用
+2026-06-30 19:31:21,253 | dataflows            | INFO     | data_source_manager:__init__:129 | 📊 数据源管理器初始化完成
+2026-06-30 19:31:21,253 | dataflows            | INFO     | data_source_manager:__init__:130 |    MongoDB缓存: ✅ 已启用
+2026-06-30 19:31:21,253 | dataflows            | INFO     | data_source_manager:__init__:131 |    统一缓存: ✅ 已启用
+2026-06-30 19:31:21,253 | dataflows            | INFO     | data_source_manager:__init__:132 |    默认数据源: DataSourceCode.MONGODB
+2026-06-30 19:31:21,253 | dataflows            | INFO     | data_source_manager:__init__:133 |    可用数据源: [<DataSourceCode.TUSHARE: 'tushare'>, <DataSourceCode.AKSHARE: 'akshare'>, <DataSourceCode.BAOSTOCK: 'baostock'>]
+2026-06-30 19:31:21,253 | dataflows            | INFO     | data_source_manager:get_stock_info:1440 | 📊 [数据来源: DataSourceCode.MONGODB] 开始获取股票信息: 002281
+2026-06-30 19:31:21,253 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:31:21,253 | dataflows            | INFO     | data_source_manager:get_stock_info:1446 | 🔧 [配置检查] use_app_cache_enabled() 返回值: True
+2026-06-30 19:31:21,253 | dataflows            | INFO     | data_source_manager:get_stock_info:1451 | 🔧 [配置] ta_use_app_cache=True, current_source=DataSourceCode.MONGODB
+2026-06-30 19:31:21,253 | dataflows            | WARNING  | data_source_manager:get_stock_info:1538 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:31:21,253 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1608 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:31:21,254 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.TUSHARE
+2026-06-30 19:31:21,254 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1652 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:31:21,254 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.AKSHARE
+2026-06-30 19:31:21,619 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1715 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:31:21,620 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:31:21,620 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.BAOSTOCK
+2026-06-30 19:31:42,655 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1732 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:31:42,656 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:31:42,656 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1656 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:31:42,656 | agents               | INFO     | interface:get_china_stock_data_unified:1542 | 📅 [配置验证] ===== MARKET_ANALYST_LOOKBACK_DAYS 配置检查 =====
+2026-06-30 19:31:42,656 | agents               | INFO     | interface:get_china_stock_data_unified:1543 | 📅 [配置验证] 从配置文件读取: 30天
+2026-06-30 19:31:42,656 | agents               | INFO     | interface:get_china_stock_data_unified:1544 | 📅 [配置验证] 配置来源: app.core.config.Settings
+2026-06-30 19:31:42,656 | agents               | INFO     | interface:get_china_stock_data_unified:1545 | 📅 [配置验证] 环境变量: MARKET_ANALYST_LOOKBACK_DAYS=30
+2026-06-30 19:31:42,656 | agents               | INFO     | interface:get_china_stock_data_unified:1554 | 📅 [智能日期] ===== 日期范围计算结果 =====
+2026-06-30 19:31:42,656 | agents               | INFO     | interface:get_china_stock_data_unified:1555 | 📅 [智能日期] 原始输入: 2026-05-31 至 2026-06-30
+2026-06-30 19:31:42,657 | agents               | INFO     | interface:get_china_stock_data_unified:1556 | 📅 [智能日期] 回溯天数: 30天
+2026-06-30 19:31:42,657 | agents               | INFO     | interface:get_china_stock_data_unified:1557 | 📅 [智能日期] 计算结果: 2026-05-31 至 2026-06-30
+2026-06-30 19:31:42,657 | agents               | INFO     | interface:get_china_stock_data_unified:1558 | 📅 [智能日期] 实际天数: 30天
+2026-06-30 19:31:42,657 | agents               | INFO     | interface:get_china_stock_data_unified:1559 | 💡 [智能日期] 说明: 自动扩展日期范围以处理周末、节假日和数据延迟
+2026-06-30 19:31:42,657 | agents               | INFO     | interface:get_china_stock_data_unified:1562 | 📊 [统一接口] 开始获取中国股票数据
+2026-06-30 19:31:42,657 | agents               | INFO     | interface:get_china_stock_data_unified:1572 | 🔍 [股票代码追踪] get_china_stock_data_unified 接收到的原始股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:31:42,658 | agents               | INFO     | interface:get_china_stock_data_unified:1573 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:31:42,658 | agents               | INFO     | interface:get_china_stock_data_unified:1574 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:31:42,658 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2168 | 🔍 [股票代码追踪] data_source_manager.get_china_stock_data_unified 接收到的股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:31:42,658 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2169 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:31:42,658 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2170 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:31:42,658 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2173 | 🔍 [股票代码追踪] 调用 manager.get_stock_data，传入参数: symbol='002281', start_date='2026-05-31', end_date='2026-06-30'
+2026-06-30 19:31:42,658 | dataflows            | INFO     | data_source_manager:get_stock_data:1094 | 📊 [数据来源: DataSourceCode.MONGODB] 开始获取daily数据: 002281
+2026-06-30 19:31:42,659 | dataflows            | INFO     | data_source_manager:get_stock_data:1105 | 🔍 [股票代码追踪] DataSourceManager.get_stock_data 接收到的股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:31:42,659 | dataflows            | INFO     | data_source_manager:get_stock_data:1106 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:31:42,659 | dataflows            | INFO     | data_source_manager:get_stock_data:1107 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:31:42,659 | dataflows            | INFO     | data_source_manager:get_stock_data:1108 | 🔍 [股票代码追踪] 当前数据源: DataSourceCode.MONGODB
+2026-06-30 19:31:42,659 | dataflows            | INFO     | data_source_manager:_get_mongodb_data:1225 | 🔄 [MongoDB] 未找到daily数据: 002281，开始尝试备用数据源
+2026-06-30 19:31:42,659 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1399 | 🔄 [DataSourceCode.MONGODB] 失败，尝试备用数据源获取daily数据: 002281
+2026-06-30 19:31:42,663 | dataflows            | WARNING  | data_source_manager:_get_data_source_priority_order:210 | ⚠️ [数据源优先级] 从数据库读取失败: No module named 'motor'，使用默认顺序
+2026-06-30 19:31:42,663 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1408 | 🔄 [备用数据源] 尝试 DataSourceCode.AKSHARE 获取daily数据: 002281
+2026-06-30 19:31:42,664 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_initialize_akshare:47 | 🔧 检测到 curl_cffi，将使用它来模拟真实浏览器 TLS 指纹
+2026-06-30 19:31:42,664 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_initialize_akshare:150 | 🔧 已修复AKShare的headers问题，使用 curl_cffi 模拟真实浏览器（Chrome 120）
+2026-06-30 19:31:42,664 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_configure_timeout:272 | 🔧 AKShare超时配置完成: 60秒
+2026-06-30 19:31:42,664 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_initialize_akshare:160 | ✅ AKShare连接成功
+2026-06-30 19:31:42,781 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:31:43,149 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:get_historical_data:974 | ⚠️ 002281 第1次尝试失败，2秒后重试: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:31:45,268 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:31:45,649 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:get_historical_data:974 | ⚠️ 002281 第2次尝试失败，4秒后重试: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:31:49,760 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:31:50,100 | tradingagents.dataflows.providers.china.akshare | ERROR    | akshare:get_historical_data:982 | ❌ 002281 网络连接中断，建议稍后重试或减小时间范围
+2026-06-30 19:31:50,101 | dataflows            | WARNING  | data_source_manager:_get_akshare_data:1334 | ⚠️ [AKShare] 数据为空: 耗时=7.44s
+2026-06-30 19:31:50,101 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.AKSHARE] 返回错误结果: 002281
+2026-06-30 19:31:50,101 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1408 | 🔄 [备用数据源] 尝试 DataSourceCode.TUSHARE 获取daily数据: 002281
+2026-06-30 19:31:50,101 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1238 | 🔍 [股票代码追踪] _get_tushare_data 接收到的股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:31:50,102 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1239 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:31:50,102 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1240 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:31:50,102 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1241 | 🔍 [DataSourceManager详细日志] _get_tushare_data 开始执行
+2026-06-30 19:31:50,102 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1242 | 🔍 [DataSourceManager详细日志] 当前数据源: DataSourceCode.MONGODB
+2026-06-30 19:31:50,136 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1262 | 🔍 [股票代码追踪] 调用 tushare_provider，传入参数: symbol='002281'
+2026-06-30 19:31:50,136 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1263 | 🔍 [DataSourceManager详细日志] 开始调用tushare_provider...
+2026-06-30 19:31:50,136 | tradingagents.dataflows.providers.base_provider.Tushare | INFO     | tushare:connect_sync:99 | 🔍 [步骤1] 开始从数据库读取 Tushare Token...
+2026-06-30 19:31:50,137 | tradingagents.dataflows.providers.base_provider.Tushare | INFO     | tushare:_get_token_from_database:48 | 🔍 [DB查询] 开始从数据库读取 Token...
+2026-06-30 19:31:50,140 | tradingagents.dataflows.providers.base_provider.Tushare | ERROR    | tushare:_get_token_from_database:82 | ❌ [DB查询] 从数据库读取 Token 失败: No module named 'motor'
+2026-06-30 19:31:50,145 | tradingagents.dataflows.providers.base_provider.Tushare | ERROR    | tushare:_get_token_from_database:84 | ❌ [DB查询] 堆栈跟踪:
+Traceback (most recent call last):
+  File "D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\tradingagents\dataflows\providers\china\tushare.py", line 49, in _get_token_from_database
+    from app.core.database import get_mongo_db_sync
+  File "D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\app\core\database.py", line 9, in <module>
+    from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+ModuleNotFoundError: No module named 'motor'
+
+2026-06-30 19:31:50,145 | tradingagents.dataflows.providers.base_provider.Tushare | INFO     | tushare:connect_sync:104 | ⚠️ [步骤1] 数据库中未找到 Token
+2026-06-30 19:31:50,145 | tradingagents.dataflows.providers.base_provider.Tushare | INFO     | tushare:connect_sync:106 | 🔍 [步骤2] 读取 .env 中的 Token...
+2026-06-30 19:31:50,146 | tradingagents.dataflows.providers.base_provider.Tushare | INFO     | tushare:connect_sync:109 | ✅ [步骤2] .env 中找到 Token (长度: 23)
+2026-06-30 19:31:50,146 | tradingagents.dataflows.providers.base_provider.Tushare | INFO     | tushare:connect_sync:142 | 🔄 [步骤4] 尝试使用 .env 中的 Tushare Token (超时: 10秒)...
+2026-06-30 19:31:50,181 | tradingagents.dataflows.providers.base_provider.Tushare | INFO     | tushare:connect_sync:148 | 🔄 [步骤4.1] 调用 stock_basic API 测试连接...
+2026-06-30 19:31:50,225 | tradingagents.dataflows.providers.base_provider.Tushare | ERROR    | tushare:connect_sync:152 | ❌ [步骤4.1] .env Token 测试失败: 您的token不对，请确认。
+2026-06-30 19:31:50,226 | dataflows            | WARNING  | data_source_manager:_get_tushare_data:1292 | ⚠️ [Tushare] 未获取到数据，耗时=0.12s
+2026-06-30 19:31:50,226 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.TUSHARE] 返回错误结果: 002281
+2026-06-30 19:31:50,227 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1408 | 🔄 [备用数据源] 尝试 DataSourceCode.BAOSTOCK 获取daily数据: 002281
+2026-06-30 19:31:50,227 | tradingagents.dataflows.providers.china.baostock | INFO     | baostock:_init_baostock:32 | 🔧 BaoStock模块加载成功
+2026-06-30 19:31:50,228 | tradingagents.dataflows.providers.china.baostock | INFO     | baostock:get_historical_data:558 | 📊 获取BaoStock历史数据: 002281 (2026-05-31 到 2026-06-30)
+2026-06-30 19:33:11,279 | tradingagents.dataflows.providers.china.baostock | ERROR    | baostock:get_historical_data:635 | ❌ BaoStock获取002281历史数据失败: 登录失败: 网络接收错误。
+2026-06-30 19:33:11,280 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.BAOSTOCK] 返回错误结果: 002281
+2026-06-30 19:33:11,280 | dataflows            | ERROR    | data_source_manager:_try_fallback_sources:1432 | ❌ [所有数据源失败] 无法获取daily数据: 002281
+2026-06-30 19:33:11,280 | dataflows            | WARNING  | data_source_manager:get_stock_data:1157 | ⚠️ [数据来源: DataSourceCode.MONGODB失败] 数据质量异常，尝试降级到其他数据源: 002281
+2026-06-30 19:33:11,280 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1399 | 🔄 [DataSourceCode.MONGODB] 失败，尝试备用数据源获取daily数据: 002281
+2026-06-30 19:33:11,283 | dataflows            | WARNING  | data_source_manager:_get_data_source_priority_order:210 | ⚠️ [数据源优先级] 从数据库读取失败: No module named 'motor'，使用默认顺序
+2026-06-30 19:33:11,285 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1408 | 🔄 [备用数据源] 尝试 DataSourceCode.AKSHARE 获取daily数据: 002281
+2026-06-30 19:33:11,402 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:33:11,790 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:get_historical_data:974 | ⚠️ 002281 第1次尝试失败，2秒后重试: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:33:13,892 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:33:14,444 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:get_historical_data:974 | ⚠️ 002281 第2次尝试失败，4秒后重试: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:33:18,568 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:33:18,994 | tradingagents.dataflows.providers.china.akshare | ERROR    | akshare:get_historical_data:982 | ❌ 002281 网络连接中断，建议稍后重试或减小时间范围
+2026-06-30 19:33:18,995 | dataflows            | WARNING  | data_source_manager:_get_akshare_data:1334 | ⚠️ [AKShare] 数据为空: 耗时=7.71s
+2026-06-30 19:33:18,996 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.AKSHARE] 返回错误结果: 002281
+2026-06-30 19:33:18,996 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1408 | 🔄 [备用数据源] 尝试 DataSourceCode.TUSHARE 获取daily数据: 002281
+2026-06-30 19:33:18,996 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1238 | 🔍 [股票代码追踪] _get_tushare_data 接收到的股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:33:18,996 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1239 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:33:18,997 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1240 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:33:18,997 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1241 | 🔍 [DataSourceManager详细日志] _get_tushare_data 开始执行
+2026-06-30 19:33:18,997 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1242 | 🔍 [DataSourceManager详细日志] 当前数据源: DataSourceCode.MONGODB
+2026-06-30 19:33:18,998 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1262 | 🔍 [股票代码追踪] 调用 tushare_provider，传入参数: symbol='002281'
+2026-06-30 19:33:18,998 | dataflows            | INFO     | data_source_manager:_get_tushare_data:1263 | 🔍 [DataSourceManager详细日志] 开始调用tushare_provider...
+2026-06-30 19:33:18,999 | dataflows            | WARNING  | data_source_manager:_get_tushare_data:1292 | ⚠️ [Tushare] 未获取到数据，耗时=0.00s
+2026-06-30 19:33:18,999 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.TUSHARE] 返回错误结果: 002281
+2026-06-30 19:33:18,999 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1408 | 🔄 [备用数据源] 尝试 DataSourceCode.BAOSTOCK 获取daily数据: 002281
+2026-06-30 19:33:19,000 | tradingagents.dataflows.providers.china.baostock | INFO     | baostock:get_historical_data:558 | 📊 获取BaoStock历史数据: 002281 (2026-05-31 到 2026-06-30)
+2026-06-30 19:34:40,045 | tradingagents.dataflows.providers.china.baostock | ERROR    | baostock:get_historical_data:635 | ❌ BaoStock获取002281历史数据失败: 登录失败: 网络接收错误。
+2026-06-30 19:34:40,045 | dataflows            | WARNING  | data_source_manager:_try_fallback_sources:1426 | ⚠️ [备用数据源-DataSourceCode.BAOSTOCK] 返回错误结果: 002281
+2026-06-30 19:34:40,045 | dataflows            | ERROR    | data_source_manager:_try_fallback_sources:1432 | ❌ [所有数据源失败] 无法获取daily数据: 002281
+2026-06-30 19:34:40,046 | dataflows            | ERROR    | data_source_manager:get_stock_data:1175 | ❌ [数据来源: 所有数据源失败] 所有数据源都无法获取有效数据: 002281
+2026-06-30 19:34:40,046 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2179 | 🔍 [股票代码追踪] 返回结果统计: 总行数=1, 数据行数=0, 结果长度=26字符
+2026-06-30 19:34:40,046 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2180 | 🔍 [股票代码追踪] 返回结果前500字符: ❌ 所有数据源都无法获取002281的daily数据
+2026-06-30 19:34:40,046 | agents               | WARNING  | interface:get_china_stock_data_unified:1603 | ⚠️ [统一接口] 中国股票数据质量异常
+2026-06-30 19:34:40,046 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:638 | ⚠️ [A股数据-异步] API 直接获取失败: 股票代码 002281 不存在或信息无效，尝试数据库同步后重试
+2026-06-30 19:34:40,047 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:646 | ⚠️ [A股数据-异步] 数据库数据不完整: MongoDB缓存未启用
+2026-06-30 19:34:40,047 | stock_validator      | INFO     | stock_validator:_prepare_china_stock_data_async:647 | 🔄 [A股数据-异步] 自动触发数据同步: 002281
+2026-06-30 19:34:40,047 | stock_validator      | INFO     | stock_validator:_trigger_data_sync_async:849 | 🔄 [数据同步] 开始同步002281的数据（历史+财务+实时）...
+2026-06-30 19:34:40,047 | stock_validator      | WARNING  | stock_validator:_get_data_source_priority_for_sync:1015 | ⚠️ [数据源优先级] MongoDB未启用，使用默认顺序
+2026-06-30 19:34:40,047 | stock_validator      | INFO     | stock_validator:_trigger_data_sync_async:853 | 📊 [数据同步] 数据源优先级: ['tushare', 'akshare', 'baostock']
+2026-06-30 19:34:40,047 | stock_validator      | INFO     | stock_validator:_trigger_data_sync_async:859 | 🔄 [数据同步] 尝试使用数据源: tushare
+2026-06-30 19:34:40,053 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:965 | ⚠️ [数据同步] tushare同步异常: No module named 'motor'
+2026-06-30 19:34:40,056 | stock_validator      | INFO     | stock_validator:_trigger_data_sync_async:859 | 🔄 [数据同步] 尝试使用数据源: akshare
+2026-06-30 19:34:40,058 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:965 | ⚠️ [数据同步] akshare同步异常: No module named 'motor'
+2026-06-30 19:34:40,061 | stock_validator      | INFO     | stock_validator:_trigger_data_sync_async:859 | 🔄 [数据同步] 尝试使用数据源: baostock
+2026-06-30 19:34:40,061 | stock_validator      | WARNING  | stock_validator:_trigger_data_sync_async:863 | ⚠️ [数据同步] BaoStock不支持单个股票同步，跳过
+2026-06-30 19:34:40,061 | stock_validator      | ERROR    | stock_validator:_trigger_data_sync_async:973 | ❌ [数据同步] 所有数据源同步失败，最后错误: baostock: 不支持单个股票同步
+2026-06-30 19:34:40,061 | stock_validator      | WARNING  | stock_validator:_prepare_china_stock_data_async:656 | ⚠️ [A股数据-异步] 数据同步失败: 所有数据源同步失败，最后错误: baostock: 不支持单个股票同步
+2026-06-30 19:34:40,061 | agents               | INFO     | interface:get_china_stock_info_unified:1648 | 📊 [统一接口] 获取002281基本信息...
+2026-06-30 19:34:40,061 | dataflows            | INFO     | data_source_manager:get_stock_info:1440 | 📊 [数据来源: DataSourceCode.MONGODB] 开始获取股票信息: 002281
+2026-06-30 19:34:40,062 | tradingagents.config | INFO     | runtime_settings:use_app_cache_enabled:173 | [runtime_settings] TA_USE_APP_CACHE evaluated -> True (source=env, env=true)
+2026-06-30 19:34:40,062 | dataflows            | INFO     | data_source_manager:get_stock_info:1446 | 🔧 [配置检查] use_app_cache_enabled() 返回值: True
+2026-06-30 19:34:40,062 | dataflows            | INFO     | data_source_manager:get_stock_info:1451 | 🔧 [配置] ta_use_app_cache=True, current_source=DataSourceCode.MONGODB
+2026-06-30 19:34:40,062 | dataflows            | WARNING  | data_source_manager:get_stock_info:1538 | ⚠️ [数据来源: DataSourceCode.MONGODB] 不支持股票信息获取，尝试降级: 002281
+2026-06-30 19:34:40,062 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1608 | 🔄 DataSourceCode.MONGODB失败，尝试备用数据源获取股票信息...
+2026-06-30 19:34:40,062 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.TUSHARE
+2026-06-30 19:34:40,062 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1652 | ❌ 备用数据源ChinaDataSource.TUSHARE失败: 'DataSourceManager' object has no attribute '_get_tushare_stock_info'
+2026-06-30 19:34:40,062 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.AKSHARE
+2026-06-30 19:34:40,178 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:34:40,532 | dataflows            | ERROR    | data_source_manager:_get_akshare_stock_info:1715 | ❌ [股票信息] AKShare获取失败: 002281, 错误: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-30 19:34:40,532 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.AKSHARE] 返回无效信息
+2026-06-30 19:34:40,533 | dataflows            | INFO     | data_source_manager:_try_fallback_stock_info:1621 | 🔄 尝试备用数据源获取股票信息: ChinaDataSource.BAOSTOCK
+2026-06-30 19:36:01,591 | dataflows            | ERROR    | data_source_manager:_get_baostock_stock_info:1732 | ❌ [股票信息] BaoStock登录失败: 网络接收错误。
+2026-06-30 19:36:01,592 | dataflows            | WARNING  | data_source_manager:_try_fallback_stock_info:1649 | ⚠️ [数据来源: ChinaDataSource.BAOSTOCK] 返回无效信息
+2026-06-30 19:36:01,592 | dataflows            | ERROR    | data_source_manager:_try_fallback_stock_info:1656 | ❌ 所有数据源都无法获取002281的股票信息
+2026-06-30 19:36:01,593 | agents               | INFO     | interface:get_china_stock_data_unified:1542 | 📅 [配置验证] ===== MARKET_ANALYST_LOOKBACK_DAYS 配置检查 =====
+2026-06-30 19:36:01,593 | agents               | INFO     | interface:get_china_stock_data_unified:1543 | 📅 [配置验证] 从配置文件读取: 30天
+2026-06-30 19:36:01,593 | agents               | INFO     | interface:get_china_stock_data_unified:1544 | 📅 [配置验证] 配置来源: app.core.config.Settings
+2026-06-30 19:36:01,594 | agents               | INFO     | interface:get_china_stock_data_unified:1545 | 📅 [配置验证] 环境变量: MARKET_ANALYST_LOOKBACK_DAYS=30
+2026-06-30 19:36:01,594 | agents               | INFO     | interface:get_china_stock_data_unified:1554 | 📅 [智能日期] ===== 日期范围计算结果 =====
+2026-06-30 19:36:01,594 | agents               | INFO     | interface:get_china_stock_data_unified:1555 | 📅 [智能日期] 原始输入: 2026-05-31 至 2026-06-30
+2026-06-30 19:36:01,595 | agents               | INFO     | interface:get_china_stock_data_unified:1556 | 📅 [智能日期] 回溯天数: 30天
+2026-06-30 19:36:01,595 | agents               | INFO     | interface:get_china_stock_data_unified:1557 | 📅 [智能日期] 计算结果: 2026-05-31 至 2026-06-30
+2026-06-30 19:36:01,595 | agents               | INFO     | interface:get_china_stock_data_unified:1558 | 📅 [智能日期] 实际天数: 30天
+2026-06-30 19:36:01,596 | agents               | INFO     | interface:get_china_stock_data_unified:1559 | 💡 [智能日期] 说明: 自动扩展日期范围以处理周末、节假日和数据延迟
+2026-06-30 19:36:01,596 | agents               | INFO     | interface:get_china_stock_data_unified:1562 | 📊 [统一接口] 开始获取中国股票数据
+2026-06-30 19:36:01,596 | agents               | INFO     | interface:get_china_stock_data_unified:1572 | 🔍 [股票代码追踪] get_china_stock_data_unified 接收到的原始股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:36:01,597 | agents               | INFO     | interface:get_china_stock_data_unified:1573 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:36:01,597 | agents               | INFO     | interface:get_china_stock_data_unified:1574 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:36:01,597 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2168 | 🔍 [股票代码追踪] data_source_manager.get_china_stock_data_unified 接收到的股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:36:01,597 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2169 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:36:01,597 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2170 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:36:01,597 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2173 | 🔍 [股票代码追踪] 调用 manager.get_stock_data，传入参数: symbol='002281', start_date='2026-05-31', end_date='2026-06-30'
+2026-06-30 19:36:01,597 | dataflows            | INFO     | data_source_manager:get_stock_data:1094 | 📊 [数据来源: DataSourceCode.MONGODB] 开始获取daily数据: 002281
+2026-06-30 19:36:01,598 | dataflows            | INFO     | data_source_manager:get_stock_data:1105 | 🔍 [股票代码追踪] DataSourceManager.get_stock_data 接收到的股票代码: '002281' (类型: <class 'str'>)
+2026-06-30 19:36:01,598 | dataflows            | INFO     | data_source_manager:get_stock_data:1106 | 🔍 [股票代码追踪] 股票代码长度: 6
+2026-06-30 19:36:01,598 | dataflows            | INFO     | data_source_manager:get_stock_data:1107 | 🔍 [股票代码追踪] 股票代码字符: ['0', '0', '2', '2', '8', '1']
+2026-06-30 19:36:01,598 | dataflows            | INFO     | data_source_manager:get_stock_data:1108 | 🔍 [股票代码追踪] 当前数据源: DataSourceCode.MONGODB
+2026-06-30 19:36:01,599 | dataflows            | INFO     | data_source_manager:_get_mongodb_data:1225 | 🔄 [MongoDB] 未找到daily数据: 002281，开始尝试备用数据源
+2026-06-30 19:36:01,599 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1399 | 🔄 [DataSourceCode.MONGODB] 失败，尝试备用数据源获取daily数据: 002281
+2026-06-30 19:36:01,602 | dataflows            | WARNING  | data_source_manager:_get_data_source_priority_order:210 | ⚠️ [数据源优先级] 从数据库读取失败: No module named 'motor'，使用默认顺序
+2026-06-30 19:36:01,603 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1408 | 🔄 [备用数据源] 尝试 DataSourceCode.AKSHARE 获取daily数据: 002281
+2026-06-30 19:36:02,219 | tradingagents.dataflows.providers.china.akshare | WARNING  | akshare:patched_get:101 | ⚠️ curl_cffi 请求失败，回退到标准 requests: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-30 19:36:06,174 | tradingagents.dataflows.providers.china.akshare | ERROR    | akshare:_get_stock_list_cached:417 | ❌ 获取股票列表失败: Excel file format cannot be determined, you must specify an engine manually.
+2026-06-30 19:36:06,176 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:748 | 📊 [技术指标] 开始计算技术指标，原始数据: 21条
+2026-06-30 19:36:06,189 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:805 | ✅ [技术指标] 技术指标计算完成
+2026-06-30 19:36:06,190 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:813 | 🔍 [技术指标详情] ===== 最近5个交易日数据 =====
+2026-06-30 19:36:06,190 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:815 | 🔍 [技术指标详情] 第1天 (2026-06-24 00:00:00):
+2026-06-30 19:36:06,191 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:816 |    价格: 开=262.47, 高=272.44, 低=260.00, 收=266.36
+2026-06-30 19:36:06,191 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:817 |    MA: MA5=263.51, MA10=238.60, MA20=229.10, MA60=229.10
+2026-06-30 19:36:06,191 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:818 |    MACD: DIF=15.1068, DEA=8.8850, MACD=12.4435
+2026-06-30 19:36:06,191 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:819 |    RSI: RSI6=75.03, RSI12=73.86, RSI24=72.65 (同花顺风格)
+2026-06-30 19:36:06,191 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:820 |    RSI14: 66.81 (国际标准)
+2026-06-30 19:36:06,191 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:821 |    BOLL: 上=279.56, 中=229.10, 下=178.64
+2026-06-30 19:36:06,191 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:815 | 🔍 [技术指标详情] 第2天 (2026-06-25 00:00:00):
+2026-06-30 19:36:06,191 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:816 |    价格: 开=266.50, 高=271.12, 低=256.00, 收=261.46
+2026-06-30 19:36:06,191 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:817 |    MA: MA5=267.40, MA10=244.48, MA20=230.90, MA60=230.90
+2026-06-30 19:36:06,191 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:818 |    MACD: DIF=15.4597, DEA=10.1999, MACD=10.5195
+2026-06-30 19:36:06,192 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:819 |    RSI: RSI6=67.35, RSI12=69.39, RSI24=69.39 (同花顺风格)
+2026-06-30 19:36:06,192 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:820 |    RSI14: 66.05 (国际标准)
+2026-06-30 19:36:06,192 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:821 |    BOLL: 上=282.17, 中=230.90, 下=179.63
+2026-06-30 19:36:06,192 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:815 | 🔍 [技术指标详情] 第3天 (2026-06-26 00:00:00):
+2026-06-30 19:36:06,192 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:816 |    价格: 开=256.00, 高=256.27, 低=237.00, 收=240.34
+2026-06-30 19:36:06,192 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:817 |    MA: MA5=262.23, MA10=247.98, MA20=231.40, MA60=231.40
+2026-06-30 19:36:06,192 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:818 |    MACD: DIF=13.8752, DEA=10.9350, MACD=5.8804
+2026-06-30 19:36:06,192 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:819 |    RSI: RSI6=44.04, RSI12=54.02, RSI24=57.72 (同花顺风格)
+2026-06-30 19:36:06,192 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:820 |    RSI14: 54.51 (国际标准)
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:821 |    BOLL: 上=281.41, 中=231.40, 下=181.38
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:815 | 🔍 [技术指标详情] 第4天 (2026-06-29 00:00:00):
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:816 |    价格: 开=240.34, 高=248.93, 低=225.00, 收=235.94
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:817 |    MA: MA5=254.20, MA10=251.08, MA20=231.62, MA60=231.62
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:818 |    MACD: DIF=12.1247, DEA=11.1729, MACD=1.9035
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:819 |    RSI: RSI6=40.53, RSI12=51.43, RSI24=55.69 (同花顺风格)
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:820 |    RSI14: 61.55 (国际标准)
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:821 |    BOLL: 上=280.35, 中=231.62, 下=182.90
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:815 | 🔍 [技术指标详情] 第5天 (2026-06-30 00:00:00):
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:816 |    价格: 开=237.11, 高=259.00, 低=230.30, 收=256.94
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:817 |    MA: MA5=252.21, MA10=254.22, MA20=234.26, MA60=232.83
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:818 |    MACD: DIF=12.2903, DEA=11.3964, MACD=1.7877
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:819 |    RSI: RSI6=59.16, RSI12=61.13, RSI24=62.31 (同花顺风格)
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:820 |    RSI14: 66.32 (国际标准)
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:821 |    BOLL: 上=282.45, 中=234.26, 下=186.06
+2026-06-30 19:36:06,193 | dataflows            | INFO     | data_source_manager:_format_stock_data_response:823 | 🔍 [技术指标详情] ===== 数据详情结束 =====
+2026-06-30 19:36:06,194 | dataflows            | INFO     | data_source_manager:_get_volume_safely:1381 | ✅ 找到成交量列: volume
+2026-06-30 19:36:06,195 | dataflows            | INFO     | data_source_manager:_get_akshare_data:1330 | ✅ [AKShare] 已计算技术指标: MA5/10/20/60, MACD, RSI, BOLL
+2026-06-30 19:36:06,195 | dataflows            | INFO     | data_source_manager:_try_fallback_sources:1423 | ✅ [备用数据源-DataSourceCode.AKSHARE] 成功获取daily数据: 002281
+2026-06-30 19:36:06,195 | dataflows            | INFO     | data_source_manager:get_stock_data:1142 | ✅ [数据来源: DataSourceCode.AKSHARE] 成功获取股票数据: 002281 (573字符, 耗时4.60秒)
+2026-06-30 19:36:06,195 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2179 | 🔍 [股票代码追踪] 返回结果统计: 总行数=36, 数据行数=0, 结果长度=573字符
+2026-06-30 19:36:06,195 | dataflows            | INFO     | data_source_manager:get_china_stock_data_unified:2180 | 🔍 [股票代码追踪] 返回结果前500字符: 📊 股票002281(002281) - 技术分析数据
+数据期间: 2026-05-31 至 2026-06-30
+数据条数: 21条 (展示最近5个交易日)
+
+💰 最新价格: ¥256.94
+📈 涨跌额: +21.00 (+8.90%)
+
+📊 移动平均线 (MA):
+   MA5:  ¥252.21 (价格在MA5上方 ↑)
+   MA10: ¥254.22 (价格在MA10上方 ↑)
+   MA20: ¥234.26 (价格在MA20上方 ↑)
+   MA60: ¥232.83 (价格在MA60上方 ↑)
+
+📈 MACD指标:
+   DIF:  12.290
+   DEA:  11.396
+   MACD: 1.788 (多头 ↑)
+
+📉 RSI指标 (同花顺风格):
+   RSI6:  59.16
+   RSI12: 61.13
+   RSI24: 62.31
+   趋势: 空头排列 ↓
+
+📊 布林带 (BOLL):
+   上轨: ¥282.45
+   中轨: ¥234.26
+   下轨: ¥186.06
+   价格位置: 73.5% (中性区域)
+
+📊 价格统计 (最近5个交易
+2026-06-30 19:36:06,196 | agents               | INFO     | interface:get_china_stock_data_unified:1591 | ✅ [统一接口] 中国股票数据获取成功
+2026-06-30 19:36:06,196 | stock_validator      | INFO     | stock_validator:_prepare_china_stock_data_async:670 | 🎉 [A股数据-异步] 数据准备完成: 002281 - 股票002281
+2026-07-02 18:17:02,256 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-07-02 18:17:02,274 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-07-02 18:17:02,291 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-07-02 18:17:02,292 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-07-02 18:17:02,294 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-07-02 18:17:02,295 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-07-02 18:17:02,346 | app.stock_agent.dsa_config | INFO     | dsa_config:_resolve_realtime_source_priority:1062 | TUSHARE_TOKEN detected, auto-injecting tushare into realtime priority: tushare,tencent,akshare_sina,efinance,akshare_em
+2026-07-02 18:17:02,427 | app.stock_agent.agent.skills.base | INFO     | base:load_builtin_strategies:180 | Loaded 11 built-in strategies from D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\app\stock_agent\strategies
+2026-07-02 18:17:02,428 | app.stock_agent.agent.factory | INFO     | factory:get_skill_manager:112 | [AgentFactory] SkillManager prototype cached (11 strategies)
+2026-07-02 18:17:48,308 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-07-02 18:17:48,310 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-07-02 18:17:48,327 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-07-02 18:17:48,328 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-07-02 18:17:48,329 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-07-02 18:17:48,330 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-07-02 18:17:48,428 | app.stock_agent.dsa_config | INFO     | dsa_config:_resolve_realtime_source_priority:1062 | TUSHARE_TOKEN detected, auto-injecting tushare into realtime priority: tushare,tencent,akshare_sina,efinance,akshare_em
+2026-07-02 18:17:48,511 | app.stock_agent.agent.skills.base | INFO     | base:load_builtin_strategies:180 | Loaded 11 built-in strategies from D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\app\stock_agent\strategies
+2026-07-02 18:17:48,512 | app.stock_agent.agent.factory | INFO     | factory:get_skill_manager:112 | [AgentFactory] SkillManager prototype cached (11 strategies)
+2026-07-06 11:07:18,476 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-07-06 11:07:18,499 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-07-06 11:07:18,521 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-07-06 11:07:18,523 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-07-06 11:07:18,525 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-07-06 11:07:18,526 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-07-13 09:44:46,738 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-07-13 09:44:46,754 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-07-13 09:44:46,771 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-07-13 09:44:46,772 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-07-13 09:44:46,773 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-07-13 09:44:46,774 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-07-27 14:08:43,661 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-07-27 14:08:43,681 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-07-27 14:08:43,697 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-07-27 14:08:43,697 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-07-27 14:08:43,701 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-07-27 14:08:43,701 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-07-29 11:08:18,961 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-07-29 11:08:18,983 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-07-29 11:08:19,004 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-07-29 11:08:19,005 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-07-29 11:08:19,006 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-07-29 11:08:19,007 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-07-29 13:42:25,525 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-07-29 13:42:25,541 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-07-29 13:42:25,558 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-07-29 13:42:25,559 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-07-29 13:42:25,559 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-07-29 13:42:25,560 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-07-29 18:24:53,441 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-07-29 18:24:53,459 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-07-29 18:24:53,476 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-07-29 18:24:53,477 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-07-29 18:24:53,478 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-07-29 18:24:53,478 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-07-30 11:19:47,551 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: D:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\tradingagents\.env
+2026-07-30 11:19:47,571 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-07-30 11:19:47,588 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-07-30 11:19:47,589 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-07-30 11:19:47,590 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-07-30 11:19:47,591 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-07-30 11:19:48,463 | app.services.auth_service | WARNING  | auth_service:verify_token:65 | Token type mismatch: got=refresh expected=access
+2026-07-30 11:19:48,464 | app.services.auth_service | WARNING  | auth_service:verify_token:65 | Token type mismatch: got=access expected=refresh
