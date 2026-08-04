@@ -4,8 +4,8 @@
     "ignore": [],
     "include": [
       {
-        "type": "folder",
-        "value": "custom-tab-bar"
+        "value": "custom-tab-bar",
+        "type": "folder"
       }
     ]
   },
@@ -41,5 +41,6 @@
   "projectname": "AresStock-MiniProgram",
   "miniprogramRoot": "./",
   "simulatorPluginLibVersion": {},
-  "editorSetting": {}
+  "editorSetting": {},
+  "libVersion": "3.16.1"
 }

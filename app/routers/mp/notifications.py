@@ -1,5 +1,7 @@
 """小程序站内通知 API"""
 
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.routers.mp.deps import get_current_mp_user
@@ -18,10 +20,17 @@ async def mp_notification_unread_count(user: dict = Depends(get_current_mp_user)
 async def mp_list_notifications(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
+    notice_types: Optional[str] = Query(
+        None,
+        description="逗号分隔的 notice_type，如 buy_signal,sell_signal",
+    ),
     user: dict = Depends(get_current_mp_user),
 ):
+    types = None
+    if notice_types:
+        types = [t.strip() for t in notice_types.split(",") if t.strip()]
     items, total, unread = await mp_notification_service.list_for_user(
-        user["id"], skip=skip, limit=limit
+        user["id"], skip=skip, limit=limit, notice_types=types
     )
     return {
         "success": True,

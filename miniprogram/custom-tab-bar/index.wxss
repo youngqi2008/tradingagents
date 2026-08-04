@@ -147,6 +147,35 @@
   box-shadow: 0 6rpx 0 #1a1a2e, 0 12rpx 0 #1a1a2e;
 }
 
+/* 消息 */
+.tab-icon-notify::before {
+  content: '';
+  position: absolute;
+  width: 18rpx;
+  height: 16rpx;
+  left: 13rpx;
+  top: 12rpx;
+  border: 3rpx solid #6b7280;
+  border-radius: 0 0 10rpx 10rpx;
+  box-sizing: border-box;
+}
+.tab-icon-notify::after {
+  content: '';
+  position: absolute;
+  width: 8rpx;
+  height: 8rpx;
+  left: 18rpx;
+  top: 8rpx;
+  border: 3rpx solid #6b7280;
+  border-bottom: none;
+  border-radius: 8rpx 8rpx 0 0;
+  box-sizing: border-box;
+}
+.tab-item.active .tab-icon-notify::before,
+.tab-item.active .tab-icon-notify::after {
+  border-color: #1a1a2e;
+}
+
 /* 风控 */
 .tab-icon-risk::before {
   content: '';
@@ -211,4 +240,20 @@
 .tab-item.active .tab-text {
   color: #c9a227;
   font-weight: 600;
+}
+
+.tab-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -14rpx;
+  min-width: 28rpx;
+  height: 28rpx;
+  padding: 0 8rpx;
+  border-radius: 14rpx;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 18rpx;
+  line-height: 28rpx;
+  text-align: center;
+  box-sizing: border-box;
 }

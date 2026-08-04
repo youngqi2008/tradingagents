@@ -1,37 +1,56 @@
-<view class="container container--no-tab">
-  <view wx:if="{{!detail}}">
-    <view class="toolbar" wx:if="{{notifications.length}}">
-      <text class="unread-tip" wx:if="{{unreadCount > 0}}">{{unreadCount}} 条未读</text>
-      <text class="mark-all" bindtap="onMarkAllRead">全部已读</text>
-    </view>
+<view class="container">
+  <view wx:if="{{needLogin}}" class="empty login-empty">
+    <text class="login-tip">登录后查看消息</text>
+    <button class="btn-primary" bindtap="onLoginTap">去登录</button>
+  </view>
 
-    <view wx:if="{{loading}}" class="empty">加载中...</view>
-    <view wx:elif="{{notifications.length === 0}}" class="empty">暂无消息</view>
+  <block wx:else>
+    <view wx:if="{{!detail}}">
+      <scroll-view class="category-bar" scroll-x enable-flex>
+        <view
+          wx:for="{{categories}}"
+          wx:key="key"
+          class="category-item {{activeCategory === item.key ? 'active' : ''}}"
+          data-key="{{item.key}}"
+          bindtap="onCategoryTap"
+        >{{item.label}}</view>
+      </scroll-view>
 
-    <view
-      wx:for="{{notifications}}"
-      wx:key="id"
-      class="card item {{item.is_read ? '' : 'unread'}}"
-      data-id="{{item.id}}"
-      bindtap="onTapItem"
-    >
-      <view class="item-title">
-        <text wx:if="{{item.typeLabel}}" class="signal-tag {{item.typeClass}}">{{item.typeLabel}}</text>
-        <text wx:if="{{!item.is_read}}" class="dot">●</text>
-        {{item.title}}
+      <view class="toolbar">
+        <text class="unread-tip" wx:if="{{unreadCount > 0}}">全部未读 {{unreadCount}}</text>
+        <text class="unread-tip muted" wx:elif="{{categoryUnread > 0}}">本类未读 {{categoryUnread}}</text>
+        <text class="unread-tip muted" wx:else>暂无未读</text>
+        <text class="mark-all" bindtap="onMarkAllRead">全部已读</text>
       </view>
-      <view class="item-preview">{{item.preview}}</view>
-      <view class="item-time">{{item.timeText}}</view>
-    </view>
-  </view>
 
-  <view wx:else class="card detail-card">
-    <view class="detail-title">
-      <text wx:if="{{detail.typeLabel}}" class="signal-tag {{detail.typeClass}}">{{detail.typeLabel}}</text>
-      {{detail.title}}
+      <view wx:if="{{loading}}" class="empty">加载中...</view>
+      <view wx:elif="{{notifications.length === 0}}" class="empty">暂无此类消息</view>
+
+      <view
+        wx:for="{{notifications}}"
+        wx:key="id"
+        class="card item {{item.is_read ? '' : 'unread'}}"
+        data-id="{{item.id}}"
+        bindtap="onTapItem"
+      >
+        <view class="item-title">
+          <text wx:if="{{item.typeLabel}}" class="signal-tag {{item.typeClass}}">{{item.typeLabel}}</text>
+          <text wx:if="{{!item.is_read}}" class="dot">●</text>
+          {{item.title}}
+        </view>
+        <view class="item-preview">{{item.preview}}</view>
+        <view class="item-time">{{item.timeText}}</view>
+      </view>
     </view>
-    <view class="detail-time">{{detail.timeText}}</view>
-    <view class="detail-content">{{detail.content}}</view>
-    <button class="btn-outline" bindtap="onCloseDetail">返回列表</button>
-  </view>
+
+    <view wx:else class="card detail-card">
+      <view class="detail-title">
+        <text wx:if="{{detail.typeLabel}}" class="signal-tag {{detail.typeClass}}">{{detail.typeLabel}}</text>
+        {{detail.title}}
+      </view>
+      <view class="detail-time">{{detail.timeText}}</view>
+      <view class="detail-content">{{detail.content}}</view>
+      <button class="btn-outline" bindtap="onCloseDetail">返回列表</button>
+    </view>
+  </block>
 </view>

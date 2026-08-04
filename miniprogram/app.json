@@ -4,13 +4,13 @@
     "pages/news/news",
     "pages/chat/chat",
     "pages/index/index",
+    "pages/notifications/notifications",
     "pages/risk-message/risk-message",
     "pages/profile/profile",
     "pages/favorites/favorites",
     "pages/analysis/analysis",
     "pages/report/report",
     "pages/membership/membership",
-    "pages/notifications/notifications",
     "pages/recharge/recharge"
   ],
   "window": {
@@ -41,6 +41,10 @@
       {
         "pagePath": "pages/index/index",
         "text": "研报"
+      },
+      {
+        "pagePath": "pages/notifications/notifications",
+        "text": "消息"
       },
       {
         "pagePath": "pages/risk-message/risk-message",

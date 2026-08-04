@@ -5,9 +5,37 @@
   margin: 16rpx 24rpx 0;
   font-size: 26rpx;
 }
+.category-bar {
+  display: flex;
+  flex-direction: row;
+  white-space: nowrap;
+  padding: 16rpx 16rpx 0;
+  box-sizing: border-box;
+}
+.category-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 12rpx 24rpx;
+  margin-right: 12rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  color: #6b7280;
+  background: #eef1f7;
+}
+.category-item.active {
+  color: #1a1a2e;
+  background: linear-gradient(135deg, #e8c547, #c9a227);
+  font-weight: 600;
+}
 .unread-tip {
   color: #c9a227;
   font-weight: 600;
+}
+.unread-tip.muted {
+  color: #9ca3af;
+  font-weight: 400;
 }
 .mark-all {
   color: #666;
@@ -16,6 +44,20 @@
   text-align: center;
   color: #999;
   padding: 80rpx 0;
+}
+.login-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32rpx;
+  padding-top: 160rpx;
+}
+.login-tip {
+  font-size: 28rpx;
+  color: #666;
+}
+.login-empty .btn-primary {
+  width: 320rpx;
 }
 .item {
   margin-top: 16rpx;
@@ -49,6 +91,18 @@
 .signal-tag.risk {
   background: rgba(201, 162, 39, 0.18);
   color: #b45309;
+}
+.signal-tag.broadcast {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+}
+.signal-tag.review {
+  background: rgba(139, 92, 246, 0.12);
+  color: #7c3aed;
+}
+.signal-tag.custom {
+  background: rgba(14, 165, 233, 0.12);
+  color: #0284c7;
 }
 .dot {
   color: #c9a227;

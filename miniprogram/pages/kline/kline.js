@@ -1,6 +1,6 @@
 var api = require('../../utils/api')
 var auth = require('../../utils/auth')
-var { syncTabBar } = require('../../utils/tabbar')
+var { syncTabBar, setTabBarUnreadCount } = require('../../utils/tabbar')
 
 // 默认展示沪指；输入个股代码后切换
 var DEFAULT_CODE = 'sh000001'
@@ -69,7 +69,11 @@ Page({
     syncTabBar(this)
     var loggedIn = auth.isLoggedIn()
     this.setData({ isLoggedIn: loggedIn })
-    if (!loggedIn) return
+    if (!loggedIn) {
+      setTabBarUnreadCount(this, 0)
+      return
+    }
+    this.refreshUnreadBadge()
     try {
       var jump = wx.getStorageSync('kline_jump')
       if (jump && jump.code) {
@@ -83,6 +87,15 @@ Page({
     this.measureCanvas(function () {
       this.loadStock(this.data.stockCode)
     }.bind(this))
+  },
+
+  refreshUnreadBadge() {
+    var self = this
+    api.getNotificationUnreadCount()
+      .then(function (count) {
+        setTabBarUnreadCount(self, count)
+      })
+      .catch(function () {})
   },
 
   onHide() {

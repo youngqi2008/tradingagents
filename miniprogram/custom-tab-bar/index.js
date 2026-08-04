@@ -4,9 +4,10 @@ const { isRiskOfficer } = require('../utils/auth')
 Component({
   data: {
     selected: 0,
-    // 默认仅基础 5 Tab，绝不默认带「风控」
+    // 默认仅基础 Tab，绝不默认带「风控」
     list: buildTabList(false),
     showRisk: false,
+    unreadCount: 0,
   },
   lifetimes: {
     attached() {
@@ -30,6 +31,11 @@ Component({
         showRisk: showRisk,
         list: list,
       })
+    },
+    setUnreadCount(count) {
+      var n = Number(count) || 0
+      if (n < 0) n = 0
+      this.setData({ unreadCount: n })
     },
     setSelectedByPath(path) {
       var list = this.data.list || []

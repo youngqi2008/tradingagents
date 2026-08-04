@@ -217,7 +217,12 @@ class MpNotificationService:
             return (await session.execute(stmt)).scalar() or 0
 
     async def list_for_user(
-        self, user_id: str, skip: int = 0, limit: int = 20
+        self,
+        user_id: str,
+        skip: int = 0,
+        limit: int = 20,
+        *,
+        notice_types: Optional[List[str]] = None,
     ) -> Tuple[List[MpNotificationResponse], int, int]:
         uid = parse_int_id(user_id)
         if not uid:
@@ -227,17 +232,17 @@ class MpNotificationService:
             if not user:
                 return [], 0, 0
 
-            base_filter = self._user_target_filter(user)
+            filters = [self._user_target_filter(user)]
+            cleaned_types = [t.strip() for t in (notice_types or []) if t and t.strip()]
+            if cleaned_types:
+                filters.append(MpNotificationORM.notice_type.in_(cleaned_types))
+            base_filter = and_(*filters)
+
             total = (await session.execute(
                 select(func.count(MpNotificationORM.id)).where(base_filter)
             )).scalar() or 0
             unread = await self.get_unread_count(user_id)
 
-            read_subq = (
-                select(MpNotificationReadORM.notification_id)
-                .where(MpNotificationReadORM.user_id == uid)
-                .scalar_subquery()
-            )
             stmt = (
                 select(MpNotificationORM)
                 .where(base_filter)

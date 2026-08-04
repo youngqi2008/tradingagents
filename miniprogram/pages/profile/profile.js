@@ -13,7 +13,7 @@ const {
   setProfileSetupPending,
   isDefaultNickname,
 } = require('../../utils/auth')
-const { syncTabBar } = require('../../utils/tabbar')
+const { syncTabBar, setTabBarUnreadCount } = require('../../utils/tabbar')
 
 Page({
   data: {
@@ -45,10 +45,12 @@ Page({
       this.setData({
         profile: null,
         records: [],
+        unreadCount: 0,
         showProfileSetup: false,
         setupNickName: '',
         setupAvatarUrl: '',
       })
+      setTabBarUnreadCount(this, 0)
       syncTabBar(this)
       return
     }
@@ -298,6 +300,7 @@ Page({
     getNotificationUnreadCount()
       .then(function (count) {
         this.setData({ unreadCount: count })
+        setTabBarUnreadCount(this, count)
       }.bind(this))
       .catch(function () {})
   },
@@ -327,11 +330,7 @@ Page({
   },
 
   goNotifications() {
-    if (!isLoggedIn()) {
-      this.onLoginTap()
-      return
-    }
-    wx.navigateTo({ url: '/pages/notifications/notifications' })
+    wx.switchTab({ url: '/pages/notifications/notifications' })
   },
 
   goRiskMessage() {

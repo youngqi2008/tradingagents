@@ -828,6 +828,9 @@ function listNotifications(params) {
   var q = []
   if (params && params.skip) q.push('skip=' + params.skip)
   if (params && params.limit) q.push('limit=' + params.limit)
+  if (params && params.notice_types) {
+    q.push('notice_types=' + encodeURIComponent(params.notice_types))
+  }
   var url = '/api/mp/notifications' + (q.length ? '?' + q.join('&') : '')
   return request({ url: url }).then(function (res) {
     return (res && res.data) || {}
