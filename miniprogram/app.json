@@ -1,10 +1,10 @@
 {
   "pages": [
+    "pages/notifications/notifications",
     "pages/kline/kline",
     "pages/news/news",
     "pages/chat/chat",
     "pages/index/index",
-    "pages/notifications/notifications",
     "pages/risk-message/risk-message",
     "pages/profile/profile",
     "pages/favorites/favorites",
@@ -27,6 +27,10 @@
     "borderStyle": "white",
     "list": [
       {
+        "pagePath": "pages/notifications/notifications",
+        "text": "消息"
+      },
+      {
         "pagePath": "pages/kline/kline",
         "text": "行情"
       },
@@ -41,10 +45,6 @@
       {
         "pagePath": "pages/index/index",
         "text": "研报"
-      },
-      {
-        "pagePath": "pages/notifications/notifications",
-        "text": "消息"
       },
       {
         "pagePath": "pages/risk-message/risk-message",

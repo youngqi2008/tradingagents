@@ -342,7 +342,7 @@ Page({
       duration: 2000,
     })
     setTimeout(function () {
-      wx.switchTab({ url: '/pages/kline/kline' })
+      wx.switchTab({ url: '/pages/notifications/notifications' })
     }, 350)
   },
 

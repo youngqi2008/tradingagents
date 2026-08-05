@@ -236,7 +236,7 @@ Page({
   goHomeLater: function () {
     this.persistActiveTask()
     wx.showToast({
-      title: '可稍后在首页查看',
+      title: '可稍后在研报页查看',
       icon: 'none',
       duration: 2000,
     })

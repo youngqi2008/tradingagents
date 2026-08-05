@@ -1,12 +1,12 @@
 const { isRiskOfficer } = require('./auth')
 
-/** 全体用户可见的基础 Tab（不含风控） */
+/** 全体用户可见的基础 Tab（不含风控）；消息置于首位作为首页 */
 var BASE_TABS = [
+  { pagePath: '/pages/notifications/notifications', text: '消息', icon: 'notify' },
   { pagePath: '/pages/kline/kline', text: '行情', icon: 'kline' },
   { pagePath: '/pages/news/news', text: '新闻', icon: 'news' },
   { pagePath: '/pages/chat/chat', text: '问股', icon: 'chat' },
   { pagePath: '/pages/index/index', text: '研报', icon: 'report' },
-  { pagePath: '/pages/notifications/notifications', text: '消息', icon: 'notify' },
   { pagePath: '/pages/profile/profile', text: '我的', icon: 'me' },
 ]
 

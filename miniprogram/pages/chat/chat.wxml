@@ -95,7 +95,7 @@
           <view class="ask-wait-tip">
             <text class="ask-wait-title">预计 1–5 分钟</text>
             <text class="ask-wait-desc">{{waitTip}}</text>
-            <button class="ask-leave-btn" bindtap="goHomeWhileAsking">先去别处看看</button>
+            <button class="ask-leave-btn" bindtap="goHomeWhileAsking">先回消息首页</button>
           </view>
         </view>
       </view>

@@ -128,11 +128,17 @@ async def mp_latest_news(
 
         matched = [c for c in codes if c in fav_codes]
         is_fav = len(matched) > 0
+        full_content = _clean_text(doc.get("content") or doc.get("summary") or "")
+        # 列表预览与详情正文分离，避免前端只能看到截断摘要
+        preview = full_content[:200]
+        if len(full_content) > 200:
+            preview = preview.rstrip() + "…"
         items.append(
             {
                 "id": str(doc.get("_id") or ""),
                 "title": title,
-                "summary": _clean_text(doc.get("content") or doc.get("summary") or "")[:160],
+                "summary": preview,
+                "content": full_content[:8000],
                 "source": doc.get("source") or doc.get("data_source") or "",
                 "url": doc.get("url") or doc.get("link") or "",
                 "publish_time": _fmt_time(doc.get("publish_time")),

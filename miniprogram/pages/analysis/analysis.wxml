@@ -39,7 +39,7 @@
       wx:if="{{isRunning}}"
       class="btn-later"
       bindtap="goHomeLater"
-    >稍后查看（回首页）</button>
+    >稍后查看（去研报）</button>
 
     <navigator wx:if="{{isFailed}}" url="/pages/index/index" open-type="switchTab" class="link-back">返回首页查看历史研报</navigator>
   </view>
