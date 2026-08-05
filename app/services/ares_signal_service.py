@@ -60,6 +60,7 @@ class AresSignalService:
         lines = [parsed.raw_content]
         if parsed.market:
             lines.append(f"市场: {parsed.market}")
+        lines.append(f"股票代码: {parsed.stock_code}")
         content = "\n".join(lines)
         return title, content, notice_type
 

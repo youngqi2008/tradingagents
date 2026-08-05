@@ -5,6 +5,12 @@
       <text wx:if="{{billing.free_remaining > 0}}">本月免费剩余 {{billing.free_remaining}} 次</text>
       <text wx:else>本次费用 ¥{{billing.per_generation_price}} · 余额 ¥{{billing.balance}}</text>
     </view>
+
+    <view class="wait-tip" wx:if="{{!taskId}}">
+      <text class="wait-tip-title">预计耗时 5–10 分钟</text>
+      <text class="wait-tip-desc">多智能体深度分析需要一定时间，提交后可先离开，完成后在首页查看。</text>
+    </view>
+
     <view class="progress-box" wx:if="{{taskId}}">
       <progress
         percent="{{progress}}"
@@ -13,7 +19,13 @@
         active="{{!isFailed && status !== 'completed'}}"
       />
       <text class="status-msg {{isFailed ? 'status-error' : ''}}">{{message}}</text>
+      <text class="elapsed" wx:if="{{isRunning && elapsedText}}">{{elapsedText}}</text>
+      <view class="wait-tip running" wx:if="{{isRunning}}">
+        <text class="wait-tip-title">请耐心等待</text>
+        <text class="wait-tip-desc">{{waitTip}}</text>
+      </view>
     </view>
+
     <button
       class="btn-primary {{isFailed ? 'btn-retry' : ''}}"
       bindtap="submit"
@@ -22,6 +34,13 @@
     >
       {{buttonText}}
     </button>
-    <navigator wx:if="{{isFailed}}" url="/pages/index/index" class="link-back">返回首页查看历史研报</navigator>
+
+    <button
+      wx:if="{{isRunning}}"
+      class="btn-later"
+      bindtap="goHomeLater"
+    >稍后查看（回首页）</button>
+
+    <navigator wx:if="{{isFailed}}" url="/pages/index/index" open-type="switchTab" class="link-back">返回首页查看历史研报</navigator>
   </view>
 </view>

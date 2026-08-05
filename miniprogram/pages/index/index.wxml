@@ -4,16 +4,20 @@
     <text class="create-title">AI 深度研报</text>
     <text class="create-desc">多智能体协作 · 一键生成专业分析</text>
     <view class="create-form">
-      <input
-        class="code-input"
-        placeholder="输入股票代码，如 600519"
-        value="{{stockCode}}"
-        bindinput="onInput"
-        confirm-type="search"
-        bindconfirm="goAnalysis"
-      />
+      <view class="input-with-clear">
+        <input
+          class="code-input input-clearable"
+          placeholder="输入股票代码，如 600519"
+          value="{{stockCode}}"
+          bindinput="onInput"
+          confirm-type="search"
+          bindconfirm="goAnalysis"
+        />
+        <view class="input-clear" wx:if="{{stockCode}}" catchtap="onClearStockCode">×</view>
+      </view>
       <button class="btn-create" bindtap="goAnalysis">生成</button>
     </view>
+    <text class="create-hint">深度研报约需 5–10 分钟，提交后可先离开，完成后在下方列表查看</text>
   </view>
 
   <!-- 未登录 -->
@@ -28,6 +32,7 @@
       <text class="list-title">我的研报</text>
       <text class="list-count">{{reports.length}} 份</text>
     </view>
+    <view class="running-hint" wx:if="{{hasRunning}}">有研报正在生成，列表将自动刷新进度</view>
 
     <view wx:if="{{reports.length === 0}}" class="empty-state">
       <view class="empty-icon">📊</view>

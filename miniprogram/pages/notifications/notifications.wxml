@@ -40,6 +40,20 @@
         </view>
         <view class="item-preview">{{item.preview}}</view>
         <view class="item-time">{{item.timeText}}</view>
+        <view class="item-actions" wx:if="{{item.canAct}}" catchtap="noop">
+          <view
+            class="action-chip"
+            catchtap="goAskStock"
+            data-code="{{item.stockCode}}"
+            data-type="{{item.notice_type}}"
+          >问股</view>
+          <view
+            class="action-chip primary"
+            catchtap="goGenerateReport"
+            data-code="{{item.stockCode}}"
+            data-type="{{item.notice_type}}"
+          >生成研报</view>
+        </view>
       </view>
     </view>
 
@@ -50,6 +64,22 @@
       </view>
       <view class="detail-time">{{detail.timeText}}</view>
       <view class="detail-content">{{detail.content}}</view>
+
+      <view class="detail-actions" wx:if="{{detail.canAct}}">
+        <button
+          class="btn-action"
+          bindtap="goAskStock"
+          data-code="{{detail.stockCode}}"
+          data-type="{{detail.notice_type}}"
+        >问股分析 {{detail.stockCode}}</button>
+        <button
+          class="btn-action primary"
+          bindtap="goGenerateReport"
+          data-code="{{detail.stockCode}}"
+          data-type="{{detail.notice_type}}"
+        >生成研报 {{detail.stockCode}}</button>
+      </view>
+
       <button class="btn-outline" bindtap="onCloseDetail">返回列表</button>
     </view>
   </block>

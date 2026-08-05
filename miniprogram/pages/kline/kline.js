@@ -32,6 +32,15 @@ function periodLabel(period) {
   return period
 }
 
+function isIndexCode(code) {
+  if (!code) return true
+  var c = String(code).trim().toLowerCase()
+  if (c === DEFAULT_CODE) return true
+  if (/^(sh000|sz399|bj899)/.test(c)) return true
+  if (/^000001$/.test(c)) return true
+  return false
+}
+
 Page({
   data: {
     isLoggedIn: false,
@@ -58,6 +67,9 @@ Page({
     lastTime: '',
     canvasWidth: 320,
     canvasHeight: 240,
+    canSubscribe: false,
+    isFavorite: false,
+    favLoading: false,
   },
 
   _bars: [],
@@ -142,6 +154,14 @@ Page({
     }, 280)
   },
 
+  onClearKeyword() {
+    if (this._searchTimer) {
+      clearTimeout(this._searchTimer)
+      this._searchTimer = null
+    }
+    this.setData({ keyword: '', suggests: [] })
+  },
+
   onSearchConfirm() {
     var code = (this.data.keyword || '').trim()
     // 空查询 → 回到默认沪指
@@ -183,14 +203,90 @@ Page({
 
   loadStock(code, name) {
     var displayKeyword = code === DEFAULT_CODE ? '' : code
+    var canSubscribe = !isIndexCode(code)
     this.setData({
       stockCode: code,
       stockName: name || (code === DEFAULT_CODE ? DEFAULT_NAME : ''),
       keyword: displayKeyword,
       suggests: [],
+      canSubscribe: canSubscribe,
+      isFavorite: false,
     })
     this.fetchQuote(code)
     this.fetchKline(code, this.data.period)
+    this.refreshFavoriteState(code)
+  },
+
+  refreshFavoriteState(code) {
+    var self = this
+    if (!auth.isLoggedIn() || isIndexCode(code)) {
+      this.setData({ canSubscribe: false, isFavorite: false })
+      return
+    }
+    this.setData({ canSubscribe: true })
+    api.checkFavorite(code)
+      .then(function (fav) {
+        if (self.data.stockCode !== code) return
+        self.setData({ isFavorite: !!fav })
+      })
+      .catch(function () {
+        if (self.data.stockCode !== code) return
+        self.setData({ isFavorite: false })
+      })
+  },
+
+  onToggleFavorite() {
+    if (!this.data.canSubscribe || this.data.favLoading) return
+    var code = this.data.stockCode
+    var name = this.data.stockName || (this.data.quote && this.data.quote.name) || code
+    if (isIndexCode(code)) {
+      wx.showToast({ title: '指数暂不支持订阅', icon: 'none' })
+      return
+    }
+    var self = this
+    var nextFav = !this.data.isFavorite
+    this.setData({ favLoading: true })
+    var action = this.data.isFavorite
+      ? api.removeFavorite(code)
+      : api.addFavorite({ stock_code: code, stock_name: name })
+    action
+      .then(function () {
+        self.setData({
+          favLoading: false,
+          isFavorite: nextFav,
+        })
+        wx.showToast({
+          title: nextFav ? '已订阅' : '已取消订阅',
+          icon: nextFav ? 'success' : 'none',
+        })
+      })
+      .catch(function (err) {
+        self.setData({ favLoading: false })
+        wx.showToast({ title: (err && err.message) || '操作失败', icon: 'none' })
+      })
+  },
+
+  onSuggestFavorite(e) {
+    var code = e.currentTarget.dataset.code
+    var name = e.currentTarget.dataset.name || code
+    if (!code || isIndexCode(code)) {
+      wx.showToast({ title: '指数暂不支持订阅', icon: 'none' })
+      return
+    }
+    var self = this
+    wx.showLoading({ title: '订阅中' })
+    api.addFavorite({ stock_code: code, stock_name: name })
+      .then(function () {
+        wx.hideLoading()
+        wx.showToast({ title: '已订阅', icon: 'success' })
+        if (self.data.stockCode === code) {
+          self.setData({ isFavorite: true, canSubscribe: true })
+        }
+      })
+      .catch(function (err) {
+        wx.hideLoading()
+        wx.showToast({ title: (err && err.message) || '订阅失败', icon: 'none' })
+      })
   },
 
   fetchQuote(code) {

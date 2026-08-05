@@ -8,6 +8,8 @@
 # 先查 Dify 网络名:
 #   docker ps --format '{{.Names}}' | grep -i redis
 #   docker inspect <redis容器名> --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+#
+# 注意：必须同时保留 tradingagents-network，否则 nginx 无法访问 backend（502）
 
 services:
   backend:
@@ -15,6 +17,7 @@ services:
       REDIS_HOST: "${REDIS_HOST:-redis}"
       REDIS_URL: "redis://:${REDIS_PASSWORD}@${REDIS_HOST:-redis}:${REDIS_PORT:-6379}/${REDIS_DB:-1}"
     networks:
+      - tradingagents-network
       - dify-network
 
 networks:

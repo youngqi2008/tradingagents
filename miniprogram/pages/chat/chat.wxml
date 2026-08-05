@@ -92,6 +92,11 @@
             <text class="dot"></text><text class="dot"></text><text class="dot"></text>
             <text class="typing-hint">{{progressStatus || '分析中，请稍候…'}}</text>
           </view>
+          <view class="ask-wait-tip">
+            <text class="ask-wait-title">预计 1–5 分钟</text>
+            <text class="ask-wait-desc">{{waitTip}}</text>
+            <button class="ask-leave-btn" bindtap="goHomeWhileAsking">先去别处看看</button>
+          </view>
         </view>
       </view>
 
@@ -114,16 +119,19 @@
     <!-- 输入区 -->
     <view class="composer">
       <view class="composer-inner">
-        <input
-          class="composer-input"
-          placeholder="问股票、看趋势、要策略…"
-          value="{{inputText}}"
-          bindinput="onInput"
-          confirm-type="send"
-          bindconfirm="onSend"
-          disabled="{{sending}}"
-          adjust-position="{{true}}"
-        />
+        <view class="input-with-clear composer-input-wrap">
+          <input
+            class="composer-input input-clearable"
+            placeholder="问股票、看趋势、要策略…"
+            value="{{inputText}}"
+            bindinput="onInput"
+            confirm-type="send"
+            bindconfirm="onSend"
+            disabled="{{sending}}"
+            adjust-position="{{true}}"
+          />
+          <view class="input-clear" wx:if="{{inputText && !sending}}" catchtap="onClearInput">×</view>
+        </view>
         <button
           class="send-btn {{inputText ? 'active' : ''}}"
           bindtap="onSend"

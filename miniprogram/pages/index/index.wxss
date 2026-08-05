@@ -29,6 +29,13 @@
   gap: 16rpx;
   align-items: center;
 }
+.create-hint {
+  display: block;
+  margin-top: 20rpx;
+  font-size: 22rpx;
+  line-height: 1.5;
+  color: rgba(232, 197, 71, 0.92);
+}
 .code-input {
   flex: 1;
   height: 80rpx;
@@ -86,6 +93,14 @@
 .list-count {
   font-size: 24rpx;
   color: var(--color-text-muted);
+}
+.running-hint {
+  margin: -8rpx 8rpx 20rpx;
+  font-size: 22rpx;
+  color: #b45309;
+  background: rgba(201, 162, 39, 0.12);
+  border-radius: 12rpx;
+  padding: 12rpx 16rpx;
 }
 
 .empty-state {

@@ -312,6 +312,38 @@
   font-size: 22rpx;
   color: var(--color-text-muted);
 }
+.ask-wait-tip {
+  margin-top: 16rpx;
+  padding: 18rpx 20rpx;
+  border-radius: 16rpx;
+  background: rgba(201, 162, 39, 0.1);
+  border: 1rpx solid rgba(201, 162, 39, 0.25);
+}
+.ask-wait-title {
+  display: block;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #8a6d1a;
+  margin-bottom: 6rpx;
+}
+.ask-wait-desc {
+  display: block;
+  font-size: 22rpx;
+  line-height: 1.5;
+  color: #6b7280;
+}
+.ask-leave-btn {
+  margin-top: 16rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #1a1a2e !important;
+  background: #fff !important;
+  border: 1rpx solid #c9a227 !important;
+  border-radius: 32rpx;
+}
+.ask-leave-btn::after { border: none; }
 .dot {
   width: 12rpx;
   height: 12rpx;
@@ -340,12 +372,22 @@
   gap: 16rpx;
   background: #f3f5fa;
   border-radius: 48rpx;
-  padding: 8rpx 8rpx 8rpx 28rpx;
+  padding: 8rpx 8rpx 8rpx 12rpx;
+}
+.composer-input-wrap {
+  flex: 1;
+  min-width: 0;
 }
 .composer-input {
   flex: 1;
+  width: 100%;
   font-size: 28rpx;
   min-height: 72rpx;
+  height: 72rpx;
+  padding: 0 28rpx;
+  background: transparent;
+  border-radius: 36rpx;
+  box-sizing: border-box;
 }
 .send-btn {
   flex-shrink: 0;

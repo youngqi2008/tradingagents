@@ -80,7 +80,7 @@
   flex-shrink: 0;
   height: 76rpx;
   line-height: 76rpx;
-  padding: 0 32rpx;
+  padding: 0 28rpx;
   margin: 0;
   background: linear-gradient(135deg, #1a1a2e, #2d3561);
   color: #fff;
@@ -93,6 +93,26 @@
   border: none;
 }
 
+.btn-fav {
+  flex-shrink: 0;
+  height: 76rpx;
+  line-height: 76rpx;
+  padding: 0 22rpx;
+  margin: 0;
+  background: #fff4d6;
+  color: #8a6d1a;
+  font-size: 24rpx;
+  font-weight: 600;
+  border-radius: 38rpx;
+  border: 1rpx solid rgba(201, 162, 39, 0.45);
+}
+.btn-fav::after { border: none; }
+.btn-fav.on {
+  background: #e8ecf4;
+  color: #6b7280;
+  border-color: #d1d5db;
+}
+
 .suggest-list {
   margin-top: 16rpx;
   border-top: 1rpx solid var(--color-border);
@@ -101,7 +121,7 @@
 .suggest-item {
   display: flex;
   align-items: center;
-  gap: 20rpx;
+  gap: 16rpx;
   padding: 20rpx 8rpx;
   border-bottom: 1rpx solid #f0f2f8;
 }
@@ -111,11 +131,27 @@
   font-weight: 600;
   color: var(--color-primary);
   width: 140rpx;
+  flex-shrink: 0;
 }
 
 .suggest-name {
+  flex: 1;
+  min-width: 0;
   font-size: 26rpx;
   color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.suggest-fav {
+  flex-shrink: 0;
+  padding: 8rpx 18rpx;
+  border-radius: 24rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #8a6d1a;
+  background: rgba(201, 162, 39, 0.14);
 }
 
 .quote-card {
@@ -129,8 +165,17 @@
 
 .quote-name-row {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.quote-title-wrap {
+  display: flex;
   align-items: baseline;
   gap: 16rpx;
+  min-width: 0;
+  flex: 1;
 }
 
 .quote-name {
@@ -141,6 +186,25 @@
 .quote-code {
   font-size: 24rpx;
   color: rgba(255, 255, 255, 0.65);
+}
+
+.btn-fav-quote {
+  flex-shrink: 0;
+  height: 56rpx;
+  line-height: 56rpx;
+  padding: 0 22rpx;
+  margin: 0;
+  font-size: 22rpx;
+  font-weight: 600;
+  border-radius: 28rpx;
+  background: rgba(232, 197, 71, 0.95);
+  color: #1a1a2e;
+  border: none;
+}
+.btn-fav-quote::after { border: none; }
+.btn-fav-quote.on {
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .quote-price-row {

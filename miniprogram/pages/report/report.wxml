@@ -1,15 +1,26 @@
 <view class="container">
-  <view class="card" wx:if="{{report}}">
+  <view class="card" wx:if="{{report && report.status === 'completed'}}">
     <view class="title">{{report.stock_name}} ({{report.stock_code}})</view>
     <view class="summary">{{report.summary || '暂无摘要'}}</view>
     <view class="rec" wx:if="{{report.recommendation}}">建议：{{report.recommendation}}</view>
     <view class="risk" wx:if="{{report.risk_level}}">风险：{{report.risk_level}}</view>
   </view>
+
   <view class="card actions" wx:if="{{report && report.status === 'completed'}}">
     <button class="btn-primary" bindtap="download" data-format="markdown">下载 Markdown</button>
     <button bindtap="download" data-format="pdf">下载 PDF</button>
   </view>
-  <view class="card" wx:elif="{{report}}">
-    <text>报告生成中，请稍后刷新...</text>
+
+  <view class="card wait-card" wx:elif="{{report}}">
+    <view class="wait-title">报告生成中</view>
+    <text class="wait-desc">{{pollHint}}</text>
+    <view class="wait-meta" wx:if="{{report.stock_name || report.stock_code}}">
+      {{report.stock_name}} {{report.stock_code}}
+    </view>
+    <button class="btn-outline" bindtap="onRefreshTap">刷新状态</button>
+  </view>
+
+  <view class="card" wx:else>
+    <text class="wait-desc">加载中...</text>
   </view>
 </view>

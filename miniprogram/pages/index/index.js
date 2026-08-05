@@ -2,11 +2,15 @@ const { isLoggedIn, promptProfileSetupIfNeeded } = require('../../utils/auth')
 const { request, login } = require('../../utils/api')
 const { syncTabBar } = require('../../utils/tabbar')
 
+var LIST_POLL_INTERVAL = 10000
+var RUNNING_STATUSES = { pending: 1, processing: 1, running: 1 }
+
 Page({
   data: {
     stockCode: '',
     reports: [],
     isLoggedIn: false,
+    hasRunning: false,
     statusText: {
       pending: '排队中',
       processing: '生成中',
@@ -24,8 +28,17 @@ Page({
     if (loggedIn) {
       this.loadReports()
     } else {
-      this.setData({ reports: [] })
+      this.stopListPoll()
+      this.setData({ reports: [], hasRunning: false })
     }
+  },
+
+  onHide() {
+    this.stopListPoll()
+  },
+
+  onUnload() {
+    this.stopListPoll()
   },
 
   onLoginTap() {
@@ -46,6 +59,10 @@ Page({
 
   onInput(e) {
     this.setData({ stockCode: e.detail.value.trim() })
+  },
+
+  onClearStockCode() {
+    this.setData({ stockCode: '' })
   },
 
   goAnalysis() {
@@ -73,12 +90,62 @@ Page({
     wx.navigateTo({ url: '/pages/report/report?id=' + id })
   },
 
-  loadReports() {
+  hasRunningReports(list) {
+    for (var i = 0; i < list.length; i++) {
+      if (RUNNING_STATUSES[list[i].status]) return true
+    }
+    return false
+  },
+
+  stopListPoll() {
+    if (this._listPollTimer) {
+      clearInterval(this._listPollTimer)
+      this._listPollTimer = null
+    }
+  },
+
+  startListPoll() {
+    var that = this
+    if (this._listPollTimer) return
+    this._listPollTimer = setInterval(function () {
+      that.loadReports({ silent: true })
+    }, LIST_POLL_INTERVAL)
+  },
+
+  loadReports(options) {
+    var silent = !!(options && options.silent)
+    var prevRunningIds = {}
+    if (silent) {
+      var prev = this.data.reports || []
+      for (var i = 0; i < prev.length; i++) {
+        if (RUNNING_STATUSES[prev[i].status]) {
+          prevRunningIds[String(prev[i].task_id)] = prev[i].stock_name || prev[i].stock_code || ''
+        }
+      }
+    }
+
     request({ url: '/api/mp/reports/list?page_size=20' })
       .then(function (res) {
-        if (res.success) {
-          this.setData({ reports: res.data.reports })
+        if (!res.success) return
+        var list = res.data.reports || []
+        var hasRunning = this.hasRunningReports(list)
+        this.setData({ reports: list, hasRunning: hasRunning })
+
+        if (silent) {
+          for (var j = 0; j < list.length; j++) {
+            var id = String(list[j].task_id)
+            if (prevRunningIds[id] && list[j].status === 'completed') {
+              wx.showToast({
+                title: (prevRunningIds[id] || '研报') + ' 已完成',
+                icon: 'success',
+              })
+              break
+            }
+          }
         }
+
+        if (hasRunning) this.startListPoll()
+        else this.stopListPoll()
       }.bind(this))
       .catch(function (e) {
         console.error(e)

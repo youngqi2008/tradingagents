@@ -75,3 +75,36 @@ page {
   color: var(--color-text-muted);
   font-size: 24rpx;
 }
+
+/* 输入框一键清空 */
+.input-with-clear {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+.input-with-clear .input-clearable {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 64rpx !important;
+}
+.input-clear {
+  position: absolute;
+  right: 12rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: rgba(107, 114, 128, 0.22);
+  color: #fff;
+  font-size: 28rpx;
+  line-height: 44rpx;
+  text-align: center;
+  font-weight: 600;
+}
+.input-clear:active {
+  opacity: 0.75;
+}

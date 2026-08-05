@@ -25,6 +25,7 @@ Page({
       '帮我选股思路',
     ],
     followUpSuggestions: [],
+    waitTip: '智能问股通常需要 1–5 分钟。分析期间可先离开，完成后回本页即可查看结果。',
   },
 
   onShow() {
@@ -34,22 +35,51 @@ Page({
     this.safeSetData({ isLoggedIn: loggedIn })
     if (!loggedIn) return
     this.loadUserQuota()
+    if (this._askRunning || this._needsRefreshOnShow) {
+      this.resumeAfterLeave()
+      return
+    }
+    var jump = null
+    try {
+      jump = wx.getStorageSync('chat_jump') || null
+      if (jump) wx.removeStorageSync('chat_jump')
+    } catch (e) {
+      jump = null
+    }
+    if (jump && jump.stock_code) {
+      this.bootstrapWithJump(jump)
+      return
+    }
     this.bootstrap()
   },
 
   onHide() {
     this._pageActive = false
-    if (this._askTask && this._askTask.abort) this._askTask.abort()
+    // 不 abort：后台继续生成，用户可切到其他 Tab
+    try { wx.hideLoading() } catch (e) {}
     this.safeSetData({ showSessions: false })
   },
 
   onUnload() {
     this._pageActive = false
+    this.stopMessagePoll()
+    // 仅页面卸载时断开，避免泄漏
     if (this._askTask && this._askTask.abort) this._askTask.abort()
   },
 
   safeSetData(payload, callback) {
-    if (!this._pageActive) return
+    // 页面隐藏时仍允许更新关键状态（sending 等），保证回来时 UI 正确
+    if (!this._pageActive) {
+      var keys = Object.keys(payload || {})
+      var allowWhileHidden = false
+      for (var i = 0; i < keys.length; i++) {
+        if (keys[i] === 'sending' || keys[i] === 'progressStatus' || keys[i] === 'messages' || keys[i] === 'followUpSuggestions' || keys[i] === 'userQuota') {
+          allowWhileHidden = true
+          break
+        }
+      }
+      if (!allowWhileHidden) return
+    }
     this.setData(payload, callback)
   },
 
@@ -113,6 +143,69 @@ Page({
       .catch(function (e) {
         if (!self._pageActive) return
         wx.showToast({ title: (e && e.message) || '加载失败', icon: 'none' })
+      })
+  },
+
+  bootstrapWithJump(jump) {
+    var self = this
+    var code = String(jump.stock_code || '').trim()
+    var message = jump.message || (code + ' 请帮我分析')
+    var strategyId = jump.strategy_id || ''
+    wx.showLoading({ title: '准备问股…' })
+    Promise.all([api.listChatStrategies(), api.listChatSessions()])
+      .then(function (results) {
+        if (!self._pageActive) return
+        var strategies = results[0] || []
+        var sessions = results[1] || []
+        var names = strategies.map(function (s) { return s.name })
+        var strategyIndex = 0
+        if (strategyId) {
+          for (var i = 0; i < strategies.length; i++) {
+            if (strategies[i].id === strategyId) {
+              strategyIndex = i
+              break
+            }
+          }
+        }
+        var sid = strategyId || (strategies[0] && strategies[0].id) || 'bull_trend'
+        self.safeSetData({
+          strategies: strategies,
+          strategyNames: names,
+          strategyIndex: strategyIndex,
+          sessions: sessions,
+          inputText: message,
+          followUpSuggestions: [],
+        })
+        return api.createChatSession({
+          stock_code: code,
+          title: '问股 ' + code,
+          strategy_id: sid,
+        }).then(function (session) {
+          if (!self._pageActive) return
+          return api.listChatSessions().then(function (freshSessions) {
+            self.safeSetData({ sessions: freshSessions || [] })
+            return self.openSession(session.session_id, session).then(function () {
+              self.setData({ inputText: message })
+              wx.hideLoading()
+              wx.showToast({
+                title: '已预填问股内容',
+                icon: 'none',
+                duration: 2000,
+              })
+              if (jump.auto_send) {
+                setTimeout(function () {
+                  if (self._pageActive) self.onSend()
+                }, 400)
+              }
+            })
+          })
+        })
+      })
+      .catch(function (e) {
+        wx.hideLoading()
+        if (!self._pageActive) return
+        wx.showToast({ title: (e && e.message) || '打开问股失败', icon: 'none' })
+        self.bootstrap()
       })
   },
 
@@ -216,45 +309,193 @@ Page({
     this.setData({ inputText: e.detail.value })
   },
 
+  onClearInput() {
+    if (this.data.sending) return
+    this.setData({ inputText: '' })
+  },
+
   hasMessageId(messages, id) {
     if (!id) return false
     return (messages || []).some(function (m) { return m.id === id })
   },
 
+  stopMessagePoll() {
+    if (this._messagePollTimer) {
+      clearInterval(this._messagePollTimer)
+      this._messagePollTimer = null
+    }
+  },
+
+  startMessagePoll() {
+    var self = this
+    if (this._messagePollTimer) return
+    this._messagePollTimer = setInterval(function () {
+      self.refreshMessagesWhileAsking()
+    }, 5000)
+  },
+
+  goHomeWhileAsking() {
+    try { wx.hideLoading() } catch (e) {}
+    wx.showToast({
+      title: '分析继续进行中',
+      icon: 'none',
+      duration: 2000,
+    })
+    setTimeout(function () {
+      wx.switchTab({ url: '/pages/kline/kline' })
+    }, 350)
+  },
+
+  resumeAfterLeave() {
+    var self = this
+    this._needsRefreshOnShow = false
+    this.loadUserQuota()
+    var sessionId = this.data.sessionId
+    if (!sessionId) {
+      this.bootstrap()
+      return
+    }
+    api.listChatMessages(sessionId)
+      .then(function (messages) {
+        messages = messages || []
+        var done = self.isAskCompletedInMessages(messages)
+        if (done) {
+          self._askRunning = false
+          self.stopMessagePoll()
+          self.setData({
+            messages: messages,
+            sending: false,
+            progressStatus: '',
+          })
+          self.loadFollowUpSuggestions(sessionId)
+          self.scrollToBottom()
+          if (self._pendingDoneToast) {
+            self._pendingDoneToast = false
+            wx.showToast({ title: '问股分析已完成', icon: 'success' })
+          }
+          return
+        }
+        if (self._askRunning || self.data.sending) {
+          self.setData({
+            messages: messages,
+            sending: true,
+            progressStatus: self.data.progressStatus || '分析仍在进行，请稍候…',
+          })
+          self.startMessagePoll()
+          self.scrollToBottom()
+          return
+        }
+        self.setData({ messages: messages })
+        self.loadFollowUpSuggestions(sessionId)
+      })
+      .catch(function () {
+        if (!self.data.sessions || !self.data.sessions.length) self.bootstrap()
+      })
+  },
+
+  isAskCompletedInMessages(messages) {
+    if (!messages || !messages.length) return false
+    var last = messages[messages.length - 1]
+    if (!last || last.role !== 'assistant') return false
+    // 若本地还记着待发送的用户问题，确认其后已有助手回复
+    if (this._pendingUserText) {
+      for (var i = messages.length - 1; i >= 0; i--) {
+        if (messages[i].role === 'user' && messages[i].content === this._pendingUserText) {
+          return i < messages.length - 1 && messages[messages.length - 1].role === 'assistant'
+        }
+      }
+    }
+    return last.status !== 'failed'
+  },
+
+  refreshMessagesWhileAsking() {
+    var self = this
+    var sessionId = this.data.sessionId
+    if (!sessionId || !this._askRunning) {
+      this.stopMessagePoll()
+      return
+    }
+    api.listChatMessages(sessionId)
+      .then(function (messages) {
+        messages = messages || []
+        if (self.isAskCompletedInMessages(messages)) {
+          self._askRunning = false
+          self.stopMessagePoll()
+          self.setData({
+            messages: messages,
+            sending: false,
+            progressStatus: '',
+          })
+          self.loadFollowUpSuggestions(sessionId)
+          self.scrollToBottom()
+          if (self._pageActive) {
+            wx.showToast({ title: '问股分析已完成', icon: 'success' })
+          } else {
+            self._pendingDoneToast = true
+            self._needsRefreshOnShow = true
+          }
+          return
+        }
+        if (self._pageActive) {
+          self.setData({ messages: messages })
+        }
+      })
+      .catch(function () {})
+  },
+
   handleAskError(self, text, err) {
-    wx.hideLoading()
-    if (!self._pageActive) return
-    self.safeSetData({ sending: false, progressStatus: '', inputText: text })
-    if (err && err.statusCode === 402) return
+    try { wx.hideLoading() } catch (e) {}
+    self._askRunning = false
+    self.stopMessagePoll()
+    // 主动离开导致的中断不打扰用户
     var errMsg = (err && err.message) || '发送失败'
+    if (!self._pageActive && (errMsg.indexOf('abort') >= 0 || errMsg.indexOf('fail') >= 0)) {
+      self._needsRefreshOnShow = true
+      return
+    }
+    self.setData({ sending: false, progressStatus: '', inputText: text || self.data.inputText })
+    if (err && err.statusCode === 402) return
     if (errMsg.indexOf('超时') >= 0) {
       wx.showModal({
         title: '分析超时',
-        content: errMsg,
+        content: errMsg + '\n\n可稍后回到本会话查看是否已生成结果。',
         showCancel: false,
         confirmText: '知道了',
       })
       return
     }
-    wx.showToast({ title: errMsg, icon: 'none' })
+    if (self._pageActive) {
+      wx.showToast({ title: errMsg, icon: 'none' })
+    } else {
+      self._needsRefreshOnShow = true
+    }
   },
 
   handleAskDone(self, data) {
-    wx.hideLoading()
-    if (!self._pageActive) return
+    try { wx.hideLoading() } catch (e) {}
+    self._askRunning = false
+    self.stopMessagePoll()
+    self._pendingUserText = ''
     var messages = (self.data.messages || []).slice()
     if (data.message && !self.hasMessageId(messages, data.message.id)) {
       messages.push(data.message)
     }
-    if (data.reply) messages.push(data.reply)
-    self.safeSetData({
+    if (data.reply && !self.hasMessageId(messages, data.reply.id)) {
+      messages.push(data.reply)
+    }
+    self.setData({
       messages: messages,
       sending: false,
       progressStatus: '',
       followUpSuggestions: data.follow_up_suggestions || [],
     })
     self.loadUserQuota()
-    self.scrollToBottom()
+    if (self._pageActive) {
+      self.scrollToBottom()
+    } else {
+      self._pendingDoneToast = true
+      self._needsRefreshOnShow = true
+    }
   },
 
   onSend() {
@@ -269,28 +510,30 @@ Page({
     var strategy = this.data.strategies[this.data.strategyIndex]
     var strategyId = strategy && strategy.id
     if (this._askTask && this._askTask.abort) this._askTask.abort()
-    this.safeSetData({
+    this._askRunning = true
+    this._pendingUserText = text
+    this._pendingDoneToast = false
+    this.setData({
       sending: true,
       inputText: '',
       followUpSuggestions: [],
       progressStatus: '连接中…',
     })
-    wx.showLoading({ title: 'AI 分析中…', mask: true })
+    // 不用 mask，避免挡住用户切 Tab / 离开
+    wx.showToast({ title: '分析开始，约需 1–5 分钟', icon: 'none', duration: 2500 })
 
     if (api.canAskStream && api.canAskStream()) {
       this._askTask = api.askInSessionStream(this.data.sessionId, text, strategyId, {
         onUserMessage: function (data) {
-          if (!self._pageActive) return
           var messages = (self.data.messages || []).slice()
           if (data.message && !self.hasMessageId(messages, data.message.id)) {
             messages.push(data.message)
-            self.safeSetData({ messages: messages, progressStatus: '已收到问题，开始分析…' })
-            self.scrollToBottom()
+            self.setData({ messages: messages, progressStatus: '已收到问题，开始分析…' })
+            if (self._pageActive) self.scrollToBottom()
           }
         },
         onProgress: function (data) {
-          if (!self._pageActive) return
-          self.safeSetData({ progressStatus: api.formatAskProgress(data) })
+          self.setData({ progressStatus: api.formatAskProgress(data) })
         },
         onDone: function (data) {
           self.handleAskDone(self, data)
@@ -299,6 +542,7 @@ Page({
           self.handleAskError(self, text, err)
         },
       })
+      this.startMessagePoll()
       return
     }
 
@@ -309,6 +553,7 @@ Page({
       .catch(function (e) {
         self.handleAskError(self, text, e)
       })
+    this.startMessagePoll()
   },
 
   scrollToBottom() {

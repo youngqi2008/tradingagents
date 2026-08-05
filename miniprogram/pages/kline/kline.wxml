@@ -13,15 +13,25 @@
     <!-- 搜索 -->
     <view class="search-card">
       <view class="search-row">
-        <input
-          class="search-input"
-          placeholder="默认沪指，输入个股代码如 600519"
-          value="{{keyword}}"
-          bindinput="onKeywordInput"
-          bindconfirm="onSearchConfirm"
-          confirm-type="search"
-        />
+        <view class="input-with-clear">
+          <input
+            class="search-input input-clearable"
+            placeholder="默认沪指，输入个股代码如 600519"
+            value="{{keyword}}"
+            bindinput="onKeywordInput"
+            bindconfirm="onSearchConfirm"
+            confirm-type="search"
+          />
+          <view class="input-clear" wx:if="{{keyword}}" catchtap="onClearKeyword">×</view>
+        </view>
         <button class="btn-search" bindtap="onSearchConfirm">查询</button>
+        <button
+          class="btn-fav {{isFavorite ? 'on' : ''}}"
+          wx:if="{{canSubscribe}}"
+          bindtap="onToggleFavorite"
+          loading="{{favLoading}}"
+          disabled="{{favLoading}}"
+        >{{isFavorite ? '已订阅' : '订阅'}}</button>
       </view>
       <view class="suggest-list" wx:if="{{suggests.length}}">
         <view
@@ -34,6 +44,13 @@
         >
           <text class="suggest-code">{{item.code}}</text>
           <text class="suggest-name">{{item.name}}</text>
+          <text
+            class="suggest-fav"
+            wx:if="{{!item.is_index}}"
+            catchtap="onSuggestFavorite"
+            data-code="{{item.code}}"
+            data-name="{{item.name}}"
+          >+订阅</text>
         </view>
       </view>
     </view>
@@ -42,8 +59,17 @@
     <view class="quote-card" wx:if="{{quote}}">
       <view class="quote-main">
         <view class="quote-name-row">
-          <text class="quote-name">{{quote.name || stockName || '-'}}</text>
-          <text class="quote-code">{{stockCode}}</text>
+          <view class="quote-title-wrap">
+            <text class="quote-name">{{quote.name || stockName || '-'}}</text>
+            <text class="quote-code">{{stockCode}}</text>
+          </view>
+          <button
+            class="btn-fav-quote {{isFavorite ? 'on' : ''}}"
+            wx:if="{{canSubscribe}}"
+            bindtap="onToggleFavorite"
+            loading="{{favLoading}}"
+            disabled="{{favLoading}}"
+          >{{isFavorite ? '已订阅' : '+ 订阅'}}</button>
         </view>
         <view class="quote-price-row {{quoteUp ? 'up' : (quoteDown ? 'down' : '')}}">
           <text class="quote-price">{{priceText}}</text>

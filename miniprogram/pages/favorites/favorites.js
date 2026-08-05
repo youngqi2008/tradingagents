@@ -24,6 +24,10 @@ Page({
     this.setData({ keyword: e.detail.value || '' })
   },
 
+  onClearKeyword() {
+    this.setData({ keyword: '', suggests: [] })
+  },
+
   onSearch() {
     var kw = (this.data.keyword || '').trim()
     if (!kw) {

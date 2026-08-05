@@ -21,6 +21,29 @@ var TYPE_META = {
   favorites_digest: { label: '自选', cls: 'custom' },
 }
 
+var SIGNAL_TYPES = { buy_signal: 1, sell_signal: 1 }
+
+function extractStockCode(n) {
+  if (!n) return ''
+  var content = n.content || ''
+  var title = n.title || ''
+  var m = content.match(/(\d{6})\.[A-Za-z]+/)
+  if (m) return m[1]
+  m = title.match(/[·•]\s*(\d{6})\s*$/)
+  if (m) return m[1]
+  m = title.match(/(\d{6})/)
+  if (m) return m[1]
+  m = content.match(/(\d{6})/)
+  return m ? m[1] : ''
+}
+
+function buildAskMessage(code, noticeType) {
+  if (noticeType === 'sell_signal') {
+    return code + ' 出现卖点信号，请分析当前走势、风险，以及是否应减仓或离场'
+  }
+  return code + ' 出现买点信号，请分析当前走势、风险与操作建议'
+}
+
 Page({
   data: {
     loading: true,
@@ -74,6 +97,21 @@ Page({
     return TYPE_META[noticeType] || { label: '', cls: '' }
   },
 
+  enrichNotification(n) {
+    var meta = this.resolveTypeMeta(n.notice_type)
+    var isSignal = !!SIGNAL_TYPES[n.notice_type]
+    var stockCode = isSignal ? extractStockCode(n) : ''
+    return Object.assign({}, n, {
+      timeText: this.formatTime(n.created_at),
+      preview: (n.content || '').slice(0, 60) + ((n.content || '').length > 60 ? '...' : ''),
+      typeLabel: meta.label,
+      typeClass: meta.cls,
+      isSignal: isSignal,
+      stockCode: stockCode,
+      canAct: isSignal && !!stockCode,
+    })
+  },
+
   loadList() {
     var self = this
     var types = self.getActiveTypes()
@@ -83,13 +121,7 @@ Page({
     listNotifications(params)
       .then(function (data) {
         var list = (data.notifications || []).map(function (n) {
-          var meta = self.resolveTypeMeta(n.notice_type)
-          return Object.assign({}, n, {
-            timeText: self.formatTime(n.created_at),
-            preview: (n.content || '').slice(0, 60) + ((n.content || '').length > 60 ? '...' : ''),
-            typeLabel: meta.label,
-            typeClass: meta.cls,
-          })
+          return self.enrichNotification(n)
         })
         var unread = data.unread_count || 0
         var categoryUnread = 0
@@ -140,16 +172,68 @@ Page({
           for (var i = 0; i < list.length; i++) {
             if (!list[i].is_read) categoryUnread += 1
           }
-          self.setData({ notifications: list, unreadCount: unread, categoryUnread: categoryUnread })
+          var detail = Object.assign({}, item, { is_read: true })
+          self.setData({
+            notifications: list,
+            unreadCount: unread,
+            categoryUnread: categoryUnread,
+            detail: detail,
+          })
           setTabBarUnreadCount(self, unread)
         })
-        .catch(function () {})
+        .catch(function () {
+          self.setData({ detail: item })
+        })
+      return
     }
     self.setData({ detail: item })
   },
 
   onCloseDetail() {
     this.setData({ detail: null })
+  },
+
+  noop() {},
+
+  resolveActionTarget(e) {
+    var code = e.currentTarget.dataset.code
+    var type = e.currentTarget.dataset.type
+    if (code) {
+      return { stockCode: code, noticeType: type || '' }
+    }
+    var detail = this.data.detail
+    if (detail && detail.stockCode) {
+      return { stockCode: detail.stockCode, noticeType: detail.notice_type || '' }
+    }
+    return null
+  },
+
+  goAskStock(e) {
+    var target = this.resolveActionTarget(e)
+    if (!target || !target.stockCode) {
+      wx.showToast({ title: '未识别股票代码', icon: 'none' })
+      return
+    }
+    try {
+      wx.setStorageSync('chat_jump', {
+        stock_code: target.stockCode,
+        message: buildAskMessage(target.stockCode, target.noticeType),
+        auto_send: false,
+        from: 'signal',
+      })
+    } catch (err) {}
+    wx.switchTab({ url: '/pages/chat/chat' })
+  },
+
+  goGenerateReport(e) {
+    var target = this.resolveActionTarget(e)
+    if (!target || !target.stockCode) {
+      wx.showToast({ title: '未识别股票代码', icon: 'none' })
+      return
+    }
+    wx.navigateTo({
+      url: '/pages/analysis/analysis?code=' + encodeURIComponent(target.stockCode),
+    })
   },
 
   onMarkAllRead() {
