@@ -34,7 +34,7 @@ class AresSignalService:
         elif SELL_TAG in content:
             signal_type = "sell"
         else:
-            raise ValueError("content 须包含 [关注]（买点）或 [取消关注]（卖点）")
+            raise ValueError("content 须包含 [关注] 或 [取消关注]")
 
         stock_match = STOCK_RE.search(content)
         if not stock_match:
@@ -51,10 +51,10 @@ class AresSignalService:
 
     def _build_notification(self, parsed: AresSignalParsed) -> Tuple[str, str, str]:
         if parsed.signal_type == "buy":
-            title = f"买点信号 · {parsed.stock_code}"
+            title = f"关注信号 · {parsed.stock_code}"
             notice_type = "buy_signal"
         else:
-            title = f"卖点信号 · {parsed.stock_code}"
+            title = f"不关注信号 · {parsed.stock_code}"
             notice_type = "sell_signal"
 
         lines = [parsed.raw_content]

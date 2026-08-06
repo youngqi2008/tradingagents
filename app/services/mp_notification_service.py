@@ -1,10 +1,12 @@
 """小程序站内通知服务"""
 
+from datetime import timedelta
 from typing import List, Optional, Tuple
 
-from sqlalchemy import and_, func, or_, select
+from sqlalchemy import and_, delete, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.mysql_db import get_mysql_session, parse_int_id
 from app.models.mp_notification import MpNotificationCreate, MpNotificationResponse
 from app.models.sql.models import MpNotificationORM, MpNotificationReadORM, UserORM
@@ -22,11 +24,31 @@ logger = get_logger("mp_notification_service")
 
 
 class MpNotificationService:
+    def _retention_days(self) -> int:
+        try:
+            days = int(getattr(settings, "MP_NOTIFICATION_RETENTION_DAYS", 7) or 7)
+        except (TypeError, ValueError):
+            days = 7
+        return max(0, days)
+
+    def _retention_cutoff(self):
+        days = self._retention_days()
+        if days <= 0:
+            return None
+        return now_tz() - timedelta(days=days)
+
+    def _retention_filter(self):
+        """仅保留近 N 天消息；days<=0 时返回 None 表示不加过滤。"""
+        cutoff = self._retention_cutoff()
+        if cutoff is None:
+            return None
+        return MpNotificationORM.created_at >= cutoff
+
     def _user_target_filter(self, user: UserORM):
         """构建：该用户可见的已发布通知条件"""
         # target_user_ids 存 int 数组；JSON_CONTAINS 候选须为 JSON 数字，不能加引号
         user_id_json = str(int(user.id))
-        return and_(
+        conditions = [
             MpNotificationORM.status == "published",
             or_(
                 MpNotificationORM.target_type == "all",
@@ -42,7 +64,11 @@ class MpNotificationService:
                     ),
                 ),
             ),
-        )
+        ]
+        retention = self._retention_filter()
+        if retention is not None:
+            conditions.append(retention)
+        return and_(*conditions)
 
     async def _count_recipients(
         self,
@@ -308,6 +334,9 @@ class MpNotificationService:
     ) -> bool:
         if row.status != "published":
             return False
+        cutoff = self._retention_cutoff()
+        if cutoff is not None and row.created_at and row.created_at < cutoff:
+            return False
         if row.target_type == "all":
             return True
         if row.target_type == "membership":
@@ -315,6 +344,51 @@ class MpNotificationService:
         if row.target_type == "users" and row.target_user_ids:
             return user.id in row.target_user_ids
         return False
+
+    async def cleanup_expired(self, days: Optional[int] = None) -> dict:
+        """删除超过保留天数的站内消息及已读记录。"""
+        retain_days = self._retention_days() if days is None else max(0, int(days))
+        if retain_days <= 0:
+            return {"deleted": 0, "reads_deleted": 0, "skipped": True, "reason": "retention disabled"}
+        cutoff = now_tz() - timedelta(days=retain_days)
+        async with get_mysql_session() as session:
+            ids = (
+                await session.execute(
+                    select(MpNotificationORM.id).where(MpNotificationORM.created_at < cutoff)
+                )
+            ).scalars().all()
+            if not ids:
+                logger.info("🧹 小程序消息清理：无过期消息 cutoff=%s days=%s", cutoff, retain_days)
+                return {
+                    "deleted": 0,
+                    "reads_deleted": 0,
+                    "cutoff": cutoff.isoformat(),
+                    "days": retain_days,
+                }
+
+            reads_result = await session.execute(
+                delete(MpNotificationReadORM).where(
+                    MpNotificationReadORM.notification_id.in_(ids)
+                )
+            )
+            notif_result = await session.execute(
+                delete(MpNotificationORM).where(MpNotificationORM.id.in_(ids))
+            )
+            deleted = notif_result.rowcount or 0
+            reads_deleted = reads_result.rowcount or 0
+            logger.info(
+                "🧹 小程序消息清理完成: deleted=%s reads=%s cutoff=%s days=%s",
+                deleted,
+                reads_deleted,
+                cutoff,
+                retain_days,
+            )
+            return {
+                "deleted": deleted,
+                "reads_deleted": reads_deleted,
+                "cutoff": cutoff.isoformat(),
+                "days": retain_days,
+            }
 
     async def mark_read(self, user_id: str, notification_id: str) -> bool:
         uid = parse_int_id(user_id)

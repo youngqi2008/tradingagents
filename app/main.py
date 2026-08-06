@@ -639,6 +639,39 @@ async def lifespan(app: FastAPI):
         else:
             logger.info(f"📊 大盘复盘推送已配置: {settings.MARKET_REVIEW_CRON}")
 
+        # 小程序站内消息过期清理（默认保留 7 天）
+        async def run_mp_notification_cleanup():
+            try:
+                logger.info("🧹 开始清理过期小程序站内消息...")
+                from app.services.mp_notification_service import mp_notification_service
+
+                result = await mp_notification_service.cleanup_expired()
+                logger.info(
+                    "✅ 小程序消息清理完成: deleted=%s reads=%s days=%s",
+                    result.get("deleted"),
+                    result.get("reads_deleted"),
+                    result.get("days"),
+                )
+            except Exception as e:
+                logger.error(f"❌ 小程序消息清理失败: {e}", exc_info=True)
+
+        scheduler.add_job(
+            run_mp_notification_cleanup,
+            CronTrigger.from_crontab(settings.MP_NOTIFICATION_CLEANUP_CRON, timezone=settings.TIMEZONE),
+            id="mp_notification_cleanup",
+            name="小程序站内消息过期清理",
+        )
+        if not settings.MP_NOTIFICATION_CLEANUP_ENABLED:
+            scheduler.pause_job("mp_notification_cleanup")
+            logger.info(
+                f"⏸️ 小程序消息清理已添加但暂停: {settings.MP_NOTIFICATION_CLEANUP_CRON}"
+            )
+        else:
+            logger.info(
+                f"🧹 小程序消息清理已配置: 保留{settings.MP_NOTIFICATION_RETENTION_DAYS}天, "
+                f"cron={settings.MP_NOTIFICATION_CLEANUP_CRON}"
+            )
+
         scheduler.start()
 
         # 设置调度器实例到服务中，以便API可以管理任务

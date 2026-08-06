@@ -42,7 +42,7 @@ def test_build_notification_titles():
         )
     )
     title, _, notice_type = ares_signal_service._build_notification(buy)
-    assert title == "买点信号 · 600378"
+    assert title == "关注信号 · 600378"
     assert notice_type == "buy_signal"
 
     sell = ares_signal_service.parse_webhook(
@@ -52,5 +52,5 @@ def test_build_notification_titles():
         )
     )
     title2, _, notice_type2 = ares_signal_service._build_notification(sell)
-    assert title2 == "卖点信号 · 000001"
+    assert title2 == "不关注信号 · 000001"
     assert notice_type2 == "sell_signal"

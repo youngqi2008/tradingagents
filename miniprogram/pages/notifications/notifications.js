@@ -5,7 +5,7 @@ const { syncTabBar, setTabBarUnreadCount } = require('../../utils/tabbar')
 /** 消息分类：与后端 notice_type 对应 */
 var CATEGORIES = [
   { key: 'all', label: '全部', types: '' },
-  { key: 'signal', label: '买卖信号', types: 'buy_signal,sell_signal' },
+  { key: 'signal', label: '关注信号', types: 'buy_signal,sell_signal' },
   { key: 'risk', label: '风控消息', types: 'risk_alert' },
   { key: 'broadcast', label: '广播消息', types: 'announcement' },
   { key: 'review', label: '定时复盘', types: 'market_review' },
@@ -13,8 +13,8 @@ var CATEGORIES = [
 ]
 
 var TYPE_META = {
-  buy_signal: { label: '买点', cls: 'buy' },
-  sell_signal: { label: '卖点', cls: 'sell' },
+  buy_signal: { label: '关注', cls: 'buy' },
+  sell_signal: { label: '不关注', cls: 'sell' },
   risk_alert: { label: '风控', cls: 'risk' },
   announcement: { label: '广播', cls: 'broadcast' },
   market_review: { label: '复盘', cls: 'review' },
@@ -39,9 +39,9 @@ function extractStockCode(n) {
 
 function buildAskMessage(code, noticeType) {
   if (noticeType === 'sell_signal') {
-    return code + ' 出现卖点信号，请分析当前走势、风险，以及是否应减仓或离场'
+    return code + ' 出现取消关注信号，请分析当前走势、风险，以及后续观察重点'
   }
-  return code + ' 出现买点信号，请分析当前走势、风险与操作建议'
+  return code + ' 出现关注信号，请分析当前走势、风险与操作建议'
 }
 
 Page({
@@ -101,7 +101,16 @@ Page({
     var meta = this.resolveTypeMeta(n.notice_type)
     var isSignal = !!SIGNAL_TYPES[n.notice_type]
     var stockCode = isSignal ? extractStockCode(n) : ''
+    var title = n.title || ''
+    if (isSignal && stockCode) {
+      title = (n.notice_type === 'sell_signal' ? '不关注信号 · ' : '关注信号 · ') + stockCode
+    } else if (isSignal) {
+      title = title
+        .replace(/买点信号/g, '关注信号')
+        .replace(/卖点信号/g, '不关注信号')
+    }
     return Object.assign({}, n, {
+      title: title,
       timeText: this.formatTime(n.created_at),
       preview: (n.content || '').slice(0, 60) + ((n.content || '').length > 60 ? '...' : ''),
       typeLabel: meta.label,

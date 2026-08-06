@@ -313,6 +313,11 @@ class Settings(BaseSettings):
     MARKET_REVIEW_ENABLED: bool = Field(default=True)
     MARKET_REVIEW_CRON: str = Field(default="0 18 * * 1-5")  # 工作日 18:00，对齐 DSA SCHEDULE_TIME
 
+    # ===== 小程序站内消息保留策略 =====
+    MP_NOTIFICATION_RETENTION_DAYS: int = Field(default=7, description="小程序消息保留天数，超时不可见并定期清理")
+    MP_NOTIFICATION_CLEANUP_ENABLED: bool = Field(default=True, description="是否启用过期消息清理任务")
+    MP_NOTIFICATION_CLEANUP_CRON: str = Field(default="30 3 * * *", description="过期消息清理 Cron，默认每天 03:30")
+
     @property
     def is_production(self) -> bool:
         """是否为生产环境"""
