@@ -35,10 +35,6 @@
         "text": "行情"
       },
       {
-        "pagePath": "pages/news/news",
-        "text": "新闻"
-      },
-      {
         "pagePath": "pages/chat/chat",
         "text": "问股"
       },

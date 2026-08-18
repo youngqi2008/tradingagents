@@ -4,7 +4,6 @@ const { isRiskOfficer } = require('./auth')
 var BASE_TABS = [
   { pagePath: '/pages/notifications/notifications', text: '消息', icon: 'notify' },
   { pagePath: '/pages/kline/kline', text: '行情', icon: 'kline' },
-  { pagePath: '/pages/news/news', text: '新闻', icon: 'news' },
   { pagePath: '/pages/chat/chat', text: '问股', icon: 'chat' },
   { pagePath: '/pages/index/index', text: '研报', icon: 'report' },
   { pagePath: '/pages/profile/profile', text: '我的', icon: 'me' },
@@ -47,6 +46,9 @@ function syncTabBar(page) {
   // 普通用户若误入风控页，不选中风控项
   if (!showRisk && route.indexOf('risk-message') >= 0) {
     route = '/pages/profile/profile'
+  }
+  if (route.indexOf('/pages/news/news') >= 0) {
+    route = '/pages/kline/kline'
   }
   if (typeof tabBar.setSelectedByPath === 'function') {
     tabBar.setSelectedByPath(route)

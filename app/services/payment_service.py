@@ -4,7 +4,7 @@ import base64
 import json
 import secrets
 import time
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from typing import Optional
 
 import httpx
@@ -30,6 +30,15 @@ except ImportError:
 logger = get_logger("payment_service")
 
 RECHARGE_AMOUNTS = [Decimal("10"), Decimal("30"), Decimal("50"), Decimal("100"), Decimal("200")]
+RECHARGE_MIN = Decimal("1")
+RECHARGE_MAX = Decimal("5000")
+
+
+def normalize_recharge_amount(amount: Decimal) -> Decimal:
+    value = Decimal(str(amount)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    if value < RECHARGE_MIN or value > RECHARGE_MAX:
+        raise ValueError(f"充值金额须在 {RECHARGE_MIN}～{RECHARGE_MAX} 元之间")
+    return value
 
 
 class PaymentService:
@@ -45,8 +54,7 @@ class PaymentService:
         return not settings.WECHAT_PAY_ENABLED
 
     async def create_recharge_order(self, user_id: str, openid: str, amount: Decimal) -> dict:
-        if amount <= 0:
-            raise ValueError("充值金额必须大于 0")
+        amount = normalize_recharge_amount(amount)
 
         uid = parse_int_id(user_id)
         if not uid:
@@ -101,7 +109,7 @@ class PaymentService:
             "description": "Ares智能研报-账户充值",
             "out_trade_no": order_no,
             "notify_url": settings.WECHAT_PAY_NOTIFY_URL,
-            "amount": {"total": int(amount * 100), "currency": "CNY"},
+            "amount": {"total": int((amount * 100).quantize(Decimal("1"), rounding=ROUND_HALF_UP)), "currency": "CNY"},
             "payer": {"openid": openid},
         }
         body_str = json.dumps(body, ensure_ascii=False)

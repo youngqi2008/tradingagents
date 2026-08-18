@@ -41,6 +41,12 @@ function isIndexCode(code) {
   return false
 }
 
+function fmtNewsTime(v) {
+  if (!v) return ''
+  var s = String(v).replace('T', ' ')
+  return s.slice(0, 16)
+}
+
 Page({
   data: {
     isLoggedIn: false,
@@ -70,6 +76,12 @@ Page({
     canSubscribe: false,
     isFavorite: false,
     favLoading: false,
+    pane: 'kline',
+    newsLoading: false,
+    newsOnlyFav: false,
+    newsList: [],
+    newsDisplayList: [],
+    newsDetail: null,
   },
 
   _bars: [],
@@ -86,16 +98,33 @@ Page({
       return
     }
     this.refreshUnreadBadge()
+    var pane = 'kline'
+    try {
+      var savedPane = wx.getStorageSync('market_pane')
+      if (savedPane === 'news' || savedPane === 'kline') {
+        pane = savedPane
+        wx.removeStorageSync('market_pane')
+      }
+    } catch (e) {}
     try {
       var jump = wx.getStorageSync('kline_jump')
       if (jump && jump.code) {
         wx.removeStorageSync('kline_jump')
+        pane = 'kline'
+        this.setData({ pane: pane })
+        this._setPaneTitle(pane)
         this.measureCanvas(function () {
           this.loadStock(jump.code, jump.name)
         }.bind(this))
         return
       }
     } catch (e) {}
+    this.setData({ pane: pane })
+    this._setPaneTitle(pane)
+    if (pane === 'news') {
+      this.loadNews()
+      return
+    }
     this.measureCanvas(function () {
       this.loadStock(this.data.stockCode)
     }.bind(this))
@@ -126,7 +155,11 @@ Page({
         wx.showToast({ title: '登录成功', icon: 'success' })
         self.setData({ isLoggedIn: true })
         self.measureCanvas(function () {
-          self.loadStock(self.data.stockCode)
+          if (self.data.pane === 'kline') {
+            self.loadStock(self.data.stockCode)
+          } else {
+            self.loadNews()
+          }
         })
         auth.promptProfileSetupIfNeeded(result && result.user)
       })
@@ -493,5 +526,144 @@ Page({
     ctx.fillText(String(bars[0].time).slice(0, 10), padL, h - 8)
     ctx.textAlign = 'right'
     ctx.fillText(String(bars[n - 1].time).slice(0, 10), padL + chartW, h - 8)
+  },
+
+  _setPaneTitle(pane) {
+    wx.setNavigationBarTitle({ title: pane === 'news' ? '新闻' : '行情' })
+  },
+
+  switchPane(e) {
+    var pane = e.currentTarget.dataset.pane
+    if (!pane || pane === this.data.pane) return
+    this.setData({ pane: pane, newsDetail: null })
+    this._setPaneTitle(pane)
+    if (pane === 'news') {
+      this.loadNews()
+      return
+    }
+    this.measureCanvas(function () {
+      this.loadStock(this.data.stockCode)
+    }.bind(this))
+  },
+
+  toggleNewsOnlyFav() {
+    if (this.data.newsDetail) return
+    var onlyFav = !this.data.newsOnlyFav
+    this.setData({ newsOnlyFav: onlyFav })
+    this.applyNewsFilter()
+  },
+
+  applyNewsFilter() {
+    var list = this.data.newsList || []
+    if (this.data.newsOnlyFav) {
+      list = list.filter(function (x) { return x.highlight })
+    }
+    this.setData({ newsDisplayList: list })
+  },
+
+  onNewsRefresh() {
+    if (this.data.newsDetail) {
+      this.setData({ newsDetail: null })
+    }
+    this.loadNews()
+  },
+
+  loadNews() {
+    var self = this
+    this.setData({ newsLoading: true, newsDetail: null })
+    api.listLatestNews({ hours: 72, limit: 50 })
+      .then(function (data) {
+        var items = (data && data.items) || []
+        items = items.map(function (it) {
+          var content = it.content || it.summary || ''
+          var summary = it.summary || ''
+          if (!summary && content) {
+            summary = content.length > 120 ? content.slice(0, 120) + '…' : content
+          }
+          return Object.assign({}, it, {
+            timeText: fmtNewsTime(it.publish_time),
+            favorite_symbolsText: (it.favorite_symbols || []).join('、'),
+            summary: summary,
+            content: content,
+            hasMore: !!(content && summary && content.length > summary.replace(/…$/, '').length),
+          })
+        })
+        self.setData({ newsList: items, newsLoading: false })
+        self.applyNewsFilter()
+      })
+      .catch(function (e) {
+        self.setData({ newsLoading: false })
+        if (e && e.message === '未登录') {
+          self.setData({ isLoggedIn: false })
+          return
+        }
+        wx.showToast({ title: (e && e.message) || '加载失败', icon: 'none' })
+      })
+  },
+
+  onOpenNews(e) {
+    var id = e.currentTarget.dataset.id
+    var item = (this.data.newsDisplayList || []).find(function (x) {
+      return String(x.id) === String(id)
+    })
+    if (!item) return
+    this.setData({ newsDetail: item })
+  },
+
+  onCloseNewsDetail() {
+    this.setData({ newsDetail: null })
+  },
+
+  onCopyNewsLink() {
+    var detail = this.data.newsDetail
+    var url = detail && detail.url
+    if (!url || (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0)) {
+      wx.showToast({ title: '暂无原文链接', icon: 'none' })
+      return
+    }
+    wx.setClipboardData({
+      data: url,
+      success: function () {
+        wx.showToast({ title: '原文链接已复制', icon: 'none' })
+      },
+    })
+  },
+
+  onOpenNewsLink() {
+    var detail = this.data.newsDetail
+    var url = detail && detail.url
+    if (!url || (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0)) {
+      wx.showToast({ title: '暂无原文链接', icon: 'none' })
+      return
+    }
+    if (wx.openOfficialAccountArticle && url.indexOf('mp.weixin.qq.com') >= 0) {
+      wx.openOfficialAccountArticle({ url: url })
+      return
+    }
+    wx.setClipboardData({
+      data: url,
+      success: function () {
+        wx.showModal({
+          title: '打开原文',
+          content: '小程序内无法直接打开外链，链接已复制，请粘贴到浏览器查看。',
+          showCancel: false,
+          confirmText: '知道了',
+        })
+      },
+    })
+  },
+
+  onNewsGoKline() {
+    var detail = this.data.newsDetail
+    var symbol = detail && detail.symbol
+    if (!symbol) {
+      wx.showToast({ title: '无关联股票', icon: 'none' })
+      return
+    }
+    this.setData({ pane: 'kline', newsDetail: null })
+    this._setPaneTitle('kline')
+    this.measureCanvas(function () {
+      this.loadStock(symbol, (detail && detail.stock_name) || '')
+    }.bind(this))
   },
 })

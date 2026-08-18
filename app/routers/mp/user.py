@@ -9,7 +9,7 @@ from app.routers.mp.deps import get_current_mp_user
 from app.services.user_service import user_service
 from app.services.billing_service import billing_service
 from app.services.membership_service import membership_service
-from app.services.payment_service import payment_service, RECHARGE_AMOUNTS
+from app.services.payment_service import payment_service, RECHARGE_AMOUNTS, RECHARGE_MIN, RECHARGE_MAX
 from app.models.payment import RechargeRequest
 from app.models.role import DEFAULT_MP_ROLE, role_display_name
 
@@ -101,7 +101,11 @@ async def get_billing_records(
 async def get_recharge_options():
     return {
         "success": True,
-        "data": {"amounts": [float(a) for a in RECHARGE_AMOUNTS]},
+        "data": {
+            "amounts": [float(a) for a in RECHARGE_AMOUNTS],
+            "min_amount": float(RECHARGE_MIN),
+            "max_amount": float(RECHARGE_MAX),
+        },
     }
 
 

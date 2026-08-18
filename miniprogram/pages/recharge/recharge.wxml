@@ -5,11 +5,24 @@
       <view
         wx:for="{{amounts}}"
         wx:key="*this"
-        class="amount-item {{selected === item ? 'active' : ''}}"
+        class="amount-item {{!custom && selected === item ? 'active' : ''}}"
         bindtap="selectAmount"
         data-amount="{{item}}"
       >¥{{item}}</view>
+      <view class="amount-item {{custom ? 'active' : ''}}" bindtap="selectCustom">自定义</view>
     </view>
-    <button class="btn-primary" bindtap="pay" loading="{{paying}}">微信支付</button>
+    <view class="custom-box" wx:if="{{custom}}">
+      <text class="custom-prefix">¥</text>
+      <input
+        class="custom-input"
+        type="digit"
+        placeholder="请输入 {{minAmount}}～{{maxAmount}} 元"
+        value="{{customAmount}}"
+        bindinput="onCustomInput"
+        focus="{{custom}}"
+      />
+    </view>
+    <view class="hint">支持自定义金额，范围 {{minAmount}}～{{maxAmount}} 元</view>
+    <button class="btn-primary" bindtap="pay" loading="{{paying}}">微信支付 ¥{{payAmount}}</button>
   </view>
 </view>

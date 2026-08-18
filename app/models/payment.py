@@ -58,7 +58,7 @@ class PaymentOrder(BaseModel):
 
 
 class RechargeRequest(BaseModel):
-    amount: Decimal = Field(..., gt=0, description="充值金额（元）")
+    amount: Decimal = Field(..., ge=1, le=5000, description="充值金额（元），1～5000")
 
 
 class PaymentOrderResponse(BaseModel):
