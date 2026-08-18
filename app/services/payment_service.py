@@ -152,10 +152,14 @@ class PaymentService:
         from cryptography.hazmat.primitives import hashes, serialization
         from cryptography.hazmat.primitives.asymmetric import padding
 
-        private_key = serialization.load_pem_private_key(
-            settings.WECHAT_MCH_PRIVATE_KEY.encode("utf-8"),
-            password=None,
-        )
+        pem = (settings.WECHAT_MCH_PRIVATE_KEY or "").encode("utf-8")
+        try:
+            private_key = serialization.load_pem_private_key(pem, password=None)
+        except ValueError as e:
+            raise ValueError(
+                "商户私钥 PEM 无法解析。请确认 WECHAT_MCH_PRIVATE_KEY 为 apiclient_key.pem 全文，"
+                "换行可用 \\n，且包含 BEGIN/END PRIVATE KEY"
+            ) from e
         signature = private_key.sign(
             message.encode("utf-8"),
             padding.PKCS1v15(),
@@ -174,12 +178,47 @@ class PaymentService:
             f'timestamp="{timestamp}",serial_no="{settings.WECHAT_MCH_SERIAL_NO}"'
         )
 
+    def _verify_wechat_notify(self, headers: dict, body: bytes) -> bool:
+        """用微信支付公钥校验回调签名；未配置公钥时跳过验签。"""
+        pub_pem = settings.WECHAT_PAY_PUBLIC_KEY
+        if not pub_pem:
+            logger.warning("未配置 WECHAT_PAY_PUBLIC_KEY，跳过支付回调验签")
+            return True
+
+        header_map = {str(k).lower(): v for k, v in headers.items()}
+        timestamp = header_map.get("wechatpay-timestamp", "")
+        nonce = header_map.get("wechatpay-nonce", "")
+        signature = header_map.get("wechatpay-signature", "")
+        if not all([timestamp, nonce, signature]):
+            logger.error("支付回调缺少验签头")
+            return False
+
+        try:
+            from cryptography.hazmat.primitives import hashes, serialization
+            from cryptography.hazmat.primitives.asymmetric import padding
+
+            public_key = serialization.load_pem_public_key(pub_pem.encode("utf-8"))
+            message = f"{timestamp}\n{nonce}\n{body.decode('utf-8')}\n"
+            public_key.verify(
+                base64.b64decode(signature),
+                message.encode("utf-8"),
+                padding.PKCS1v15(),
+                hashes.SHA256(),
+            )
+            return True
+        except Exception as e:
+            logger.error(f"支付回调验签失败: {e}")
+            return False
+
     async def handle_notify(self, headers: dict, body: bytes) -> dict:
         if self._is_mock_mode():
             return {"code": "SUCCESS", "message": "mock"}
 
         try:
             from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+            if not self._verify_wechat_notify(headers, body):
+                return {"code": "FAIL", "message": "invalid signature"}
 
             data = json.loads(body)
             resource = data.get("resource", {})

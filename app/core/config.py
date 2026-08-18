@@ -1,4 +1,4 @@
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 import os
@@ -91,7 +91,47 @@ class Settings(BaseSettings):
     WECHAT_MCH_SERIAL_NO: str = Field(default="", description="商户 API 证书序列号")
     WECHAT_API_V3_KEY: str = Field(default="", description="APIv3 密钥")
     WECHAT_MCH_PRIVATE_KEY: str = Field(default="", description="商户私钥 PEM 内容")
+    WECHAT_PAY_PUBLIC_KEY_ID: str = Field(default="", description="微信支付公钥 ID（PUB_KEY_ID_ 开头）")
+    WECHAT_PAY_PUBLIC_KEY: str = Field(default="", description="微信支付平台公钥 PEM，用于回调验签")
     WECHAT_PAY_NOTIFY_URL: str = Field(default="", description="支付结果回调 URL")
+
+    @staticmethod
+    def _normalize_pem(value) -> str:
+        if value is None:
+            return ""
+        key = str(value).strip().strip('"').strip("'").strip()
+        if not key:
+            return ""
+        key = key.replace("\r\n", "\n").replace("\r", "\n")
+        if "\\n" in key:
+            key = key.replace("\\n", "\n")
+        lines = [line.strip() for line in key.split("\n") if line.strip()]
+        return "\n".join(lines) + "\n"
+
+    @field_validator("WECHAT_MCH_PRIVATE_KEY", "WECHAT_PAY_PUBLIC_KEY", mode="before")
+    @classmethod
+    def _normalize_wechat_pem(cls, value):
+        """把 .env 里的字面量 \\n、引号和行内空格还原成标准 PEM。"""
+        return cls._normalize_pem(value)
+
+    @field_validator("WECHAT_API_V3_KEY", mode="before")
+    @classmethod
+    def _normalize_wechat_api_v3_key(cls, value):
+        """APIv3 密钥必须是 32 位；误填的 PUB_KEY_ID_ 不是密钥。"""
+        if value is None:
+            return ""
+        key = str(value).strip().strip('"').strip("'")
+        if not key:
+            return ""
+        if key.startswith("PUB_KEY_ID_"):
+            warnings.warn(
+                "WECHAT_API_V3_KEY 填的是微信支付公钥ID，不是 APIv3 密钥，已忽略。"
+                "请到商户平台「API安全 -> APIv3密钥」填写 32 位密钥。",
+                UserWarning,
+                stacklevel=2,
+            )
+            return ""
+        return key
 
     # 外部买卖点信号 Webhook（必须配置，空则接口拒绝）
     ARES_SIGNAL_TOKEN: str = Field(default="", description="外部信号推送鉴权令牌（必填，否则接口 503）")
