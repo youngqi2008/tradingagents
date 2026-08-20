@@ -20,16 +20,36 @@ class ChangeMembershipRequest(BaseModel):
 @router.get("/membership/levels")
 async def list_mp_membership_levels(user: dict = Depends(get_current_mp_user)):
     """可选购的会员等级列表"""
+    from app.services.benefit_service import get_level_benefit_templates
+
     levels = await membership_service.list_levels(active_only=True)
+    benefit_templates = await get_level_benefit_templates()
     current_id = user.get("membership_level_id")
     if not current_id:
         default = await membership_service.get_default_level()
         current_id = str(default.id) if default else None
+
+    level_items = []
+    for level in levels:
+        item = level.model_dump()
+        tpl = benefit_templates.get(level.code) or {}
+        item["benefit_monthly_report"] = tpl.get("monthly_report", 0)
+        item["benefit_monthly_ask"] = tpl.get("monthly_ask", 0)
+        item["benefit_monthly_push"] = tpl.get("monthly_push", 0)
+        item["benefit_once_report"] = tpl.get("once_report", 0)
+        item["benefit_once_ask"] = tpl.get("once_ask", 0)
+        item["benefit_once_push"] = tpl.get("once_push", 0)
+        if item["benefit_monthly_report"] >= 99999:
+            item["benefit_monthly_report_text"] = "不限"
+        else:
+            item["benefit_monthly_report_text"] = str(item["benefit_monthly_report"])
+        level_items.append(item)
+
     return {
         "success": True,
         "data": {
             "current_membership_level_id": current_id,
-            "levels": [level.model_dump() for level in levels],
+            "levels": level_items,
         },
     }
 

@@ -69,23 +69,22 @@ function isProfileSetupPending() {
   return wx.getStorageSync(PROFILE_SETUP_FLAG) === '1'
 }
 
-/** 登录后若资料未完善：打标并跳转「我的」完善页 */
+/** 登录后若资料未完善：仅打标，稍后在「我的」完善；不打断首页关注信号 */
 function promptProfileSetupIfNeeded(user) {
   if (!needsProfileSetup(user)) {
     setProfileSetupPending(false)
     return false
   }
   setProfileSetupPending(true)
-  try {
-    var pages = getCurrentPages() || []
-    var cur = pages.length ? pages[pages.length - 1] : null
-    var route = (cur && (cur.route || cur.__route__)) || ''
-    if (route.indexOf('pages/profile/profile') >= 0) {
-      return true
-    }
-  } catch (e) {}
-  wx.switchTab({ url: '/pages/profile/profile' })
   return true
+}
+
+var HOME_TAB = '/pages/kline/kline'
+
+/** 登录成功后回到当前页即可，不打断浏览；若在登录墙页面再回行情首页 */
+function goHomeAfterLogin(user) {
+  promptProfileSetupIfNeeded(user)
+  return false
 }
 
 function ensureLogin() {
@@ -118,6 +117,7 @@ module.exports = {
   setProfileSetupPending,
   isProfileSetupPending,
   promptProfileSetupIfNeeded,
+  goHomeAfterLogin,
   ensureLogin,
   logout,
 }

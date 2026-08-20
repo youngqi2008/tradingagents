@@ -11,7 +11,7 @@
 .denied-title {
   display: block;
   font-size: 34rpx;
-  color: #1a1a2e;
+  color: #111111;
   font-weight: 600;
 }
 .denied-desc {
@@ -30,7 +30,7 @@
 .card-title {
   font-size: 30rpx;
   font-weight: 600;
-  color: #1a1a2e;
+  color: #111111;
 }
 .field {
   margin-top: 24rpx;
@@ -52,7 +52,7 @@
   border-radius: 12rpx;
   padding: 20rpx 22rpx;
   font-size: 28rpx;
-  color: #1a1a2e;
+  color: #111111;
   line-height: 1.5;
 }
 .title-input {
@@ -80,9 +80,9 @@
   border: 1rpx solid #e5e7eb;
 }
 .chip.on {
-  background: #1a1a2e;
-  color: #c9a227;
-  border-color: #1a1a2e;
+  background: #111111;
+  color: #d4202a;
+  border-color: #111111;
 }
 .level-hint {
   display: block;
@@ -93,8 +93,8 @@
 }
 .btn-send {
   margin-top: 32rpx;
-  background: linear-gradient(135deg, #c9a227, #e8c547);
-  color: #1a1a2e;
+  background: linear-gradient(135deg, #d4202a, #ef4444);
+  color: #ffffff;
   font-weight: 600;
   border-radius: 14rpx;
 }
@@ -105,7 +105,7 @@
 }
 .refresh {
   font-size: 24rpx;
-  color: #c9a227;
+  color: #d4202a;
 }
 .empty {
   text-align: center;
@@ -125,7 +125,7 @@
 }
 .hist-title {
   font-size: 28rpx;
-  color: #1a1a2e;
+  color: #111111;
   font-weight: 500;
   flex: 1;
 }
@@ -137,7 +137,7 @@
   display: block;
   margin-top: 8rpx;
   font-size: 22rpx;
-  color: #c9a227;
+  color: #d4202a;
 }
 .hist-content {
   display: block;

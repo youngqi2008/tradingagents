@@ -43,7 +43,7 @@
   align-items: center;
   gap: 24rpx;
   padding: 40rpx 32rpx 32rpx;
-  background: linear-gradient(180deg, #1a1a2e 0%, #2d3561 60%, var(--color-bg) 100%);
+  background: linear-gradient(180deg, #111111 0%, #1f1f1f 60%, var(--color-bg) 100%);
 }
 .avatar-btn {
   padding: 0;
@@ -58,7 +58,7 @@
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
-  border: 4rpx solid rgba(201, 162, 39, 0.6);
+  border: 4rpx solid rgba(212, 32, 42, 0.6);
   display: block;
 }
 .avatar-ph {
@@ -92,7 +92,7 @@
   display: inline-block;
   margin-top: 12rpx;
   padding: 6rpx 20rpx;
-  background: rgba(201, 162, 39, 0.25);
+  background: rgba(212, 32, 42, 0.25);
   color: var(--color-accent-light);
   font-size: 22rpx;
   border-radius: 20rpx;
@@ -227,9 +227,9 @@
   margin-right: 20rpx;
   flex-shrink: 0;
 }
-.menu-icon.gold { background: linear-gradient(135deg, #c9a227, #e8c547); color: #1a1a2e; }
-.menu-icon.blue { background: linear-gradient(135deg, #1a1a2e, #4a5568); color: #e8c547; }
-.menu-icon.green { background: linear-gradient(135deg, #059669, #34d399); }
+.menu-icon.gold { background: linear-gradient(135deg, #b91c1c, #ef4444); color: #fff; }
+.menu-icon.blue { background: linear-gradient(135deg, #111111, #3f3f46); color: #fff; }
+.menu-icon.red { background: linear-gradient(135deg, #7f1d1d, #d4202a); color: #fff; }
 .menu-text {
   flex: 1;
   font-size: 30rpx;
@@ -282,8 +282,8 @@
   white-space: nowrap;
   margin-right: 16rpx;
 }
-.record-amount.plus { color: #059669; font-weight: 600; }
-.record-amount.minus { color: #ef4444; font-weight: 600; }
+.record-amount.plus { color: var(--color-up); font-weight: 600; }
+.record-amount.minus { color: var(--color-down); font-weight: 600; }
 
 .btn-logout {
   margin: 16rpx 24rpx 48rpx;
@@ -344,7 +344,7 @@
   height: 160rpx;
   border-radius: 50%;
   display: block;
-  border: 4rpx solid rgba(201, 162, 39, 0.55);
+  border: 4rpx solid rgba(212, 32, 42, 0.55);
 }
 .setup-avatar-ph {
   display: flex;

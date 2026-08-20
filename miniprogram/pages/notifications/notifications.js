@@ -1,15 +1,15 @@
-const { listNotifications, markNotificationRead, markAllNotificationsRead } = require('../../utils/api')
-const { isLoggedIn } = require('../../utils/auth')
+const { listNotifications, markNotificationRead, markAllNotificationsRead, login } = require('../../utils/api')
+const { isLoggedIn, promptProfileSetupIfNeeded } = require('../../utils/auth')
 const { syncTabBar, setTabBarUnreadCount } = require('../../utils/tabbar')
 
-/** 消息分类：与后端 notice_type 对应 */
+/** 消息分类：关注信号为首页默认 Tab；自选股日报与其它 Tab 并列 */
 var CATEGORIES = [
-  { key: 'all', label: '全部', types: '' },
-  { key: 'signal', label: '关注信号', types: 'buy_signal,sell_signal' },
+  { key: 'signal', label: '关注信号', types: 'buy_signal,sell_signal', featured: true },
   { key: 'risk', label: '风控消息', types: 'risk_alert' },
-  { key: 'broadcast', label: '广播消息', types: 'announcement' },
+  { key: 'all', label: '全部', types: '' },
+  { key: 'digest', label: '自选股日报', types: 'favorites_digest' },
   { key: 'review', label: '定时复盘', types: 'market_review' },
-  { key: 'custom', label: '自选检测', types: 'favorites_digest' },
+  { key: 'broadcast', label: '广播消息', types: 'announcement' },
 ]
 
 var TYPE_META = {
@@ -18,7 +18,7 @@ var TYPE_META = {
   risk_alert: { label: '风控', cls: 'risk' },
   announcement: { label: '广播', cls: 'broadcast' },
   market_review: { label: '复盘', cls: 'review' },
-  favorites_digest: { label: '自选', cls: 'custom' },
+  favorites_digest: { label: '日报', cls: 'custom' },
 }
 
 var SIGNAL_TYPES = { buy_signal: 1, sell_signal: 1 }
@@ -48,7 +48,7 @@ Page({
   data: {
     loading: true,
     categories: CATEGORIES,
-    activeCategory: 'all',
+    activeCategory: 'signal',
     notifications: [],
     unreadCount: 0,
     categoryUnread: 0,
@@ -70,19 +70,41 @@ Page({
       setTabBarUnreadCount(this, 0)
       return
     }
-    this.setData({ needLogin: false })
+    this.setData({ needLogin: false, detail: null })
+    this._setNavTitle(this.data.activeCategory || 'signal')
     this.loadList()
   },
 
   onLoginTap() {
-    wx.switchTab({ url: '/pages/profile/profile' })
+    var self = this
+    wx.showLoading({ title: '登录中...' })
+    login({})
+      .then(function (result) {
+        wx.hideLoading()
+        wx.showToast({ title: '登录成功', icon: 'success' })
+        promptProfileSetupIfNeeded(result && result.user)
+        self.setData({ needLogin: false, activeCategory: 'signal', detail: null })
+        self._setNavTitle('signal')
+        syncTabBar(self)
+        self.loadList()
+      })
+      .catch(function (e) {
+        wx.hideLoading()
+        wx.showToast({ title: (e && e.message) || '登录失败', icon: 'none' })
+      })
   },
 
   onCategoryTap(e) {
     var key = e.currentTarget.dataset.key
     if (!key || key === this.data.activeCategory) return
     this.setData({ activeCategory: key, detail: null })
+    this._setNavTitle(key)
     this.loadList()
+  },
+
+  _setNavTitle(key) {
+    var titles = { signal: '关注信号', digest: '自选股日报' }
+    wx.setNavigationBarTitle({ title: titles[key] || '消息中心' })
   },
 
   getActiveTypes() {

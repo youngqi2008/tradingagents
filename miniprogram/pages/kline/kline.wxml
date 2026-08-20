@@ -1,21 +1,10 @@
 <view class="page container">
-  <!-- 未登录 -->
-  <view class="login-wrap" wx:if="{{!isLoggedIn}}">
-    <view class="login-hero">
-      <text class="login-logo">Ares</text>
-      <text class="login-title">行情 · 新闻</text>
-      <text class="login-desc">查看沪指/个股 K 线，以及最近财经新闻</text>
-    </view>
-    <button class="btn-login" bindtap="onLoginTap">微信登录</button>
+  <view class="pane-bar">
+    <view class="pane-item {{pane === 'kline' ? 'active' : ''}}" data-pane="kline" bindtap="switchPane">行情</view>
+    <view class="pane-item {{pane === 'news' ? 'active' : ''}}" data-pane="news" bindtap="switchPane">新闻</view>
   </view>
 
-  <block wx:else>
-    <view class="pane-bar">
-      <view class="pane-item {{pane === 'kline' ? 'active' : ''}}" data-pane="kline" bindtap="switchPane">行情</view>
-      <view class="pane-item {{pane === 'news' ? 'active' : ''}}" data-pane="news" bindtap="switchPane">新闻</view>
-    </view>
-
-    <block wx:if="{{pane === 'kline'}}">
+  <block wx:if="{{pane === 'kline'}}">
     <!-- 搜索 -->
     <view class="search-card">
       <view class="search-row">
@@ -170,7 +159,7 @@
             <text>{{newsDetail.source || '财经资讯'}}</text>
             <text wx:if="{{newsDetail.favorite_symbolsText}}">关联 {{newsDetail.favorite_symbolsText}}</text>
           </view>
-          <view class="news-detail-content">{{newsDetail.content || newsDetail.summary || '暂无正文'}}</view>
+          <rich-text class="news-md" nodes="{{newsDetail.contentHtml}}"></rich-text>
           <view class="news-detail-actions">
             <button class="news-btn" wx:if="{{newsDetail.url}}" bindtap="onOpenNewsLink">打开原文</button>
             <button class="news-btn" wx:if="{{newsDetail.url}}" bindtap="onCopyNewsLink">复制链接</button>
@@ -180,5 +169,4 @@
         </view>
       </view>
     </block>
-  </block>
 </view>

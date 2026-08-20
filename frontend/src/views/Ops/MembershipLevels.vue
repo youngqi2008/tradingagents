@@ -8,15 +8,34 @@
         </div>
       </template>
 
+      <el-alert
+        type="info"
+        :closable="false"
+        show-icon
+        style="margin-bottom: 16px"
+        title="当前体系：体验 / 普通 / 银卡 / 金卡 / 白金 / 钻石 / 至尊（7档）。免费额度由「客户权益」活动发放，等级表配置月费与超限单价。"
+      />
+
       <el-table :data="levels" v-loading="loading" stripe>
+        <el-table-column prop="sort_order" label="排序" width="70" />
         <el-table-column prop="name" label="名称" width="110" />
         <el-table-column prop="code" label="代码" width="90" />
-        <el-table-column prop="monthly_price" label="月费（元）" width="100" />
-        <el-table-column prop="monthly_free_generations" label="免费研报/月" width="110" />
-        <el-table-column prop="per_generation_price" label="研报单价" width="90" />
-        <el-table-column prop="monthly_free_asks" label="免费问股/月" width="110" />
-        <el-table-column prop="per_ask_price" label="问股单价" width="90" />
-        <el-table-column prop="description" label="说明" min-width="180" />
+        <el-table-column prop="monthly_price" label="月费（元）" width="100">
+          <template #default="{ row }">¥{{ row.monthly_price?.toFixed(2) }}</template>
+        </el-table-column>
+        <el-table-column prop="per_generation_price" label="研报单价" width="90">
+          <template #default="{ row }">¥{{ row.per_generation_price?.toFixed(2) }}</template>
+        </el-table-column>
+        <el-table-column prop="per_ask_price" label="问股单价" width="90">
+          <template #default="{ row }">¥{{ row.per_ask_price?.toFixed(2) }}</template>
+        </el-table-column>
+        <el-table-column label="默认权益（月）" min-width="200">
+          <template #default="{ row }">
+            <span v-if="benefitText(row.code)">{{ benefitText(row.code) }}</span>
+            <span v-else class="muted">无（按次付费）</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="description" label="说明" min-width="180" show-overflow-tooltip />
         <el-table-column prop="is_default" label="默认" width="70">
           <template #default="{ row }">
             <el-tag v-if="row.is_default" type="warning">默认</el-tag>
@@ -39,11 +58,10 @@
     <el-dialog v-model="dialogVisible" :title="editing ? '编辑等级' : '新增等级'" width="520px">
       <el-form :model="form" label-width="130px">
         <el-form-item label="名称"><el-input v-model="form.name" /></el-form-item>
-        <el-form-item label="代码"><el-input v-model="form.code" :disabled="!!editing" placeholder="如 normal / vip / vvip" /></el-form-item>
+        <el-form-item label="代码"><el-input v-model="form.code" :disabled="!!editing" placeholder="如 trial / normal / platinum" /></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="form.sort_order" :min="0" /></el-form-item>
         <el-form-item label="月会员费（元）"><el-input-number v-model="form.monthly_price" :min="0" :precision="2" :step="1" /></el-form-item>
-        <el-form-item label="月免费研报次数"><el-input-number v-model="form.monthly_free_generations" :min="0" /></el-form-item>
         <el-form-item label="研报超限单价"><el-input-number v-model="form.per_generation_price" :min="0" :precision="2" :step="1" /></el-form-item>
-        <el-form-item label="月免费问股次数"><el-input-number v-model="form.monthly_free_asks" :min="0" /></el-form-item>
         <el-form-item label="问股超限单价"><el-input-number v-model="form.per_ask_price" :min="0" :precision="2" :step="0.1" :step-strictly="false" /></el-form-item>
         <el-form-item label="说明"><el-input v-model="form.description" type="textarea" /></el-form-item>
         <el-form-item label="默认等级"><el-switch v-model="form.is_default" /></el-form-item>
@@ -61,6 +79,17 @@ import { ref, onMounted, reactive } from 'vue'
 import { opsApi, type MembershipLevel } from '@/api/ops'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
+/** 与 benefit_service.DEFAULT_LEVEL_CAMPAIGNS 月度权益一致（展示用） */
+const LEVEL_MONTHLY_BENEFITS: Record<string, string> = {
+  trial: '研报3 / 问股5 / AI2',
+  normal: '',
+  silver: '研报3 / 问股20 / AI10',
+  gold: '研报10 / 问股30 / AI20',
+  platinum: '研报5 / 问股20 / AI8',
+  diamond: '研报30 / 问股60 / AI50',
+  supreme: '研报不限 / 问股1000 / AI150',
+}
+
 const levels = ref<MembershipLevel[]>([])
 const loading = ref(false)
 const dialogVisible = ref(false)
@@ -68,14 +97,15 @@ const editing = ref<MembershipLevel | null>(null)
 const form = reactive({
   name: '',
   code: '',
+  sort_order: 0,
   monthly_price: 0,
-  monthly_free_generations: 0,
   per_generation_price: 9.9,
-  monthly_free_asks: 0,
   per_ask_price: 1.9,
   description: '',
   is_default: false,
 })
+
+const benefitText = (code: string) => LEVEL_MONTHLY_BENEFITS[code] || ''
 
 const load = async () => {
   loading.value = true
@@ -92,10 +122,9 @@ const openCreate = () => {
   Object.assign(form, {
     name: '',
     code: '',
+    sort_order: levels.value.length,
     monthly_price: 0,
-    monthly_free_generations: 0,
     per_generation_price: 9.9,
-    monthly_free_asks: 0,
     per_ask_price: 1.9,
     description: '',
     is_default: false,
@@ -108,10 +137,9 @@ const openEdit = (row: MembershipLevel) => {
   Object.assign(form, {
     name: row.name,
     code: row.code,
+    sort_order: row.sort_order ?? 0,
     monthly_price: row.monthly_price ?? 0,
-    monthly_free_generations: row.monthly_free_generations,
     per_generation_price: row.per_generation_price,
-    monthly_free_asks: row.monthly_free_asks ?? 0,
     per_ask_price: row.per_ask_price ?? row.per_generation_price,
     description: row.description,
     is_default: row.is_default,
@@ -121,10 +149,15 @@ const openEdit = (row: MembershipLevel) => {
 
 const submit = async () => {
   try {
+    const payload = {
+      ...form,
+      monthly_free_generations: 0,
+      monthly_free_asks: 0,
+    }
     if (editing.value) {
-      await opsApi.updateMembershipLevel(editing.value.id, { ...form })
+      await opsApi.updateMembershipLevel(editing.value.id, payload)
     } else {
-      await opsApi.createMembershipLevel({ ...form })
+      await opsApi.createMembershipLevel(payload)
     }
     ElMessage.success('保存成功')
     dialogVisible.value = false
@@ -153,5 +186,8 @@ onMounted(load)
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.muted {
+  color: #909399;
 }
 </style>

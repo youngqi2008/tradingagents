@@ -17,6 +17,16 @@ except ImportError:
 logger = get_logger("mp_deps")
 
 
+async def get_optional_mp_user(authorization: Optional[str] = Header(default=None)) -> Optional[dict]:
+    """游客可访问；有合法 token 时返回小程序用户，否则 None。"""
+    if not authorization or not str(authorization).strip():
+        return None
+    try:
+        return await get_current_mp_user(authorization)
+    except HTTPException:
+        return None
+
+
 async def get_current_mp_user(authorization: Optional[str] = Header(default=None)) -> dict:
     """获取当前小程序用户"""
     user = await get_current_user(authorization)

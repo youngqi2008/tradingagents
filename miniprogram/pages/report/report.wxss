@@ -10,7 +10,7 @@
 .wait-title {
   font-size: 32rpx;
   font-weight: 700;
-  color: #1a1a2e;
+  color: #111111;
   margin-bottom: 16rpx;
 }
 .wait-desc {
@@ -23,14 +23,14 @@
 .wait-meta {
   margin-top: 20rpx;
   font-size: 24rpx;
-  color: #c9a227;
+  color: #d4202a;
   font-weight: 600;
 }
 .btn-outline {
   margin-top: 32rpx;
   background: #fff;
-  color: #1a1a2e;
-  border: 1px solid #c9a227;
+  color: #111111;
+  border: 1px solid #d4202a;
   border-radius: 12rpx;
   font-size: 28rpx;
 }

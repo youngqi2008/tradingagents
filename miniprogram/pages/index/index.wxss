@@ -7,7 +7,7 @@
 .create-card {
   margin: 24rpx;
   padding: 36rpx 32rpx;
-  background: linear-gradient(135deg, #1a1a2e 0%, #2d3561 100%);
+  background: linear-gradient(135deg, #111111 0%, #1f1f1f 100%);
   border-radius: var(--radius-lg);
   box-shadow: 0 12rpx 40rpx rgba(26, 26, 46, 0.2);
 }
@@ -34,7 +34,7 @@
   margin-top: 20rpx;
   font-size: 22rpx;
   line-height: 1.5;
-  color: rgba(232, 197, 71, 0.92);
+  color: rgba(239, 68, 68, 0.92);
 }
 .code-input {
   flex: 1;
@@ -49,8 +49,8 @@
   height: 80rpx;
   line-height: 80rpx;
   padding: 0 40rpx;
-  background: linear-gradient(135deg, #c9a227, #e8c547);
-  color: #1a1a2e;
+  background: linear-gradient(135deg, #d4202a, #ef4444);
+  color: #ffffff;
   font-weight: 600;
   font-size: 28rpx;
   border-radius: 40rpx;
@@ -98,7 +98,7 @@
   margin: -8rpx 8rpx 20rpx;
   font-size: 22rpx;
   color: #b45309;
-  background: rgba(201, 162, 39, 0.12);
+  background: rgba(212, 32, 42, 0.12);
   border-radius: 12rpx;
   padding: 12rpx 16rpx;
 }
@@ -160,8 +160,8 @@
   font-weight: 500;
 }
 .status-completed {
-  background: rgba(82, 196, 26, 0.12);
-  color: #389e0d;
+  background: rgba(180, 83, 9, 0.12);
+  color: #b45309;
 }
 .status-processing, .status-pending, .status-running {
   background: rgba(24, 144, 255, 0.12);

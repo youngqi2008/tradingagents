@@ -537,26 +537,24 @@ class BenefitService:
 benefit_service = BenefitService()
 
 
-# 各会员等级默认权益（按 code 幂等写入）
-# 规则：权益优先消耗；无可用权益后按等级单价单次扣款
+# 各会员等级默认权益（来源：data/会员等级与费用明细.xlsx）
+# push_quota = AI深度分析；权益优先消耗，用尽后按等级单价扣款
 DEFAULT_LEVEL_CAMPAIGNS = [
-    # ---- 普通会员：仅一次性入门包 ----
     {
-        "code": "level_normal_welcome",
-        "name": "普通会员·入门权益",
-        "description": "普通会员一次性权益：研报5次、问股8次",
-        "level_code": "normal",
-        "cycle_type": "once",
-        "report_quota": 5,
-        "ask_quota": 8,
-        "push_quota": 0,
+        "code": "level_trial_monthly",
+        "name": "体验会员·每月权益",
+        "description": "体验会员每月刷新：研报3次、问股5次、AI深度分析2次",
+        "level_code": "trial",
+        "cycle_type": "monthly",
+        "report_quota": 3,
+        "ask_quota": 5,
+        "push_quota": 2,
         "priority": 100,
     },
-    # ---- 银卡：入门包 + 每月刷新 ----
     {
         "code": "level_silver_welcome",
         "name": "银卡会员·入门权益",
-        "description": "银卡一次性权益：研报10次、问股20次、推送5次",
+        "description": "银卡一次性权益：研报10次、问股20次、AI深度分析5次",
         "level_code": "silver",
         "cycle_type": "once",
         "report_quota": 10,
@@ -567,20 +565,19 @@ DEFAULT_LEVEL_CAMPAIGNS = [
     {
         "code": "level_silver_monthly",
         "name": "银卡会员·每月权益",
-        "description": "银卡每月刷新：研报3次、问股12次、推送3次",
+        "description": "银卡每月刷新：研报3次、问股20次、AI深度分析10次",
         "level_code": "silver",
         "cycle_type": "monthly",
         "report_quota": 3,
-        "ask_quota": 12,
-        "push_quota": 3,
+        "ask_quota": 20,
+        "push_quota": 10,
         "priority": 80,
     },
-    # ---- VIP：入门包 + 每月刷新 ----
     {
-        "code": "level_vip_welcome",
-        "name": "VIP会员·入门权益",
-        "description": "VIP一次性权益：研报15次、问股30次、推送10次",
-        "level_code": "vip",
+        "code": "level_gold_welcome",
+        "name": "金卡会员·入门权益",
+        "description": "金卡一次性权益：研报15次、问股30次、AI深度分析10次",
+        "level_code": "gold",
         "cycle_type": "once",
         "report_quota": 15,
         "ask_quota": 30,
@@ -588,17 +585,142 @@ DEFAULT_LEVEL_CAMPAIGNS = [
         "priority": 70,
     },
     {
-        "code": "level_vip_monthly",
-        "name": "VIP会员·每月权益",
-        "description": "VIP每月刷新：研报5次、问股20次、推送8次",
-        "level_code": "vip",
+        "code": "level_gold_monthly",
+        "name": "金卡会员·每月权益",
+        "description": "金卡每月刷新：研报10次、问股30次、AI深度分析20次",
+        "level_code": "gold",
+        "cycle_type": "monthly",
+        "report_quota": 10,
+        "ask_quota": 30,
+        "push_quota": 20,
+        "priority": 60,
+    },
+    {
+        "code": "level_platinum_welcome",
+        "name": "白金会员·入门权益",
+        "description": "白金一次性权益：研报15次、问股30次、AI深度分析10次",
+        "level_code": "platinum",
+        "cycle_type": "once",
+        "report_quota": 15,
+        "ask_quota": 30,
+        "push_quota": 10,
+        "priority": 55,
+    },
+    {
+        "code": "level_platinum_monthly",
+        "name": "白金会员·每月权益",
+        "description": "白金每月刷新：研报5次、问股20次、AI深度分析8次",
+        "level_code": "platinum",
         "cycle_type": "monthly",
         "report_quota": 5,
         "ask_quota": 20,
         "push_quota": 8,
-        "priority": 60,
+        "priority": 50,
+    },
+    {
+        "code": "level_diamond_welcome",
+        "name": "钻石会员·入门权益",
+        "description": "钻石一次性权益：研报30次、问股60次、AI深度分析20次",
+        "level_code": "diamond",
+        "cycle_type": "once",
+        "report_quota": 30,
+        "ask_quota": 60,
+        "push_quota": 20,
+        "priority": 45,
+    },
+    {
+        "code": "level_diamond_monthly",
+        "name": "钻石会员·每月权益",
+        "description": "钻石每月刷新：研报30次、问股60次、AI深度分析50次",
+        "level_code": "diamond",
+        "cycle_type": "monthly",
+        "report_quota": 30,
+        "ask_quota": 60,
+        "push_quota": 50,
+        "priority": 40,
+    },
+    {
+        "code": "level_supreme_welcome",
+        "name": "至尊会员·入门权益",
+        "description": "至尊一次性权益：研报100次、问股200次、AI深度分析50次",
+        "level_code": "supreme",
+        "cycle_type": "once",
+        "report_quota": 100,
+        "ask_quota": 200,
+        "push_quota": 50,
+        "priority": 35,
+    },
+    {
+        "code": "level_supreme_monthly",
+        "name": "至尊会员·每月权益",
+        "description": "至尊每月刷新：研报不限、问股1000次、AI深度分析150次",
+        "level_code": "supreme",
+        "cycle_type": "monthly",
+        "report_quota": 99999,
+        "ask_quota": 1000,
+        "push_quota": 150,
+        "priority": 30,
     },
 ]
+
+DEPRECATED_LEVEL_CAMPAIGN_CODES = {
+    "level_normal_welcome",
+    "level_vip_welcome",
+    "level_vip_monthly",
+}
+
+DEFAULT_LEVEL_CAMPAIGN_CODES = {c["code"] for c in DEFAULT_LEVEL_CAMPAIGNS}
+
+
+async def _sync_campaign_grants(session, campaign_id: int, cfg: dict) -> None:
+    """同步已发放默认权益的上限（不削减已使用量）。"""
+    grants = (
+        await session.execute(
+            select(UserBenefitGrantORM).where(
+                UserBenefitGrantORM.campaign_id == campaign_id,
+                UserBenefitGrantORM.status == "active",
+            )
+        )
+    ).scalars().all()
+    now = now_tz()
+    for g in grants:
+        g.report_limit = max(int(g.report_used or 0), int(cfg["report_quota"]))
+        g.ask_limit = max(int(g.ask_used or 0), int(cfg["ask_quota"]))
+        g.push_limit = max(int(g.push_used or 0), int(cfg["push_quota"]))
+        g.updated_at = now
+        if (
+            g.report_used >= g.report_limit
+            and g.ask_used >= g.ask_limit
+            and g.push_used >= g.push_limit
+        ):
+            g.status = "exhausted"
+
+
+async def get_level_benefit_templates() -> dict[str, dict]:
+    """按等级 code 汇总默认权益模板（供会员列表展示）。"""
+    by_level: dict[str, dict] = {}
+    for cfg in DEFAULT_LEVEL_CAMPAIGNS:
+        code = cfg["level_code"]
+        bucket = by_level.setdefault(
+            code,
+            {
+                "monthly_report": 0,
+                "monthly_ask": 0,
+                "monthly_push": 0,
+                "once_report": 0,
+                "once_ask": 0,
+                "once_push": 0,
+            },
+        )
+        if cfg["cycle_type"] == "monthly":
+            bucket["monthly_report"] += cfg["report_quota"]
+            bucket["monthly_ask"] += cfg["ask_quota"]
+            bucket["monthly_push"] += cfg["push_quota"]
+        else:
+            bucket["once_report"] += cfg["report_quota"]
+            bucket["once_ask"] += cfg["ask_quota"]
+            bucket["once_push"] += cfg["push_quota"]
+    return by_level
 
 
 async def init_default_level_campaigns() -> None:
@@ -612,6 +734,7 @@ async def init_default_level_campaigns() -> None:
             level_map[r.code] = r.id
 
         created = 0
+        now = now_tz()
         for cfg in DEFAULT_LEVEL_CAMPAIGNS:
             level_id = level_map.get(cfg["level_code"])
             if not level_id:
@@ -622,11 +745,21 @@ async def init_default_level_campaigns() -> None:
             )
             row = exists.scalar_one_or_none()
             if row:
-                # 保持运营可改额度；补齐 grant_mode=default；草稿升为 active
-                if getattr(row, "grant_mode", None) != "default":
-                    row.grant_mode = "default"
-                if row.status == "draft":
+                row.name = cfg["name"]
+                row.description = cfg["description"]
+                row.grant_mode = "default"
+                row.grant_scope = "membership"
+                row.membership_level_id = level_id
+                row.cycle_type = cfg["cycle_type"]
+                row.report_quota = cfg["report_quota"]
+                row.ask_quota = cfg["ask_quota"]
+                row.push_quota = cfg["push_quota"]
+                row.priority = cfg["priority"]
+                row.stackable = True
+                if row.status in ("draft", "paused", "ended"):
                     row.status = "active"
+                row.updated_at = now
+                await _sync_campaign_grants(session, row.id, cfg)
                 continue
 
             session.add(
@@ -649,6 +782,17 @@ async def init_default_level_campaigns() -> None:
                 )
             )
             created += 1
+
+        deprecated = (
+            await session.execute(
+                select(BenefitCampaignORM).where(
+                    BenefitCampaignORM.code.in_(DEPRECATED_LEVEL_CAMPAIGN_CODES)
+                )
+            )
+        ).scalars().all()
+        for row in deprecated:
+            row.status = "ended"
+            row.updated_at = now
 
         if created:
             logger.info(f"✅ 已初始化 {created} 条会员等级默认权益活动")

@@ -3,13 +3,13 @@
 import re
 from datetime import datetime, timedelta
 from html import unescape
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Optional, Set
 
 from fastapi import APIRouter, Depends, Query
 
 from app.core.response import ok
 from app.core.database import get_mongo_db
-from app.routers.mp.deps import get_current_mp_user
+from app.routers.mp.deps import get_optional_mp_user
 from app.services.favorites_service import favorites_service
 from app.utils.timezone import now_tz
 
@@ -26,6 +26,22 @@ def _clean_text(text: Any) -> str:
     s = _TAG_RE.sub("", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s
+
+
+def _clean_markdown(text: Any) -> str:
+    """保留 Markdown 换行与结构，仅去掉 HTML 标签。"""
+    if text is None:
+        return ""
+    s = unescape(str(text))
+    s = re.sub(r"<br\s*/?>", "\n", s, flags=re.I)
+    s = re.sub(r"</p\s*>", "\n\n", s, flags=re.I)
+    s = re.sub(r"</div\s*>", "\n", s, flags=re.I)
+    s = re.sub(r"</h[1-6]\s*>", "\n\n", s, flags=re.I)
+    s = _TAG_RE.sub("", s)
+    s = s.replace("\r\n", "\n").replace("\r", "\n")
+    s = re.sub(r"[ \t]+\n", "\n", s)
+    s = re.sub(r"\n{3,}", "\n\n", s)
+    return s.strip()
 
 
 def _norm_code(code: Any) -> str:
@@ -73,22 +89,23 @@ async def mp_latest_news(
     limit: int = Query(50, ge=1, le=100),
     skip: int = Query(0, ge=0),
     favorites_first: bool = Query(True, description="自选相关新闻排前"),
-    user: dict = Depends(get_current_mp_user),
+    user: Optional[dict] = Depends(get_optional_mp_user),
 ):
     """
-    最新财经新闻（来自 Mongo stock_news）。
-    若新闻关联股票在用户自选中，标记 is_favorite / highlight，并可优先排序。
+    最新财经新闻（游客可浏览）。
+    已登录时：自选相关新闻可标记并优先排序。
     """
     fav_codes: Set[str] = set()
-    try:
-        key = favorites_service.mp_user_key(user["id"])
-        favs = await favorites_service.get_user_favorites(key)
-        for f in favs or []:
-            c = _norm_code(f.get("stock_code"))
-            if c:
-                fav_codes.add(c)
-    except Exception:
-        fav_codes = set()
+    if user:
+        try:
+            key = favorites_service.mp_user_key(user["id"])
+            favs = await favorites_service.get_user_favorites(key)
+            for f in favs or []:
+                c = _norm_code(f.get("stock_code"))
+                if c:
+                    fav_codes.add(c)
+        except Exception:
+            fav_codes = set()
 
     db = get_mongo_db()
     since = now_tz() - timedelta(hours=hours)
@@ -128,9 +145,9 @@ async def mp_latest_news(
 
         matched = [c for c in codes if c in fav_codes]
         is_fav = len(matched) > 0
-        full_content = _clean_text(doc.get("content") or doc.get("summary") or "")
-        # 列表预览与详情正文分离，避免前端只能看到截断摘要
-        preview = full_content[:200]
+        full_content = _clean_markdown(doc.get("content") or doc.get("summary") or "")
+        # 列表预览为纯文本；详情保留 Markdown
+        preview = re.sub(r"\s+", " ", full_content)[:200]
         if len(full_content) > 200:
             preview = preview.rstrip() + "…"
         items.append(

@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.core.database import get_mongo_db
 from app.core.response import ok
-from app.routers.mp.deps import get_current_mp_user
+from app.routers.mp.deps import get_optional_mp_user
 from app.routers.stocks import get_kline, get_quote
 
 router = APIRouter(prefix="/stocks", tags=["mp-stocks"])
@@ -346,9 +346,9 @@ def _fetch_index_quote_sync(symbol: str, name: str) -> dict:
 async def mp_search_stocks(
     q: str = Query(..., min_length=1, description="股票代码或名称"),
     limit: int = Query(10, ge=1, le=30),
-    user: dict = Depends(get_current_mp_user),
+    user: dict = Depends(get_optional_mp_user),
 ):
-    """搜索股票（代码 / 名称）；支持沪指等指数别名"""
+    """搜索股票（代码 / 名称）；支持沪指等指数别名。游客可访问。"""
     keyword = q.strip()
     if not keyword:
         raise HTTPException(status_code=400, detail="请输入搜索关键词")
@@ -410,9 +410,9 @@ async def mp_search_stocks(
 async def mp_get_quote(
     code: str,
     force_refresh: bool = Query(False),
-    user: dict = Depends(get_current_mp_user),
+    user: dict = Depends(get_optional_mp_user),
 ):
-    """获取实时行情；指数走专用数据源"""
+    """获取实时行情；指数走专用数据源。游客可访问。"""
     idx = _normalize_index_code(code)
     if idx:
         meta = INDEX_META[idx]
@@ -422,7 +422,7 @@ async def mp_get_quote(
         except Exception as e:
             logger.exception("指数行情失败")
             raise HTTPException(status_code=500, detail=f"获取指数行情失败: {e}")
-    return await get_quote(code=code, force_refresh=force_refresh, current_user=user)
+    return await get_quote(code=code, force_refresh=force_refresh, current_user=user or {})
 
 
 @router.get("/{code}/kline")
@@ -432,9 +432,9 @@ async def mp_get_kline(
     limit: int = Query(120, ge=10, le=500),
     adj: str = Query("none", description="none/qfq/hfq"),
     force_refresh: bool = Query(False),
-    user: dict = Depends(get_current_mp_user),
+    user: dict = Depends(get_optional_mp_user),
 ):
-    """获取 K 线；默认沪指等指数走 AKShare 指数接口"""
+    """获取 K 线；默认沪指等指数走 AKShare 指数接口。游客可访问。"""
     if period not in ("day", "week", "month", "5m", "15m", "30m", "60m"):
         raise HTTPException(status_code=400, detail=f"不支持的period: {period}")
 
@@ -466,5 +466,5 @@ async def mp_get_kline(
         limit=limit,
         adj=adj,
         force_refresh=force_refresh,
-        current_user=user,
+        current_user=user or {},
     )

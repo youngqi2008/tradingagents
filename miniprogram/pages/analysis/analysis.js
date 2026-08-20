@@ -79,7 +79,7 @@ Page({
     isFailed: false,
     isRunning: false,
     elapsedText: '',
-    waitTip: '深度研报通常需要 5–10 分钟，可先离开，完成后在「研报」首页查看。',
+    waitTip: '深度研报通常需要 5–10 分钟，可先离开，完成后在「投研 → 研报」查看。',
   },
 
   onLoad: function (options) {
@@ -235,13 +235,16 @@ Page({
 
   goHomeLater: function () {
     this.persistActiveTask()
+    try {
+      wx.setStorageSync('research_pane', 'report')
+    } catch (e) {}
     wx.showToast({
-      title: '可稍后在研报页查看',
+      title: '可稍后在投研·研报查看',
       icon: 'none',
       duration: 2000,
     })
     setTimeout(function () {
-      wx.switchTab({ url: '/pages/index/index' })
+      wx.switchTab({ url: '/pages/chat/chat' })
     }, 400)
   },
 
@@ -308,7 +311,7 @@ Page({
           that.startPoll(taskId)
           wx.showModal({
             title: '研报生成中',
-            content: '深度研报通常需要 5–10 分钟。您可先离开本页，完成后在「研报」首页查看。',
+            content: '深度研报通常需要 5–10 分钟。您可先离开本页，完成后在「投研 → 研报」查看。',
             showCancel: true,
             cancelText: '继续等待',
             confirmText: '稍后查看',

@@ -12,6 +12,7 @@ const {
   isProfileSetupPending,
   setProfileSetupPending,
   isDefaultNickname,
+  goHomeAfterLogin,
 } = require('../../utils/auth')
 const { syncTabBar, setTabBarUnreadCount } = require('../../utils/tabbar')
 
@@ -80,10 +81,8 @@ Page({
   },
 
   maybeOpenProfileSetup(user, userInfo) {
-    if (!isLoggedIn()) return
-    if (this._profileSetupDismissed) return
-    if (!isProfileSetupPending() && !needsProfileSetup(user, userInfo)) return
-    this.openProfileSetup(userInfo || getUserInfo())
+    // 合规：不在进入页面时强制授权头像/昵称，仅用户主动完善
+    return
   },
 
   openProfileSetup(userInfo) {
@@ -104,10 +103,6 @@ Page({
         wx.showToast({ title: '登录成功', icon: 'success' })
         this._profileSetupDismissed = false
         this.checkLoginStatus()
-        var user = (result && result.user) || getUser()
-        if (needsProfileSetup(user)) {
-          this.openProfileSetup(getUserInfo())
-        }
       }.bind(this))
       .catch(function (e) {
         wx.hideLoading()

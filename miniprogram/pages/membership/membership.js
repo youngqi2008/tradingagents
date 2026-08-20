@@ -67,6 +67,12 @@ Page({
       action = 'downgrade'
       actionText = '降级'
     }
+    var monthlyReport = level.benefit_monthly_report || 0
+    var monthlyAsk = level.benefit_monthly_ask || 0
+    var monthlyPush = level.benefit_monthly_push || 0
+    var onceReport = level.benefit_once_report || 0
+    var onceAsk = level.benefit_once_ask || 0
+    var oncePush = level.benefit_once_push || 0
     return Object.assign({}, level, {
       isCurrent: isCurrent,
       action: action,
@@ -74,6 +80,9 @@ Page({
       monthly_price_text: Number(level.monthly_price || 0).toFixed(2),
       per_generation_price_text: Number(level.per_generation_price || 0).toFixed(2),
       per_ask_price_text: Number(level.per_ask_price || 0).toFixed(2),
+      benefit_monthly_report_text: level.benefit_monthly_report_text || String(monthlyReport),
+      hasMonthlyBenefit: monthlyReport > 0 || monthlyAsk > 0 || monthlyPush > 0,
+      hasOnceBenefit: onceReport > 0 || onceAsk > 0 || oncePush > 0,
     })
   },
 
@@ -87,11 +96,25 @@ Page({
     var feePaid = this.data.profile && this.data.profile.membership_fee_paid
     var lines = [
       '月费：¥' + level.monthly_price_text + (fee > 0 && !feePaid ? '（变更时将扣除）' : ''),
-      '免费研报：' + level.monthly_free_generations + ' 次/月',
-      '研报超限：¥' + level.per_generation_price_text + '/次',
-      '免费问股：' + (level.monthly_free_asks || 0) + ' 次/月',
-      '问股超限：¥' + level.per_ask_price_text + '/次',
     ]
+    if (level.hasMonthlyBenefit) {
+      lines.push(
+        '每月免费：研报 ' + level.benefit_monthly_report_text +
+          ' · 问股 ' + (level.benefit_monthly_ask || 0) +
+          ' · AI ' + (level.benefit_monthly_push || 0)
+      )
+    } else {
+      lines.push('无每月免费额度')
+    }
+    if (level.hasOnceBenefit) {
+      lines.push(
+        '入门权益：研报 ' + (level.benefit_once_report || 0) +
+          ' · 问股 ' + (level.benefit_once_ask || 0) +
+          ' · AI ' + (level.benefit_once_push || 0)
+      )
+    }
+    lines.push('研报超限：¥' + level.per_generation_price_text + '/次')
+    lines.push('问股超限：¥' + level.per_ask_price_text + '/次')
     if (level.description) lines.push(level.description)
     var self = this
     wx.showModal({

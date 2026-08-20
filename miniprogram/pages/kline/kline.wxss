@@ -43,7 +43,7 @@
   height: 88rpx;
   line-height: 88rpx;
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
-  color: var(--color-primary);
+  color: #ffffff;
   font-weight: 600;
   border-radius: 44rpx;
   border: none;
@@ -82,7 +82,7 @@
   line-height: 76rpx;
   padding: 0 28rpx;
   margin: 0;
-  background: linear-gradient(135deg, #1a1a2e, #2d3561);
+  background: linear-gradient(135deg, #111111, #1f1f1f);
   color: #fff;
   font-size: 26rpx;
   border-radius: 38rpx;
@@ -99,12 +99,12 @@
   line-height: 76rpx;
   padding: 0 22rpx;
   margin: 0;
-  background: #fff4d6;
-  color: #8a6d1a;
+  background: #ffe4e6;
+  color: #9f1239;
   font-size: 24rpx;
   font-weight: 600;
   border-radius: 38rpx;
-  border: 1rpx solid rgba(201, 162, 39, 0.45);
+  border: 1rpx solid rgba(212, 32, 42, 0.45);
 }
 .btn-fav::after { border: none; }
 .btn-fav.on {
@@ -150,14 +150,14 @@
   border-radius: 24rpx;
   font-size: 22rpx;
   font-weight: 600;
-  color: #8a6d1a;
-  background: rgba(201, 162, 39, 0.14);
+  color: #9f1239;
+  background: rgba(212, 32, 42, 0.14);
 }
 
 .quote-card {
   margin: 0 24rpx 16rpx;
   padding: 28rpx;
-  background: linear-gradient(135deg, #1a1a2e 0%, #2d3561 100%);
+  background: linear-gradient(135deg, #111111 0%, #1f1f1f 100%);
   border-radius: var(--radius-lg);
   color: #fff;
   box-shadow: 0 12rpx 40rpx rgba(26, 26, 46, 0.18);
@@ -197,8 +197,8 @@
   font-size: 22rpx;
   font-weight: 600;
   border-radius: 28rpx;
-  background: rgba(232, 197, 71, 0.95);
-  color: #1a1a2e;
+  background: rgba(239, 68, 68, 0.95);
+  color: #111111;
   border: none;
 }
 .btn-fav-quote::after { border: none; }
@@ -226,12 +226,12 @@
 
 .quote-price-row.up .quote-price,
 .quote-price-row.up .quote-chg {
-  color: #f87171;
+  color: var(--color-up);
 }
 
 .quote-price-row.down .quote-price,
 .quote-price-row.down .quote-chg {
-  color: #4ade80;
+  color: var(--color-down);
 }
 
 .quote-meta {
@@ -264,7 +264,7 @@
 
 .period-item.active {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
-  color: var(--color-primary);
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -321,7 +321,7 @@
 }
 .pane-item.active {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
-  color: var(--color-primary);
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -342,9 +342,9 @@
   border: 1rpx solid #e5e7eb;
 }
 .news-chip.on {
-  background: #1a1a2e;
-  color: #c9a227;
-  border-color: #1a1a2e;
+  background: #111111;
+  color: #d4202a;
+  border-color: #111111;
 }
 .news-empty {
   text-align: center;
@@ -361,8 +361,8 @@
   box-shadow: 0 4rpx 16rpx rgba(26, 26, 46, 0.04);
 }
 .news-card.fav {
-  background: linear-gradient(180deg, #fff9e8 0%, #ffffff 48%);
-  border-color: #e8c547;
+  background: linear-gradient(180deg, #fff1f2 0%, #ffffff 48%);
+  border-color: #ef4444;
 }
 .news-card-hd {
   display: flex;
@@ -385,8 +385,8 @@
   color: #6b7280;
 }
 .news-tag.fav-tag {
-  background: #c9a227;
-  color: #1a1a2e;
+  background: #d4202a;
+  color: #111111;
   font-weight: 700;
 }
 .news-tag.code {
@@ -425,7 +425,7 @@
   color: #9ca3af;
 }
 .news-expand {
-  color: #c9a227;
+  color: #d4202a;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -438,7 +438,7 @@
 .news-detail-title {
   font-size: 36rpx;
   font-weight: 700;
-  color: #1a1a2e;
+  color: #111111;
   line-height: 1.45;
 }
 .news-detail-meta {
@@ -449,13 +449,11 @@
   font-size: 22rpx;
   color: #9ca3af;
 }
-.news-detail-content {
-  font-size: 28rpx;
-  line-height: 1.75;
-  color: #374151;
-  white-space: pre-wrap;
-  word-break: break-word;
+.news-md {
+  display: block;
   margin-bottom: 28rpx;
+  word-break: break-word;
+  overflow: hidden;
 }
 .news-detail-actions {
   display: flex;
@@ -466,15 +464,15 @@
 .news-btn {
   margin: 0;
   background: #fff;
-  color: #1a1a2e;
-  border: 1px solid #c9a227;
+  color: #111111;
+  border: 1px solid #d4202a;
   border-radius: 12rpx;
   font-size: 28rpx;
   font-weight: 600;
 }
 .news-btn::after { border: none; }
 .news-btn.primary {
-  background: linear-gradient(135deg, #e8c547, #c9a227);
+  background: linear-gradient(135deg, #ef4444, #d4202a);
   border-color: transparent;
 }
 .news-btn-back {

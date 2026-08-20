@@ -124,7 +124,7 @@
         <div class="benefit-summary" v-if="detail">
           <el-tag type="warning">活动研报剩余 {{ detail.report_benefit_remaining || 0 }}</el-tag>
           <el-tag type="warning" style="margin-left: 8px">活动问股剩余 {{ detail.ask_benefit_remaining || 0 }}</el-tag>
-          <el-tag type="warning" style="margin-left: 8px">活动推送剩余 {{ detail.push_benefit_remaining || 0 }}</el-tag>
+          <el-tag type="warning" style="margin-left: 8px">AI深度分析剩余 {{ detail.push_benefit_remaining || 0 }}</el-tag>
         </div>
         <el-table :data="benefitGrants" size="small" stripe style="margin-top: 12px" empty-text="暂无活动权益">
           <el-table-column prop="campaign_name" label="活动" min-width="120" />
@@ -134,7 +134,7 @@
           <el-table-column label="问股" width="90">
             <template #default="{ row }">{{ row.ask_remaining }}/{{ row.ask_limit }}</template>
           </el-table-column>
-          <el-table-column label="推送" width="90">
+          <el-table-column label="AI深度分析" width="100">
             <template #default="{ row }">{{ row.push_remaining }}/{{ row.push_limit }}</template>
           </el-table-column>
           <el-table-column prop="cycle_key" label="周期" width="100" />

@@ -31,7 +31,7 @@
         </el-table-column>
         <el-table-column label="研报" width="70" prop="report_quota" />
         <el-table-column label="问股" width="70" prop="ask_quota" />
-        <el-table-column label="推送" width="70" prop="push_quota" />
+        <el-table-column label="AI深度分析" width="90" prop="push_quota" />
         <el-table-column label="叠加" width="70">
           <template #default="{ row }">{{ row.stackable ? '是' : '否' }}</template>
         </el-table-column>
@@ -109,7 +109,7 @@
         </el-form-item>
         <el-form-item label="研报次数"><el-input-number v-model="form.report_quota" :min="0" /></el-form-item>
         <el-form-item label="问股次数"><el-input-number v-model="form.ask_quota" :min="0" /></el-form-item>
-        <el-form-item label="推送次数"><el-input-number v-model="form.push_quota" :min="0" /></el-form-item>
+        <el-form-item label="AI深度分析次数"><el-input-number v-model="form.push_quota" :min="0" /></el-form-item>
         <el-form-item label="可叠加"><el-switch v-model="form.stackable" /></el-form-item>
         <el-form-item label="优先级"><el-input-number v-model="form.priority" :min="0" /><span class="hint">数字越小越先扣减</span></el-form-item>
       </el-form>

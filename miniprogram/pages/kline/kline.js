@@ -1,5 +1,6 @@
 var api = require('../../utils/api')
 var auth = require('../../utils/auth')
+var md = require('../../utils/markdown')
 var { syncTabBar, setTabBarUnreadCount } = require('../../utils/tabbar')
 
 // 默认展示沪指；输入个股代码后切换
@@ -93,12 +94,12 @@ Page({
     syncTabBar(this)
     var loggedIn = auth.isLoggedIn()
     this.setData({ isLoggedIn: loggedIn })
-    if (!loggedIn) {
+    if (loggedIn) {
+      this.refreshUnreadBadge()
+    } else {
       setTabBarUnreadCount(this, 0)
-      return
     }
-    this.refreshUnreadBadge()
-    var pane = 'kline'
+    var pane = this.data.pane || 'kline'
     try {
       var savedPane = wx.getStorageSync('market_pane')
       if (savedPane === 'news' || savedPane === 'kline') {
@@ -154,14 +155,8 @@ Page({
         wx.hideLoading()
         wx.showToast({ title: '登录成功', icon: 'success' })
         self.setData({ isLoggedIn: true })
-        self.measureCanvas(function () {
-          if (self.data.pane === 'kline') {
-            self.loadStock(self.data.stockCode)
-          } else {
-            self.loadNews()
-          }
-        })
-        auth.promptProfileSetupIfNeeded(result && result.user)
+        self.refreshFavoriteState(self.data.stockCode)
+        self.refreshUnreadBadge()
       })
       .catch(function (e) {
         wx.hideLoading()
@@ -401,10 +396,6 @@ Page({
 
   measureCanvas(done) {
     var self = this
-    if (!this.data.isLoggedIn) {
-      if (done) done()
-      return
-    }
     var tryMeasure = function (attempt) {
       var query = wx.createSelectorQuery()
       query.select('#klineCanvas').fields({ node: true, size: true }).exec(function (res) {
@@ -506,7 +497,7 @@ Page({
       var yH = yOf(bar.high)
       var yL = yOf(bar.low)
       var up = bar.close >= bar.open
-      var color = up ? '#ef4444' : '#16a34a'
+      var color = up ? '#e11d2e' : '#6b7280'
       ctx.strokeStyle = color
       ctx.fillStyle = color
       ctx.lineWidth = 1
@@ -576,15 +567,16 @@ Page({
         var items = (data && data.items) || []
         items = items.map(function (it) {
           var content = it.content || it.summary || ''
-          var summary = it.summary || ''
-          if (!summary && content) {
-            summary = content.length > 120 ? content.slice(0, 120) + '…' : content
+          var summary = md.stripToPlain(it.summary || content)
+          if (summary.length > 120) {
+            summary = summary.slice(0, 120) + '…'
           }
           return Object.assign({}, it, {
             timeText: fmtNewsTime(it.publish_time),
             favorite_symbolsText: (it.favorite_symbols || []).join('、'),
             summary: summary,
             content: content,
+            contentHtml: md.mdToHtml(content),
             hasMore: !!(content && summary && content.length > summary.replace(/…$/, '').length),
           })
         })
@@ -594,7 +586,7 @@ Page({
       .catch(function (e) {
         self.setData({ newsLoading: false })
         if (e && e.message === '未登录') {
-          self.setData({ isLoggedIn: false })
+          self.setData({ newsLoading: false, newsList: [], newsDisplayList: [] })
           return
         }
         wx.showToast({ title: (e && e.message) || '加载失败', icon: 'none' })
@@ -607,6 +599,9 @@ Page({
       return String(x.id) === String(id)
     })
     if (!item) return
+    if (!item.contentHtml) {
+      item = Object.assign({}, item, { contentHtml: md.mdToHtml(item.content || item.summary || '') })
+    }
     this.setData({ newsDetail: item })
   },
 

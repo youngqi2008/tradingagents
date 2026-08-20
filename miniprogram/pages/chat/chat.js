@@ -1,9 +1,22 @@
 var api = require('../../utils/api')
 var auth = require('../../utils/auth')
+var md = require('../../utils/markdown')
 var { syncTabBar } = require('../../utils/tabbar')
+
+var LIST_POLL_INTERVAL = 10000
+var RUNNING_STATUSES = { pending: 1, processing: 1, running: 1 }
+
+function withMd(messages) {
+  return (messages || []).map(function (m) {
+    if (!m || m.role !== 'assistant') return m
+    if (m.contentHtml) return m
+    return Object.assign({}, m, { contentHtml: md.mdToHtml(m.content || '') })
+  })
+}
 
 Page({
   data: {
+    pane: 'chat',
     isLoggedIn: false,
     sessionId: '',
     sessions: [],
@@ -26,14 +39,41 @@ Page({
     ],
     followUpSuggestions: [],
     waitTip: '智能问股通常需要 1–5 分钟。分析期间可先离开，完成后回本页即可查看结果。',
+    reportStockCode: '',
+    reports: [],
+    hasRunning: false,
+    statusText: {
+      pending: '排队中',
+      processing: '生成中',
+      running: '生成中',
+      completed: '已完成',
+      failed: '失败',
+      cancelled: '已取消',
+    },
   },
 
   onShow() {
     this._pageActive = true
     syncTabBar(this)
     var loggedIn = auth.isLoggedIn()
-    this.safeSetData({ isLoggedIn: loggedIn })
-    if (!loggedIn) return
+    var pane = 'chat'
+    try {
+      var savedPane = wx.getStorageSync('research_pane')
+      if (savedPane === 'report' || savedPane === 'chat') {
+        pane = savedPane
+        wx.removeStorageSync('research_pane')
+      }
+    } catch (e) {}
+    this.safeSetData({ isLoggedIn: loggedIn, pane: pane })
+    this._setPaneTitle(pane)
+    if (!loggedIn) {
+      this.stopListPoll()
+      return
+    }
+    if (pane === 'report') {
+      this.loadReports()
+      return
+    }
     this.loadUserQuota()
     if (this._askRunning || this._needsRefreshOnShow) {
       this.resumeAfterLeave()
@@ -55,7 +95,7 @@ Page({
 
   onHide() {
     this._pageActive = false
-    // 不 abort：后台继续生成，用户可切到其他 Tab
+    this.stopListPoll()
     try { wx.hideLoading() } catch (e) {}
     this.safeSetData({ showSessions: false })
   },
@@ -63,8 +103,114 @@ Page({
   onUnload() {
     this._pageActive = false
     this.stopMessagePoll()
-    // 仅页面卸载时断开，避免泄漏
+    this.stopListPoll()
     if (this._askTask && this._askTask.abort) this._askTask.abort()
+  },
+
+  _setPaneTitle(pane) {
+    wx.setNavigationBarTitle({ title: pane === 'report' ? '研报' : '问股' })
+  },
+
+  switchPane(e) {
+    var pane = e.currentTarget.dataset.pane
+    if (!pane || pane === this.data.pane) return
+    this.setData({ pane: pane, showSessions: false })
+    this._setPaneTitle(pane)
+    if (pane === 'report') {
+      this.loadReports()
+      return
+    }
+    this.stopListPoll()
+    if (auth.isLoggedIn()) {
+      this.loadUserQuota()
+      if (!this.data.sessionId && !(this.data.messages || []).length) {
+        this.bootstrap()
+      }
+    }
+  },
+
+  onReportStockInput(e) {
+    this.setData({ reportStockCode: (e.detail.value || '').trim() })
+  },
+
+  onClearReportStockCode() {
+    this.setData({ reportStockCode: '' })
+  },
+
+  goAnalysis() {
+    var code = this.data.reportStockCode
+    if (!code) {
+      wx.showToast({ title: '请输入股票代码', icon: 'none' })
+      return
+    }
+    wx.navigateTo({ url: '/pages/analysis/analysis?code=' + code })
+  },
+
+  openReport(e) {
+    var id = e.currentTarget.dataset.id
+    wx.navigateTo({ url: '/pages/report/report?id=' + id })
+  },
+
+  hasRunningReports(list) {
+    for (var i = 0; i < list.length; i++) {
+      if (RUNNING_STATUSES[list[i].status]) return true
+    }
+    return false
+  },
+
+  stopListPoll() {
+    if (this._listPollTimer) {
+      clearInterval(this._listPollTimer)
+      this._listPollTimer = null
+    }
+  },
+
+  startListPoll() {
+    var that = this
+    if (this._listPollTimer) return
+    this._listPollTimer = setInterval(function () {
+      that.loadReports({ silent: true })
+    }, LIST_POLL_INTERVAL)
+  },
+
+  loadReports(options) {
+    var silent = !!(options && options.silent)
+    var prevRunningIds = {}
+    if (silent) {
+      var prev = this.data.reports || []
+      for (var i = 0; i < prev.length; i++) {
+        if (RUNNING_STATUSES[prev[i].status]) {
+          prevRunningIds[String(prev[i].task_id)] = prev[i].stock_name || prev[i].stock_code || ''
+        }
+      }
+    }
+
+    api.request({ url: '/api/mp/reports/list?page_size=20' })
+      .then(function (res) {
+        if (!res.success) return
+        var list = res.data.reports || []
+        var hasRunning = this.hasRunningReports(list)
+        this.setData({ reports: list, hasRunning: hasRunning })
+
+        if (silent) {
+          for (var j = 0; j < list.length; j++) {
+            var id = String(list[j].task_id)
+            if (prevRunningIds[id] && list[j].status === 'completed') {
+              wx.showToast({
+                title: (prevRunningIds[id] || '研报') + ' 已完成',
+                icon: 'success',
+              })
+              break
+            }
+          }
+        }
+
+        if (hasRunning) this.startListPoll()
+        else this.stopListPoll()
+      }.bind(this))
+      .catch(function (e) {
+        console.error(e)
+      })
   },
 
   safeSetData(payload, callback) {
@@ -80,6 +226,9 @@ Page({
       }
       if (!allowWhileHidden) return
     }
+    if (payload && payload.messages) {
+      payload.messages = withMd(payload.messages)
+    }
     this.setData(payload, callback)
   },
 
@@ -91,9 +240,9 @@ Page({
         wx.hideLoading()
         wx.showToast({ title: '登录成功', icon: 'success' })
         self.safeSetData({ isLoggedIn: true })
+        auth.goHomeAfterLogin(result && result.user)
         self.loadUserQuota()
         self.bootstrap()
-        auth.promptProfileSetupIfNeeded(result && result.user)
       })
       .catch(function (e) {
         wx.hideLoading()
@@ -221,7 +370,7 @@ Page({
       if (!self._pageActive) return
       self.safeSetData({
         sessionId: sessionId,
-        messages: messages || [],
+        messages: withMd(messages || []),
         currentSessionTitle: title,
         showSessions: false,
         followUpSuggestions: [],
@@ -363,7 +512,7 @@ Page({
           self._askRunning = false
           self.stopMessagePoll()
           self.setData({
-            messages: messages,
+            messages: withMd(messages),
             sending: false,
             progressStatus: '',
           })
@@ -377,7 +526,7 @@ Page({
         }
         if (self._askRunning || self.data.sending) {
           self.setData({
-            messages: messages,
+            messages: withMd(messages),
             sending: true,
             progressStatus: self.data.progressStatus || '分析仍在进行，请稍候…',
           })
@@ -385,7 +534,7 @@ Page({
           self.scrollToBottom()
           return
         }
-        self.setData({ messages: messages })
+        self.setData({ messages: withMd(messages) })
         self.loadFollowUpSuggestions(sessionId)
       })
       .catch(function () {
@@ -422,7 +571,7 @@ Page({
           self._askRunning = false
           self.stopMessagePoll()
           self.setData({
-            messages: messages,
+            messages: withMd(messages),
             sending: false,
             progressStatus: '',
           })
@@ -437,7 +586,7 @@ Page({
           return
         }
         if (self._pageActive) {
-          self.setData({ messages: messages })
+          self.setData({ messages: withMd(messages) })
         }
       })
       .catch(function () {})
@@ -484,7 +633,7 @@ Page({
       messages.push(data.reply)
     }
     self.setData({
-      messages: messages,
+      messages: withMd(messages),
       sending: false,
       progressStatus: '',
       followUpSuggestions: data.follow_up_suggestions || [],
@@ -528,7 +677,7 @@ Page({
           var messages = (self.data.messages || []).slice()
           if (data.message && !self.hasMessageId(messages, data.message.id)) {
             messages.push(data.message)
-            self.setData({ messages: messages, progressStatus: '已收到问题，开始分析…' })
+            self.setData({ messages: withMd(messages), progressStatus: '已收到问题，开始分析…' })
             if (self._pageActive) self.scrollToBottom()
           }
         },

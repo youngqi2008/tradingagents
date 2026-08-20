@@ -210,15 +210,12 @@ function request(options) {
         console.log('[API]', res.statusCode, options.url)
 
         if (res.statusCode === 401) {
-
-          clearAuth()
-
-          wx.showToast({ title: '请重新登录', icon: 'none' })
-
+          if (token) {
+            clearAuth()
+            wx.showToast({ title: '请重新登录', icon: 'none' })
+          }
           reject(new Error('未登录'))
-
           return
-
         }
 
         if (res.statusCode === 402) {

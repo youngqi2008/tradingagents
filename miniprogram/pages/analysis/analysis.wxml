@@ -8,14 +8,14 @@
 
     <view class="wait-tip" wx:if="{{!taskId}}">
       <text class="wait-tip-title">预计耗时 5–10 分钟</text>
-      <text class="wait-tip-desc">多智能体深度分析需要一定时间，提交后可先离开，完成后在首页查看。</text>
+      <text class="wait-tip-desc">多智能体深度分析需要一定时间，提交后可先离开，完成后在「投研 → 研报」查看。</text>
     </view>
 
     <view class="progress-box" wx:if="{{taskId}}">
       <progress
         percent="{{progress}}"
         stroke-width="8"
-        activeColor="{{isFailed ? '#e74c3c' : '#c9a227'}}"
+        activeColor="{{isFailed ? '#d4202a' : '#ef4444'}}"
         active="{{!isFailed && status !== 'completed'}}"
       />
       <text class="status-msg {{isFailed ? 'status-error' : ''}}">{{message}}</text>
@@ -41,6 +41,10 @@
       bindtap="goHomeLater"
     >稍后查看（去研报）</button>
 
-    <navigator wx:if="{{isFailed}}" url="/pages/index/index" open-type="switchTab" class="link-back">返回首页查看历史研报</navigator>
+    <view
+      wx:if="{{isFailed}}"
+      class="link-back"
+      bindtap="goHomeLater"
+    >返回投研查看历史研报</view>
   </view>
 </view>

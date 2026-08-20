@@ -18,9 +18,9 @@
   border: 1rpx solid #e5e7eb;
 }
 .chip.on {
-  background: #1a1a2e;
-  color: #c9a227;
-  border-color: #1a1a2e;
+  background: #111111;
+  color: #d4202a;
+  border-color: #111111;
 }
 .login-tip {
   margin-top: 80rpx;
@@ -29,8 +29,8 @@
 }
 .login-tip .btn {
   margin-top: 28rpx;
-  background: #1a1a2e;
-  color: #c9a227;
+  background: #111111;
+  color: #d4202a;
 }
 .empty,
 .loading {
@@ -48,9 +48,9 @@
   box-shadow: 0 4rpx 16rpx rgba(26, 26, 46, 0.04);
 }
 .card.fav {
-  background: linear-gradient(180deg, #fff9e8 0%, #ffffff 48%);
-  border-color: #e8c547;
-  box-shadow: 0 6rpx 20rpx rgba(201, 162, 39, 0.18);
+  background: linear-gradient(180deg, #fff1f2 0%, #ffffff 48%);
+  border-color: #ef4444;
+  box-shadow: 0 6rpx 20rpx rgba(212, 32, 42, 0.18);
 }
 .card-hd {
   display: flex;
@@ -73,8 +73,8 @@
   color: #6b7280;
 }
 .fav-tag {
-  background: #c9a227;
-  color: #1a1a2e;
+  background: #d4202a;
+  color: #111111;
   font-weight: 700;
 }
 .code {
@@ -94,7 +94,7 @@
   line-height: 1.45;
 }
 .card.fav .title {
-  color: #1a1a2e;
+  color: #111111;
   font-weight: 750;
 }
 .summary {
@@ -117,7 +117,7 @@
   color: #9ca3af;
 }
 .expand-hint {
-  color: #c9a227;
+  color: #d4202a;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -139,7 +139,7 @@
 .detail-title {
   font-size: 36rpx;
   font-weight: 700;
-  color: #1a1a2e;
+  color: #111111;
   line-height: 1.45;
 }
 .detail-meta {
@@ -167,15 +167,15 @@
 .btn-action {
   margin: 0;
   background: #fff;
-  color: #1a1a2e;
-  border: 1px solid #c9a227;
+  color: #111111;
+  border: 1px solid #d4202a;
   border-radius: 12rpx;
   font-size: 28rpx;
   font-weight: 600;
 }
 .btn-action::after { border: none; }
 .btn-action.primary {
-  background: linear-gradient(135deg, #e8c547, #c9a227);
+  background: linear-gradient(135deg, #ef4444, #d4202a);
   border-color: transparent;
 }
 .btn-back {

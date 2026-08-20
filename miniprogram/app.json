@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/notifications/notifications",
     "pages/kline/kline",
+    "pages/notifications/notifications",
     "pages/news/news",
     "pages/chat/chat",
     "pages/index/index",
@@ -15,32 +15,28 @@
   ],
   "window": {
     "navigationBarTitleText": "Ares 智能投研",
-    "navigationBarBackgroundColor": "#1a1a2e",
+    "navigationBarBackgroundColor": "#111111",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#f0f2f8"
+    "backgroundColor": "#f2f2f3"
   },
   "tabBar": {
     "custom": true,
-    "color": "#9ca3af",
-    "selectedColor": "#c9a227",
+    "color": "#8b8b93",
+    "selectedColor": "#d4202a",
     "backgroundColor": "#ffffff",
-    "borderStyle": "white",
+    "borderStyle": "black",
     "list": [
-      {
-        "pagePath": "pages/notifications/notifications",
-        "text": "消息"
-      },
       {
         "pagePath": "pages/kline/kline",
         "text": "行情"
       },
       {
-        "pagePath": "pages/chat/chat",
-        "text": "问股"
+        "pagePath": "pages/notifications/notifications",
+        "text": "消息"
       },
       {
-        "pagePath": "pages/index/index",
-        "text": "研报"
+        "pagePath": "pages/chat/chat",
+        "text": "投研"
       },
       {
         "pagePath": "pages/risk-message/risk-message",

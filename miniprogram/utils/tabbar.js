@@ -1,11 +1,10 @@
 const { isRiskOfficer } = require('./auth')
 
-/** 全体用户可见的基础 Tab（不含风控）；消息置于首位作为首页 */
+/** 全体用户可见的基础 Tab（不含风控）；行情为首页，游客可先浏览 */
 var BASE_TABS = [
-  { pagePath: '/pages/notifications/notifications', text: '消息', icon: 'notify' },
   { pagePath: '/pages/kline/kline', text: '行情', icon: 'kline' },
-  { pagePath: '/pages/chat/chat', text: '问股', icon: 'chat' },
-  { pagePath: '/pages/index/index', text: '研报', icon: 'report' },
+  { pagePath: '/pages/notifications/notifications', text: '消息', icon: 'notify' },
+  { pagePath: '/pages/chat/chat', text: '投研', icon: 'chat' },
   { pagePath: '/pages/profile/profile', text: '我的', icon: 'me' },
 ]
 
@@ -16,7 +15,7 @@ var RISK_TAB = {
 }
 
 /**
- * 默认用户：6 个 Tab（含消息）
+ * 默认用户：行情 / 消息 / 投研 / 我的
  * 风控专员：在「我的」前插入「风控」
  */
 function buildTabList(isRisk) {
@@ -49,6 +48,9 @@ function syncTabBar(page) {
   }
   if (route.indexOf('/pages/news/news') >= 0) {
     route = '/pages/kline/kline'
+  }
+  if (route.indexOf('/pages/index/index') >= 0) {
+    route = '/pages/chat/chat'
   }
   if (typeof tabBar.setSelectedByPath === 'function') {
     tabBar.setSelectedByPath(route)

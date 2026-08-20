@@ -676,3 +676,14 @@ ModuleNotFoundError: No module named 'motor'
 2026-07-30 11:19:47,591 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
 2026-07-30 11:19:48,463 | app.services.auth_service | WARNING  | auth_service:verify_token:65 | Token type mismatch: got=refresh expected=access
 2026-07-30 11:19:48,464 | app.services.auth_service | WARNING  | auth_service:verify_token:65 | Token type mismatch: got=access expected=refresh
+2026-08-19 16:56:40,397 | agents               | INFO     | config_manager:_load_env_file:91 | 🔍 [ConfigManager] 加载 .env 文件: d:\Workspace\03 项目\04 重大项目\01 大模型\量化交易\AresStock\git\tradingagents\.env
+2026-08-19 16:56:40,413 | agents               | INFO     | config_manager:_load_env_file:92 | 🔍 [ConfigManager] 加载前 DASHSCOPE_API_KEY: 空
+2026-08-19 16:56:40,433 | agents               | INFO     | config_manager:_load_env_file:96 | 🔍 [ConfigManager] 加载后 DASHSCOPE_API_KEY: 有值
+2026-08-19 16:56:40,434 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-08-19 16:56:40,435 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=true (解析为: True)
+2026-08-19 16:56:40,436 | agents               | INFO     | config_manager:_init_mongodb_storage:174 | 🔍 [ConfigManager] MONGODB_CONNECTION_STRING=已设置
+2026-08-19 16:56:40,437 | agents               | INFO     | config_manager:_init_mongodb_storage:175 | 🔍 [ConfigManager] MONGODB_DATABASE_NAME=tradingagents
+2026-08-19 16:56:40,438 | agents               | INFO     | config_manager:_init_mongodb_storage:181 | 🔄 [ConfigManager] 正在创建 MongoDBStorage 实例...
+2026-08-19 16:56:45,523 | agents               | ERROR    | mongodb_storage:_connect:84 | ❌ MongoDB连接失败: mongodb:27017: [Errno 11001] getaddrinfo failed (configured timeouts: socketTimeoutMS: 30000.0ms, connectTimeoutMS: 30000.0ms), Timeout: 5.0s, Topology Description: <TopologyDescription id: 6a856fc8c4621801bd4a85bb, topology_type: Unknown, servers: [<ServerDescription ('mongodb', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('mongodb:27017: [Errno 11001] getaddrinfo failed (configured timeouts: socketTimeoutMS: 30000.0ms, connectTimeoutMS: 30000.0ms)')>]>
+2026-08-19 16:56:45,565 | agents               | INFO     | mongodb_storage:_connect:85 | 将使用本地JSON文件存储
+2026-08-19 16:56:45,565 | agents               | WARNING  | config_manager:_init_mongodb_storage:191 | ⚠️ [ConfigManager] MongoDB连接失败，将使用JSON文件存储

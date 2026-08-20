@@ -3,8 +3,8 @@
   <view class="login-panel" wx:if="{{!isLoggedIn}}">
     <view class="login-avatar">我</view>
     <text class="login-title">登录 Ares</text>
-    <text class="login-desc">管理账户、会员与消息</text>
-    <button class="btn-primary btn-block" bindtap="onLoginTap">微信一键登录</button>
+    <text class="login-desc">登录后可管理账户、会员与个人消息</text>
+    <button class="btn-primary btn-block" bindtap="onLoginTap">登录</button>
   </view>
 
   <block wx:else>
@@ -63,13 +63,13 @@
         </view>
         <view class="benefit-item">
           <text class="benefit-num">{{profile.push_benefit_remaining || 0}}</text>
-          <text class="benefit-label">推送剩余</text>
+          <text class="benefit-label">AI深度分析</text>
         </view>
       </view>
       <view class="grant-list" wx:if="{{profile.benefit_grants && profile.benefit_grants.length}}">
         <view class="grant-item" wx:for="{{profile.benefit_grants}}" wx:key="id">
           <text class="grant-name">{{item.campaign_name || item.campaign_code}}</text>
-          <text class="grant-meta">研报 {{item.report_remaining}}/{{item.report_limit}} · 问股 {{item.ask_remaining}}/{{item.ask_limit}} · 推送 {{item.push_remaining}}/{{item.push_limit}}</text>
+          <text class="grant-meta">研报 {{item.report_remaining}}/{{item.report_limit}} · 问股 {{item.ask_remaining}}/{{item.ask_limit}} · AI {{item.push_remaining}}/{{item.push_limit}}</text>
         </view>
       </view>
     </view>
@@ -98,7 +98,7 @@
         <text class="menu-arrow">›</text>
       </view>
       <view class="menu-item" bindtap="goRecharge">
-        <view class="menu-icon green">充</view>
+        <view class="menu-icon red">充</view>
         <text class="menu-text">账户充值</text>
         <text class="menu-arrow">›</text>
       </view>

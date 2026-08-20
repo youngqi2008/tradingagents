@@ -11,8 +11,8 @@
 }
 .login-tip .btn {
   margin-top: 32rpx;
-  background: #1a1a2e;
-  color: #c9a227;
+  background: #111111;
+  color: #d4202a;
 }
 .add-bar {
   display: flex;
@@ -27,8 +27,8 @@
   font-size: 28rpx;
 }
 .btn-add {
-  background: #1a1a2e !important;
-  color: #c9a227 !important;
+  background: #111111 !important;
+  color: #d4202a !important;
   margin: 0;
 }
 .suggest {
@@ -46,14 +46,14 @@
 .suggest-item .code {
   width: 140rpx;
   font-weight: 600;
-  color: #1a1a2e;
+  color: #111111;
 }
 .suggest-item .name {
   flex: 1;
   color: #555;
 }
 .suggest-item .plus {
-  color: #c9a227;
+  color: #d4202a;
   font-size: 24rpx;
 }
 .section-title {
@@ -98,8 +98,8 @@
   gap: 20rpx;
   font-size: 26rpx;
 }
-.pct.up { color: #e11d48; }
-.pct.down { color: #059669; }
+.pct.up { color: var(--color-up); }
+.pct.down { color: var(--color-down); }
 .remove {
   color: #999;
   font-size: 24rpx;

@@ -1,19 +1,28 @@
-/* Ares 设计系统 */
+/* Ares 设计系统 · 红黑金融风 */
 page {
-  --color-bg: #f0f2f8;
+  /* 基色：黑 / 红 / 灰白 */
+  --color-bg: #f2f2f3;
   --color-surface: #ffffff;
-  --color-primary: #1a1a2e;
-  --color-accent: #c9a227;
-  --color-accent-light: #e8c547;
-  --color-text: #1f2430;
-  --color-text-secondary: #6b7280;
-  --color-text-muted: #9ca3af;
-  --color-border: #e8ecf4;
-  --color-user-bubble: #fff4d6;
-  --color-ai-bubble: #f3f5fa;
+  --color-primary: #111111;
+  --color-accent: #d4202a;
+  --color-accent-light: #ef4444;
+  --color-accent-soft: #fff1f2;
+  --color-text: #111111;
+  --color-text-secondary: #52525b;
+  --color-text-muted: #8b8b93;
+  --color-border: #e4e4e7;
+  /* 涨跌：红涨 · 灰跌（少绿） */
+  --color-up: #e11d2e;
+  --color-down: #6b7280;
+  /* 状态：完成用琥珀金，失败用红，进行中用深灰 */
+  --color-ok: #b45309;
+  --color-danger: #d4202a;
+  --color-info: #3f3f46;
+  --color-user-bubble: #ffe4e6;
+  --color-ai-bubble: #f4f4f5;
   --radius-md: 16rpx;
   --radius-lg: 24rpx;
-  --shadow-sm: 0 4rpx 20rpx rgba(26, 26, 46, 0.06);
+  --shadow-sm: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
   --tab-height: 110rpx;
   background: var(--color-bg);
   color: var(--color-text);
@@ -40,8 +49,8 @@ page {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
-  color: var(--color-primary);
+  background: linear-gradient(135deg, #b91c1c 0%, #ef4444 100%);
+  color: #ffffff;
   border: none;
   border-radius: var(--radius-md);
   font-weight: 600;
@@ -76,6 +85,13 @@ page {
   font-size: 24rpx;
 }
 
+.text-up {
+  color: var(--color-up);
+}
+.text-down {
+  color: var(--color-down);
+}
+
 /* 输入框一键清空 */
 .input-with-clear {
   position: relative;
@@ -98,7 +114,7 @@ page {
   width: 44rpx;
   height: 44rpx;
   border-radius: 50%;
-  background: rgba(107, 114, 128, 0.22);
+  background: rgba(17, 17, 17, 0.28);
   color: #fff;
   font-size: 28rpx;
   line-height: 44rpx;

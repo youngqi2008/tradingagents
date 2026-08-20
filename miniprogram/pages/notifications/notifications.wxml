@@ -1,20 +1,27 @@
 <view class="container">
   <view wx:if="{{needLogin}}" class="empty login-empty">
-    <text class="login-tip">登录后查看消息</text>
-    <button class="btn-primary" bindtap="onLoginTap">去登录</button>
+    <text class="login-tip">消息为个人服务，登录后可查看关注信号与推送</text>
+    <button class="btn-primary" bindtap="onLoginTap">登录</button>
+    <text class="login-hint">可先浏览「行情」与「新闻」，无需登录</text>
   </view>
 
   <block wx:else>
     <view wx:if="{{!detail}}">
-      <scroll-view class="category-bar" scroll-x enable-flex>
+      <view class="signal-hero" wx:if="{{activeCategory === 'signal'}}">
+        <view class="signal-hero-kicker">首页 · 优先查看</view>
+        <view class="signal-hero-title">关注信号</view>
+        <view class="signal-hero-sub">自选股关注 / 取消关注推送，未读优先处理</view>
+      </view>
+
+      <view class="category-bar">
         <view
           wx:for="{{categories}}"
           wx:key="key"
-          class="category-item {{activeCategory === item.key ? 'active' : ''}}"
+          class="category-item {{item.featured ? 'featured' : ''}} {{activeCategory === item.key ? 'active' : ''}}"
           data-key="{{item.key}}"
           bindtap="onCategoryTap"
         >{{item.label}}</view>
-      </scroll-view>
+      </view>
 
       <view class="toolbar">
         <text class="unread-tip" wx:if="{{unreadCount > 0}}">全部未读 {{unreadCount}}</text>
@@ -24,7 +31,9 @@
       </view>
 
       <view wx:if="{{loading}}" class="empty">加载中...</view>
-      <view wx:elif="{{notifications.length === 0}}" class="empty">暂无此类消息</view>
+      <view wx:elif="{{notifications.length === 0}}" class="empty">
+        {{activeCategory === 'digest' ? '暂无自选股日报，工作日将按自选股推送到这里' : '暂无此类消息'}}
+      </view>
 
       <view
         wx:for="{{notifications}}"
