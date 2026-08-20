@@ -32,6 +32,7 @@ async def init_redis():
                 3: 3,   # TCP_KEEPCNT: 最多发送3次探测
             },
             health_check_interval=30,  # 每30秒检查一次连接健康状态
+            protocol=2,
         )
 
         # 创建Redis客户端

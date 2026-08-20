@@ -84,6 +84,7 @@ class DatabaseManager:
                 decode_responses=True,
                 socket_connect_timeout=5,  # 5秒连接超时
                 socket_timeout=10,  # 10秒套接字超时
+                protocol=2,  # RESP2：先 AUTH 再命令，兼容 requirepass 的 Redis 5/6
             )
 
             # 创建Redis客户端
