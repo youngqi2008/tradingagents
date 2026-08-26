@@ -1,14 +1,13 @@
 <view class="page container">
-  <!-- 未登录 -->
   <view class="login-panel" wx:if="{{!isLoggedIn}}">
     <view class="login-avatar">我</view>
     <text class="login-title">登录 Ares</text>
     <text class="login-desc">登录后可管理账户、会员与个人消息</text>
     <button class="btn-primary btn-block" bindtap="onLoginTap">登录</button>
+    <text class="login-hint">可先浏览首页介绍与帮助，无需登录</text>
   </view>
 
   <block wx:else>
-    <!-- 用户头部：合规头像选择器 + 昵称输入 -->
     <view class="profile-header">
       <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
         <image wx:if="{{userInfo.avatarUrl}}" class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
@@ -28,7 +27,6 @@
       </view>
     </view>
 
-    <!-- 资产卡片 -->
     <view class="asset-card" wx:if="{{profile}}">
       <view class="asset-item">
         <text class="asset-label">余额</text>
@@ -36,17 +34,11 @@
       </view>
       <view class="asset-divider"></view>
       <view class="asset-item">
-        <text class="asset-label">问股剩余</text>
-        <text class="asset-value sm">{{profile.ask_free_remaining}}</text>
-      </view>
-      <view class="asset-divider"></view>
-      <view class="asset-item">
-        <text class="asset-label">研报剩余</text>
-        <text class="asset-value sm">{{profile.report_free_remaining}}</text>
+        <text class="asset-label">会员等级</text>
+        <text class="asset-value sm">{{profile.membership_level_name || '普通'}}</text>
       </view>
     </view>
 
-    <!-- 活动权益 -->
     <view class="benefit-card" wx:if="{{profile && (profile.report_benefit_remaining || profile.ask_benefit_remaining || profile.push_benefit_remaining || (profile.benefit_grants && profile.benefit_grants.length))}}">
       <view class="benefit-hd">
         <text class="benefit-title">我的活动权益</text>
@@ -55,32 +47,26 @@
       <view class="benefit-row">
         <view class="benefit-item">
           <text class="benefit-num">{{profile.report_benefit_remaining || 0}}</text>
-          <text class="benefit-label">研报剩余</text>
+          <text class="benefit-label">权益 A</text>
         </view>
         <view class="benefit-item">
           <text class="benefit-num">{{profile.ask_benefit_remaining || 0}}</text>
-          <text class="benefit-label">问股剩余</text>
+          <text class="benefit-label">权益 B</text>
         </view>
         <view class="benefit-item">
           <text class="benefit-num">{{profile.push_benefit_remaining || 0}}</text>
-          <text class="benefit-label">AI深度分析</text>
+          <text class="benefit-label">权益 C</text>
         </view>
       </view>
       <view class="grant-list" wx:if="{{profile.benefit_grants && profile.benefit_grants.length}}">
         <view class="grant-item" wx:for="{{profile.benefit_grants}}" wx:key="id">
           <text class="grant-name">{{item.campaign_name || item.campaign_code}}</text>
-          <text class="grant-meta">研报 {{item.report_remaining}}/{{item.report_limit}} · 问股 {{item.ask_remaining}}/{{item.ask_limit}} · AI {{item.push_remaining}}/{{item.push_limit}}</text>
+          <text class="grant-meta">A {{item.report_remaining}}/{{item.report_limit}} · B {{item.ask_remaining}}/{{item.ask_limit}} · C {{item.push_remaining}}/{{item.push_limit}}</text>
         </view>
       </view>
     </view>
 
-    <!-- 功能菜单 -->
     <view class="menu-card">
-      <view class="menu-item" bindtap="goFavorites">
-        <view class="menu-icon gold">选</view>
-        <text class="menu-text">我的自选</text>
-        <text class="menu-arrow">›</text>
-      </view>
       <view class="menu-item" bindtap="goMembership">
         <view class="menu-icon gold">VIP</view>
         <text class="menu-text">会员中心</text>
@@ -104,7 +90,6 @@
       </view>
     </view>
 
-    <!-- 最近流水 -->
     <view class="records-card" wx:if="{{records.length > 0}}">
       <text class="records-title">最近流水</text>
       <view wx:for="{{records}}" wx:key="id" class="record-row">
@@ -117,30 +102,4 @@
 
     <button class="btn-logout" bindtap="onLogoutTap">退出登录</button>
   </block>
-
-  <!-- 登录后完善资料（头像选择器 + 昵称输入，可带出微信昵称） -->
-  <view class="setup-mask" wx:if="{{showProfileSetup}}" catchtouchmove="preventMove">
-    <view class="setup-card">
-      <text class="setup-title">完善个人资料</text>
-      <text class="setup-desc">微信不再提供静默昵称，请选择头像并确认昵称</text>
-
-      <button class="setup-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onSetupChooseAvatar">
-        <image wx:if="{{setupAvatarUrl}}" class="setup-avatar" src="{{setupAvatarUrl}}" mode="aspectFill" />
-        <view wx:else class="setup-avatar setup-avatar-ph">选头像</view>
-      </button>
-      <text class="setup-avatar-tip">点击上方选择微信头像</text>
-
-      <input
-        class="setup-nickname"
-        type="nickname"
-        placeholder="点击填写微信昵称"
-        value="{{setupNickName}}"
-        bindinput="onSetupNicknameInput"
-        bindblur="onSetupNicknameBlur"
-      />
-
-      <button class="btn-primary setup-confirm" bindtap="onProfileSetupConfirm">完成</button>
-      <button class="setup-skip" bindtap="onProfileSetupSkip">稍后完善</button>
-    </view>
-  </view>
 </view>

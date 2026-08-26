@@ -8,11 +8,7 @@ const {
   getToken,
   logout,
   isRiskOfficer,
-  needsProfileSetup,
-  isProfileSetupPending,
-  setProfileSetupPending,
   isDefaultNickname,
-  goHomeAfterLogin,
 } = require('../../utils/auth')
 const { syncTabBar, setTabBarUnreadCount } = require('../../utils/tabbar')
 
@@ -24,9 +20,6 @@ Page({
     isLoggedIn: false,
     isRiskOfficer: false,
     userInfo: { nickName: '', avatarUrl: '' },
-    showProfileSetup: false,
-    setupNickName: '',
-    setupAvatarUrl: '',
   },
 
   onShow() {
@@ -47,9 +40,6 @@ Page({
         profile: null,
         records: [],
         unreadCount: 0,
-        showProfileSetup: false,
-        setupNickName: '',
-        setupAvatarUrl: '',
       })
       setTabBarUnreadCount(this, 0)
       syncTabBar(this)
@@ -72,36 +62,17 @@ Page({
         return applyAvatarDisplay(u.nickname, u.avatar_url).then(function (fresh) {
           setUserInfo(fresh)
           this.setData({ userInfo: fresh })
-          this.maybeOpenProfileSetup(u, fresh)
         }.bind(this))
       }.bind(this))
-      .catch(function () {
-        this.maybeOpenProfileSetup(getUser(), getUserInfo())
-      }.bind(this))
-  },
-
-  maybeOpenProfileSetup(user, userInfo) {
-    // 合规：不在进入页面时强制授权头像/昵称，仅用户主动完善
-    return
-  },
-
-  openProfileSetup(userInfo) {
-    var info = userInfo || getUserInfo() || { nickName: '', avatarUrl: '' }
-    var nick = (info.nickName || '').trim()
-    this.setData({
-      showProfileSetup: true,
-      setupNickName: isDefaultNickname(nick) ? '' : nick,
-      setupAvatarUrl: info.avatarUrl || '',
-    })
+      .catch(function () {})
   },
 
   onLoginTap() {
     wx.showLoading({ title: '登录中...' })
     login({})
-      .then(function (result) {
+      .then(function () {
         wx.hideLoading()
         wx.showToast({ title: '登录成功', icon: 'success' })
-        this._profileSetupDismissed = false
         this.checkLoginStatus()
       }.bind(this))
       .catch(function (e) {
@@ -113,10 +84,6 @@ Page({
   onChooseAvatar(e) {
     var avatarUrl = e.detail.avatarUrl
     if (!avatarUrl) return
-    if (this.data.showProfileSetup) {
-      this.setData({ setupAvatarUrl: avatarUrl })
-      return
-    }
     var userInfo = Object.assign({}, this.data.userInfo, { avatarUrl: avatarUrl })
     this.setData({ userInfo: userInfo })
     setUserInfo(userInfo)
@@ -132,16 +99,8 @@ Page({
       })
   },
 
-  onSetupChooseAvatar(e) {
-    this.onChooseAvatar(e)
-  },
-
   onNicknameInput(e) {
     this.setData({ 'userInfo.nickName': e.detail.value })
-  },
-
-  onSetupNicknameInput(e) {
-    this.setData({ setupNickName: e.detail.value })
   },
 
   onNicknameBlur(e) {
@@ -156,84 +115,10 @@ Page({
     this.setData({ userInfo: userInfo })
     updateMe({ nickname: nickName })
       .then(function () {
-        setProfileSetupPending(false)
         wx.showToast({ title: '昵称已保存', icon: 'success' })
       })
       .catch(function () {
         wx.showToast({ title: '昵称同步失败', icon: 'none' })
-      })
-  },
-
-  preventMove() {},
-
-  onSetupNicknameBlur(e) {
-    var nickName = (e.detail.value || '').trim()
-    this.setData({ setupNickName: nickName })
-  },
-
-  onProfileSetupSkip() {
-    this._profileSetupDismissed = true
-    setProfileSetupPending(false)
-    this.setData({ showProfileSetup: false })
-  },
-
-  onProfileSetupConfirm() {
-    var nickName = (this.data.setupNickName || '').trim()
-    var avatarUrl = this.data.setupAvatarUrl || ''
-    if (!nickName) {
-      wx.showToast({ title: '请填写昵称', icon: 'none' })
-      return
-    }
-    if (isDefaultNickname(nickName)) {
-      wx.showToast({ title: '请使用真实昵称', icon: 'none' })
-      return
-    }
-
-    var self = this
-    wx.showLoading({ title: '保存中...' })
-
-    var chain = Promise.resolve()
-    if (avatarUrl && isLocalTempAvatar(avatarUrl)) {
-      chain = uploadAvatar(avatarUrl).catch(function (err) {
-        throw new Error((err && err.message) || '头像上传失败')
-      })
-    }
-
-    chain
-      .then(function () {
-        return updateMe({ nickname: nickName })
-      })
-      .then(function () {
-        return getMe()
-      })
-      .then(function (u) {
-        return applyAvatarDisplay(
-          (u && u.nickname) || nickName,
-          (u && u.avatar_url) || ''
-        ).then(function (fresh) {
-          if (!fresh.avatarUrl && avatarUrl) {
-            fresh.avatarUrl = avatarUrl
-          }
-          if (!fresh.nickName) {
-            fresh.nickName = nickName
-          }
-          setUserInfo(fresh)
-          setProfileSetupPending(false)
-          self._profileSetupDismissed = true
-          wx.hideLoading()
-          self.setData({
-            showProfileSetup: false,
-            userInfo: fresh,
-            setupNickName: '',
-            setupAvatarUrl: '',
-          })
-          wx.showToast({ title: '资料已完善', icon: 'success' })
-          self.loadProfile()
-        })
-      })
-      .catch(function (err) {
-        wx.hideLoading()
-        wx.showToast({ title: (err && err.message) || '保存失败', icon: 'none' })
       })
   },
 
@@ -244,16 +129,13 @@ Page({
       success: function (r) {
         if (r.confirm) {
           logout()
-          this._profileSetupDismissed = false
           this.setData({
             isLoggedIn: false,
             isRiskOfficer: false,
             profile: null,
             records: [],
             userInfo: { nickName: '', avatarUrl: '' },
-            showProfileSetup: false,
-            setupNickName: '',
-            setupAvatarUrl: '',
+            unreadCount: 0,
           })
           syncTabBar(this)
           wx.showToast({ title: '已退出', icon: 'none' })
@@ -308,14 +190,6 @@ Page({
     wx.navigateTo({ url: '/pages/recharge/recharge' })
   },
 
-  goFavorites() {
-    if (!isLoggedIn()) {
-      this.onLoginTap()
-      return
-    }
-    wx.navigateTo({ url: '/pages/favorites/favorites' })
-  },
-
   goMembership() {
     if (!isLoggedIn()) {
       this.onLoginTap()
@@ -340,14 +214,3 @@ Page({
     wx.switchTab({ url: '/pages/risk-message/risk-message' })
   },
 })
-
-function isLocalTempAvatar(path) {
-  if (!path) return false
-  return (
-    path.indexOf('wxfile://') === 0 ||
-    path.indexOf('http://tmp') === 0 ||
-    path.indexOf('https://tmp') === 0 ||
-    path.indexOf('tmp/') >= 0 ||
-    path.indexOf('/tmp') >= 0
-  )
-}

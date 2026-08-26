@@ -1,7 +1,14 @@
 {
-  "description": "Ares智能研报微信小程序",
+  "description": "Ares账号与通知服务",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "folder", "value": "pages/kline" },
+      { "type": "folder", "value": "pages/news" },
+      { "type": "folder", "value": "pages/chat" },
+      { "type": "folder", "value": "pages/analysis" },
+      { "type": "folder", "value": "pages/report" },
+      { "type": "folder", "value": "pages/favorites" }
+    ],
     "include": [
       {
         "value": "custom-tab-bar",
@@ -29,7 +36,7 @@
     "swc": false,
     "disableSWC": true,
     "ignoreDevUnusedFiles": false,
-    "ignoreUploadUnusedFiles": false,
+    "ignoreUploadUnusedFiles": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],

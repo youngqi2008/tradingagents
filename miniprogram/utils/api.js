@@ -222,7 +222,7 @@ function request(options) {
 
           var detail = res.data && res.data.detail
 
-          var msg = extractErrorMessage(res.data, '余额不足，请先充值后再生成研报')
+          var msg = extractErrorMessage(res.data, '余额不足，请先充值')
 
           var balance = detail && detail.balance
 
@@ -238,7 +238,7 @@ function request(options) {
 
           wx.showModal({
 
-            title: '无法生成研报',
+            title: '余额不足',
 
             content: content,
 
@@ -743,16 +743,8 @@ function askInSessionStream(sessionId, message, strategyId, handlers) {
       }
       if (res.statusCode === 402) {
         var detail402 = res.data && res.data.detail
-        var msg402 = extractErrorMessage(res.data, '余额不足，无法问股')
-        wx.showModal({
-          title: '无法问股',
-          content: msg402,
-          confirmText: '去充值',
-          cancelText: '知道了',
-          success: function (r) {
-            if (r.confirm) wx.navigateTo({ url: '/pages/recharge/recharge' })
-          },
-        })
+        var msg402 = extractErrorMessage(res.data, '当前无法完成该操作')
+        wx.showToast({ title: msg402, icon: 'none' })
         var err402 = new Error(msg402)
         err402.statusCode = 402
         finish(err402)

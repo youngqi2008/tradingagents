@@ -1,20 +1,14 @@
 {
   "pages": [
-    "pages/kline/kline",
-    "pages/notifications/notifications",
-    "pages/news/news",
-    "pages/chat/chat",
     "pages/index/index",
+    "pages/notifications/notifications",
     "pages/risk-message/risk-message",
     "pages/profile/profile",
-    "pages/favorites/favorites",
-    "pages/analysis/analysis",
-    "pages/report/report",
     "pages/membership/membership",
     "pages/recharge/recharge"
   ],
   "window": {
-    "navigationBarTitleText": "Ares 智能投研",
+    "navigationBarTitleText": "Ares",
     "navigationBarBackgroundColor": "#111111",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#f2f2f3"
@@ -27,16 +21,12 @@
     "borderStyle": "black",
     "list": [
       {
-        "pagePath": "pages/kline/kline",
-        "text": "行情"
+        "pagePath": "pages/index/index",
+        "text": "首页"
       },
       {
         "pagePath": "pages/notifications/notifications",
         "text": "消息"
-      },
-      {
-        "pagePath": "pages/chat/chat",
-        "text": "投研"
       },
       {
         "pagePath": "pages/risk-message/risk-message",

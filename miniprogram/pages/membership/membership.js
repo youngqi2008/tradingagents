@@ -99,22 +99,22 @@ Page({
     ]
     if (level.hasMonthlyBenefit) {
       lines.push(
-        '每月免费：研报 ' + level.benefit_monthly_report_text +
-          ' · 问股 ' + (level.benefit_monthly_ask || 0) +
-          ' · AI ' + (level.benefit_monthly_push || 0)
+        '每月免费：额度一 ' + level.benefit_monthly_report_text +
+          ' · 额度二 ' + (level.benefit_monthly_ask || 0) +
+          ' · 专项 ' + (level.benefit_monthly_push || 0)
       )
     } else {
       lines.push('无每月免费额度')
     }
     if (level.hasOnceBenefit) {
       lines.push(
-        '入门权益：研报 ' + (level.benefit_once_report || 0) +
-          ' · 问股 ' + (level.benefit_once_ask || 0) +
-          ' · AI ' + (level.benefit_once_push || 0)
+        '入门权益：额度一 ' + (level.benefit_once_report || 0) +
+          ' · 额度二 ' + (level.benefit_once_ask || 0) +
+          ' · 专项 ' + (level.benefit_once_push || 0)
       )
     }
-    lines.push('研报超限：¥' + level.per_generation_price_text + '/次')
-    lines.push('问股超限：¥' + level.per_ask_price_text + '/次')
+    lines.push('额度一超限：¥' + level.per_generation_price_text + '/次')
+    lines.push('额度二超限：¥' + level.per_ask_price_text + '/次')
     if (level.description) lines.push(level.description)
     var self = this
     wx.showModal({

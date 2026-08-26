@@ -12,7 +12,6 @@ App({
     that.globalData.isLoggedIn = isLoggedIn()
     that.globalData.userInfo = getUserInfo()
 
-    // 启动时刷新角色，保证默认用户不出现风控 Tab、专员能及时出现
     if (isLoggedIn()) {
       getMe()
         .then(function (u) {

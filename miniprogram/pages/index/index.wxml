@@ -1,1 +1,79 @@
-<view class="page container"></view>
+<view class="page container">
+  <view class="hero">
+    <text class="hero-kicker">欢迎使用</text>
+    <text class="hero-title">Ares</text>
+    <text class="hero-desc">账号管理与站内通知工具。打开即可浏览介绍与帮助，登录可在体验后自行选择。</text>
+  </view>
+
+  <view class="section-hd">服务介绍</view>
+  <view class="feature-card" bindtap="goNotify">
+    <view class="feature-icon">讯</view>
+    <view class="feature-body">
+      <text class="feature-title">站内通知</text>
+      <text class="feature-desc">查看平台公告与个人消息，及时了解服务动态。</text>
+    </view>
+    <text class="feature-arrow">›</text>
+  </view>
+  <view class="feature-card" bindtap="goProfile">
+    <view class="feature-icon dark">我</view>
+    <view class="feature-body">
+      <text class="feature-title">个人中心</text>
+      <text class="feature-desc">管理头像、昵称等资料，登录后可维护账号信息。</text>
+    </view>
+    <text class="feature-arrow">›</text>
+  </view>
+  <view class="feature-card">
+    <view class="feature-icon gray">帮</view>
+    <view class="feature-body">
+      <text class="feature-title">使用帮助</text>
+      <text class="feature-desc">阅读下方指南与常见问题，了解如何使用本小程序。</text>
+    </view>
+  </view>
+
+  <view class="section-hd">使用指南</view>
+  <view class="guide-card">
+    <view class="guide-item">
+      <text class="guide-num">1</text>
+      <view class="guide-body">
+        <text class="guide-title">浏览首页</text>
+        <text class="guide-desc">无需登录，先了解服务内容与使用方式。</text>
+      </view>
+    </view>
+    <view class="guide-item">
+      <text class="guide-num">2</text>
+      <view class="guide-body">
+        <text class="guide-title">查看消息</text>
+        <text class="guide-desc">在「消息」阅读公告；个人消息需登录后查看。</text>
+      </view>
+    </view>
+    <view class="guide-item">
+      <text class="guide-num">3</text>
+      <view class="guide-body">
+        <text class="guide-title">管理资料</text>
+        <text class="guide-desc">需要时再到「我的」自行登录并完善资料。</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-hd">常见问题</view>
+  <view class="faq-card">
+    <view
+      wx:for="{{faqs}}"
+      wx:key="id"
+      class="faq-item"
+      data-id="{{item.id}}"
+      bindtap="toggleFaq"
+    >
+      <view class="faq-q">
+        <text>{{item.q}}</text>
+        <text class="faq-toggle">{{item.open ? '−' : '+'}}</text>
+      </view>
+      <text class="faq-a" wx:if="{{item.open}}">{{item.a}}</text>
+    </view>
+  </view>
+
+  <view class="notice-card">
+    <text class="notice-title">服务说明</text>
+    <text class="notice-text">本小程序提供账号管理、站内通知与使用帮助。打开即可浏览首页介绍，登录可在体验后自行选择。</text>
+  </view>
+</view>

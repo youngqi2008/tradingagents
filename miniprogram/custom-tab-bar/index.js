@@ -4,7 +4,6 @@ const { isRiskOfficer } = require('../utils/auth')
 Component({
   data: {
     selected: 0,
-    // 默认仅基础 Tab，绝不默认带「风控」
     list: buildTabList(false),
     showRisk: false,
     unreadCount: 0,
@@ -21,8 +20,7 @@ Component({
   },
   methods: {
     refreshByRole() {
-      var showRisk = isRiskOfficer()
-      this.updateForRole(showRisk)
+      this.updateForRole(isRiskOfficer())
     },
     updateForRole(isRisk) {
       var showRisk = !!isRisk && isRiskOfficer()
@@ -53,7 +51,6 @@ Component({
     switchTab(e) {
       var path = e.currentTarget.dataset.path
       var index = e.currentTarget.dataset.index
-      // 非风控专员禁止进入风控页
       if (path.indexOf('risk-message') >= 0 && !isRiskOfficer()) {
         wx.showToast({ title: '仅风控专员可用', icon: 'none' })
         this.updateForRole(false)

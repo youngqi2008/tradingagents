@@ -1,4 +1,4 @@
 {
-  "desc": "Ares智能研报小程序",
+  "desc": "Ares账号与通知服务",
   "rules": [{ "action": "allow", "page": "*" }]
 }

@@ -33,32 +33,33 @@
   background: linear-gradient(135deg, #b91c1c, #ef4444);
 }
 
-/* 行情 */
-.tab-icon-kline::before {
+/* 首页 */
+.tab-icon-home::before {
   content: '';
   position: absolute;
-  width: 3rpx;
-  height: 22rpx;
-  left: 14rpx;
-  top: 11rpx;
+  width: 22rpx;
+  height: 16rpx;
+  left: 11rpx;
+  top: 18rpx;
   background: #9ca3af;
+  border-radius: 2rpx 2rpx 0 0;
 }
-.tab-icon-kline::after {
+.tab-icon-home::after {
   content: '';
   position: absolute;
-  width: 10rpx;
-  height: 14rpx;
-  left: 10.5rpx;
-  top: 15rpx;
-  background: #9ca3af;
-  box-shadow: 16rpx -2rpx 0 0 #9ca3af, 16rpx -6rpx 0 -3.5rpx #9ca3af, 16rpx 8rpx 0 -3.5rpx #9ca3af;
+  width: 0;
+  height: 0;
+  left: 8rpx;
+  top: 8rpx;
+  border-left: 14rpx solid transparent;
+  border-right: 14rpx solid transparent;
+  border-bottom: 12rpx solid #9ca3af;
 }
-.tab-item.active .tab-icon-kline::before,
-.tab-item.active .tab-icon-kline::after {
+.tab-item.active .tab-icon-home::before {
   background: #ffffff;
 }
-.tab-item.active .tab-icon-kline::after {
-  box-shadow: 16rpx -2rpx 0 0 #ffffff, 16rpx -6rpx 0 -3.5rpx #ffffff, 16rpx 8rpx 0 -3.5rpx #ffffff;
+.tab-item.active .tab-icon-home::after {
+  border-bottom-color: #ffffff;
 }
 
 /* 新闻 */

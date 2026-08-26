@@ -4,9 +4,9 @@
     <view class="current-name">{{profile.membership_level_name}}</view>
     <view class="current-balance">账户余额 ¥{{profile.balance}}</view>
     <view class="quota-row">
-      <text>研报剩余 {{profile.report_free_remaining}}</text>
-      <text>问股剩余 {{profile.ask_free_remaining}}</text>
-      <text wx:if="{{profile.push_benefit_remaining > 0}}">AI分析 {{profile.push_benefit_remaining}}</text>
+      <text>额度一剩余 {{profile.report_free_remaining}}</text>
+      <text>额度二剩余 {{profile.ask_free_remaining}}</text>
+      <text wx:if="{{profile.push_benefit_remaining > 0}}">专项额度 {{profile.push_benefit_remaining}}</text>
     </view>
     <view class="fee-hint" wx:if="{{profile.monthly_fee > 0}}">
       月费 ¥{{profile.monthly_fee}}
@@ -33,10 +33,10 @@
     </view>
     <view class="level-fee">月费 ¥{{item.monthly_price_text}}</view>
     <view class="level-benefits">
-      <text wx:if="{{item.hasMonthlyBenefit}}">每月：研报 {{item.benefit_monthly_report_text}} · 问股 {{item.benefit_monthly_ask}} · AI {{item.benefit_monthly_push}}</text>
+      <text wx:if="{{item.hasMonthlyBenefit}}">每月：额度一 {{item.benefit_monthly_report_text}} · 额度二 {{item.benefit_monthly_ask}} · 专项 {{item.benefit_monthly_push}}</text>
       <text wx:else>无每月免费额度，按次付费</text>
-      <text wx:if="{{item.hasOnceBenefit}}">入门：研报 {{item.benefit_once_report}} · 问股 {{item.benefit_once_ask}} · AI {{item.benefit_once_push}}</text>
-      <text>超限单价：研报 ¥{{item.per_generation_price_text}} · 问股 ¥{{item.per_ask_price_text}}</text>
+      <text wx:if="{{item.hasOnceBenefit}}">入门：额度一 {{item.benefit_once_report}} · 额度二 {{item.benefit_once_ask}} · 专项 {{item.benefit_once_push}}</text>
+      <text>超限单价：额度一 ¥{{item.per_generation_price_text}} · 额度二 ¥{{item.per_ask_price_text}}</text>
     </view>
     <view class="level-desc" wx:if="{{item.description}}">{{item.description}}</view>
     <button
