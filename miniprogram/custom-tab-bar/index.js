@@ -7,6 +7,7 @@ Component({
     list: buildTabList(false),
     showRisk: false,
     unreadCount: 0,
+    signalUnread: 0,
   },
   lifetimes: {
     attached() {
@@ -34,6 +35,11 @@ Component({
       var n = Number(count) || 0
       if (n < 0) n = 0
       this.setData({ unreadCount: n })
+    },
+    setSignalUnreadCount(count) {
+      var n = Number(count) || 0
+      if (n < 0) n = 0
+      this.setData({ signalUnread: n })
     },
     setSelectedByPath(path) {
       var list = this.data.list || []

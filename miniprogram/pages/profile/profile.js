@@ -10,7 +10,7 @@ const {
   isRiskOfficer,
   isDefaultNickname,
 } = require('../../utils/auth')
-const { syncTabBar, setTabBarUnreadCount } = require('../../utils/tabbar')
+const { syncTabBar, refreshTabBadges } = require('../../utils/tabbar')
 
 Page({
   data: {
@@ -41,7 +41,7 @@ Page({
         records: [],
         unreadCount: 0,
       })
-      setTabBarUnreadCount(this, 0)
+      refreshTabBadges(this)
       syncTabBar(this)
       return
     }
@@ -74,6 +74,9 @@ Page({
         wx.hideLoading()
         wx.showToast({ title: '登录成功', icon: 'success' })
         this.checkLoginStatus()
+        try {
+          require('../../utils/subscribe').requestSignalSubscribe()
+        } catch (e) {}
       }.bind(this))
       .catch(function (e) {
         wx.hideLoading()
@@ -177,7 +180,7 @@ Page({
     getNotificationUnreadCount()
       .then(function (count) {
         this.setData({ unreadCount: count })
-        setTabBarUnreadCount(this, count)
+        refreshTabBadges(this)
       }.bind(this))
       .catch(function () {})
   },
@@ -200,6 +203,10 @@ Page({
 
   goNotifications() {
     wx.switchTab({ url: '/pages/notifications/notifications' })
+  },
+
+  goSignals() {
+    wx.switchTab({ url: '/pages/signals/signals' })
   },
 
   goRiskMessage() {

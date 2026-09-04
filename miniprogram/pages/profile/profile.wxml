@@ -67,6 +67,11 @@
     </view>
 
     <view class="menu-card">
+      <view class="menu-item" bindtap="goSignals">
+        <view class="menu-icon gold">号</view>
+        <text class="menu-text">关注信号</text>
+        <text class="menu-arrow">›</text>
+      </view>
       <view class="menu-item" bindtap="goMembership">
         <view class="menu-icon gold">VIP</view>
         <text class="menu-text">会员中心</text>

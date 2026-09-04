@@ -4,9 +4,16 @@ function getToken() {
   return wx.getStorageSync('access_token') || ''
 }
 
-function setAuth(token, user) {
+function setAuth(token, user, refreshToken) {
   wx.setStorageSync('access_token', token)
   wx.setStorageSync('user', user)
+  if (refreshToken) {
+    wx.setStorageSync('refresh_token', refreshToken)
+  }
+}
+
+function getRefreshToken() {
+  return wx.getStorageSync('refresh_token') || ''
 }
 
 function getUser() {
@@ -23,6 +30,7 @@ function getUserInfo() {
 
 function clearAuth() {
   wx.removeStorageSync('access_token')
+  wx.removeStorageSync('refresh_token')
   wx.removeStorageSync('user')
   wx.removeStorageSync('userInfo')
   wx.removeStorageSync(PROFILE_SETUP_FLAG)
@@ -79,7 +87,7 @@ function promptProfileSetupIfNeeded(user) {
   return true
 }
 
-var HOME_TAB = '/pages/index/index'
+var HOME_TAB = '/pages/signals/signals'
 
 /** 登录成功后回到当前页即可，不打断首页浏览 */
 function goHomeAfterLogin(user) {
@@ -106,6 +114,7 @@ function logout() {
 module.exports = {
   getToken,
   setAuth,
+  getRefreshToken,
   getUser,
   setUserInfo,
   getUserInfo,

@@ -8,7 +8,8 @@
     bindtap="switchTab"
   >
     <view class="tab-icon tab-icon-{{item.icon}}">
-      <text class="tab-badge" wx:if="{{item.icon === 'notify' && unreadCount > 0}}">{{unreadCount > 99 ? '99+' : unreadCount}}</text>
+      <text class="tab-badge" wx:if="{{item.icon === 'signal' && signalUnread > 0}}">{{signalUnread > 99 ? '99+' : signalUnread}}</text>
+      <text class="tab-badge" wx:elif="{{item.icon === 'notify' && unreadCount > 0}}">{{unreadCount > 99 ? '99+' : unreadCount}}</text>
     </view>
     <text class="tab-text">{{item.text}}</text>
   </view>

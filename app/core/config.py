@@ -75,6 +75,24 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = Field(default="HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=60)
     REFRESH_TOKEN_EXPIRE_DAYS: int = Field(default=30)
+    MP_ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(
+        default=10080,
+        description="小程序 access token 有效期（分钟），默认 7 天，避免频繁掉登录",
+    )
+
+    # 小程序订阅消息（服务通知，类似微信聊天提醒）
+    WECHAT_SUBSCRIBE_TEMPLATE_SIGNAL: str = Field(
+        default="",
+        description="关注信号订阅消息模板 ID，在公众平台「订阅消息」中申请",
+    )
+    WECHAT_SUBSCRIBE_FIELD_TITLE: str = Field(default="thing1")
+    WECHAT_SUBSCRIBE_FIELD_TIME: str = Field(default="time2")
+    WECHAT_SUBSCRIBE_FIELD_TIP: str = Field(default="thing3")
+    WECHAT_SUBSCRIBE_PAGE: str = Field(default="pages/signals/signals")
+    WECHAT_MINI_PROGRAM_STATE: str = Field(
+        default="formal",
+        description="订阅消息跳转版本：developer / trial / formal",
+    )
 
     # 微信小程序
     WECHAT_MINI_APP_ID: str = Field(default="", description="小程序 AppID")

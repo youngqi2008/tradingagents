@@ -1,0 +1,55 @@
+<view class="container">
+  <view class="signal-hero">
+    <view class="signal-hero-kicker">置顶 · 第一眼看到</view>
+    <view class="signal-hero-title">关注信号</view>
+    <view class="signal-hero-sub">登录后可接收微信服务通知，无需点进小程序也能看到新信号</view>
+  </view>
+
+  <view wx:if="{{needLogin}}" class="empty login-empty">
+    <text class="login-tip">登录后查看关注信号，并可开启微信提醒</text>
+    <button class="btn-primary" bindtap="onLoginTap">登录</button>
+    <text class="login-hint">登录一次后会保持登录，下次打开无需再登</text>
+  </view>
+
+  <block wx:else>
+    <view wx:if="{{!detail}}">
+      <view class="toolbar">
+        <text class="unread-tip" wx:if="{{unreadCount > 0}}">未读 {{unreadCount}}</text>
+        <text class="unread-tip muted" wx:else>暂无未读</text>
+        <view class="toolbar-actions">
+          <text class="mark-all" bindtap="onEnablePush">开启微信提醒</text>
+          <text class="mark-all" bindtap="onMarkAllRead">全部已读</text>
+        </view>
+      </view>
+
+      <view wx:if="{{loading}}" class="empty">加载中...</view>
+      <view wx:elif="{{notifications.length === 0}}" class="empty">暂无关注信号</view>
+
+      <view
+        wx:for="{{notifications}}"
+        wx:key="id"
+        class="card item {{item.is_read ? '' : 'unread'}}"
+        data-id="{{item.id}}"
+        bindtap="onTapItem"
+      >
+        <view class="item-title">
+          <text wx:if="{{item.typeLabel}}" class="signal-tag {{item.typeClass}}">{{item.typeLabel}}</text>
+          <text wx:if="{{!item.is_read}}" class="dot">●</text>
+          {{item.title}}
+        </view>
+        <view class="item-preview">{{item.preview}}</view>
+        <view class="item-time">{{item.timeText}}</view>
+      </view>
+    </view>
+
+    <view wx:else class="card detail-card">
+      <view class="detail-title">
+        <text wx:if="{{detail.typeLabel}}" class="signal-tag {{detail.typeClass}}">{{detail.typeLabel}}</text>
+        {{detail.title}}
+      </view>
+      <view class="detail-time">{{detail.timeText}}</view>
+      <view class="detail-content">{{detail.content}}</view>
+      <button class="btn-outline" bindtap="onCloseDetail">返回列表</button>
+    </view>
+  </block>
+</view>

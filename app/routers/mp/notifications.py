@@ -11,8 +11,14 @@ router = APIRouter()
 
 
 @router.get("/notifications/unread-count")
-async def mp_notification_unread_count(user: dict = Depends(get_current_mp_user)):
-    count = await mp_notification_service.get_unread_count(user["id"])
+async def mp_notification_unread_count(
+    notice_types: Optional[str] = Query(None),
+    user: dict = Depends(get_current_mp_user),
+):
+    types = None
+    if notice_types:
+        types = [t.strip() for t in notice_types.split(",") if t.strip()]
+    count = await mp_notification_service.get_unread_count(user["id"], notice_types=types)
     return {"success": True, "data": {"unread_count": count}}
 
 

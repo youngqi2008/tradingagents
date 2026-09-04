@@ -1,6 +1,7 @@
 const {
   getToken,
   setAuth,
+  getRefreshToken,
   clearAuth,
   getUser,
   setUserInfo,
@@ -29,7 +30,68 @@ const ASK_TIMEOUT = 300000
 
 const DEV_LOGIN_CODE = ''
 
+var _recovering = null
 
+function refreshAccessToken() {
+  var rt = getRefreshToken()
+  if (!rt) return Promise.reject(new Error('无刷新令牌'))
+  return request({
+    url: '/api/auth/refresh',
+    method: 'POST',
+    data: { refresh_token: rt },
+    skipAuthRefresh: true,
+    timeout: LOGIN_TIMEOUT,
+  }).then(function (data) {
+    var inner = (data && data.data) || data || {}
+    var token = inner.access_token
+    if (!token) throw new Error('刷新失败')
+    setAuth(token, getUser(), inner.refresh_token || rt)
+    return token
+  })
+}
+
+function silentRelogin() {
+  return login({}).then(function () {
+    return getToken()
+  })
+}
+
+function recoverSession() {
+  if (_recovering) return _recovering
+  _recovering = refreshAccessToken()
+    .catch(function () {
+      return silentRelogin()
+    })
+    .finally(function () {
+      _recovering = null
+    })
+  return _recovering
+}
+
+function restoreSession() {
+  if (getToken()) {
+    return getMe()
+      .then(function () {
+        return true
+      })
+      .catch(function () {
+        return false
+      })
+  }
+  if (getRefreshToken()) {
+    return recoverSession()
+      .then(function () {
+        return getMe()
+      })
+      .then(function () {
+        return true
+      })
+      .catch(function () {
+        return false
+      })
+  }
+  return Promise.resolve(false)
+}
 
 function buildHeaders(token, extra) {
 
@@ -210,11 +272,29 @@ function request(options) {
         console.log('[API]', res.statusCode, options.url)
 
         if (res.statusCode === 401) {
-          if (token) {
-            clearAuth()
-            wx.showToast({ title: '请重新登录', icon: 'none' })
+          if (options.skipAuthRefresh || options._retried) {
+            if (token && !options.skipAuthRefresh) {
+              clearAuth()
+              wx.showToast({ title: '请重新登录', icon: 'none' })
+            }
+            reject(new Error('未登录'))
+            return
           }
-          reject(new Error('未登录'))
+          recoverSession()
+            .then(function () {
+              var retryOpts = {}
+              for (var k in options) {
+                if (Object.prototype.hasOwnProperty.call(options, k)) retryOpts[k] = options[k]
+              }
+              retryOpts._retried = true
+              return request(retryOpts)
+            })
+            .then(resolve)
+            .catch(function (err) {
+              clearAuth()
+              wx.showToast({ title: '请重新登录', icon: 'none' })
+              reject(err || new Error('未登录'))
+            })
           return
         }
 
@@ -334,6 +414,8 @@ function miniprogramLogin(code, userInfo) {
 
     timeout: LOGIN_TIMEOUT,
 
+    skipAuthRefresh: true,
+
   }).then(function (data) {
 
     var token = (data.data && data.data.access_token) || data.access_token
@@ -346,7 +428,8 @@ function miniprogramLogin(code, userInfo) {
 
     }
 
-    setAuth(token, user)
+    var refreshToken = (data.data && data.data.refresh_token) || data.refresh_token
+    setAuth(token, user, refreshToken)
 
     // 确保本地持久化角色：缺省视为普通，避免误展示风控 Tab
     try {
@@ -807,9 +890,22 @@ function changeMembership(membershipLevelId) {
   })
 }
 
-function getNotificationUnreadCount() {
-  return request({ url: '/api/mp/notifications/unread-count' }).then(function (res) {
+function getNotificationUnreadCount(params) {
+  var url = '/api/mp/notifications/unread-count'
+  if (params && params.notice_types) {
+    url += '?notice_types=' + encodeURIComponent(params.notice_types)
+  }
+  return request({ url: url }).then(function (res) {
     return (res.data && res.data.unread_count) || 0
+  })
+}
+
+function getPushSubscribeConfig() {
+  return request({
+    url: '/api/mp/push/subscribe-config',
+    skipAuthRefresh: true,
+  }).then(function (res) {
+    return (res && res.data) || {}
   })
 }
 
@@ -971,6 +1067,10 @@ module.exports = {
   changeMembership,
 
   getNotificationUnreadCount,
+
+  getPushSubscribeConfig,
+
+  restoreSession,
 
   listNotifications,
 

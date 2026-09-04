@@ -1,6 +1,6 @@
 const { listNotifications, markNotificationRead, markAllNotificationsRead, login } = require('../../utils/api')
 const { isLoggedIn } = require('../../utils/auth')
-const { syncTabBar, setTabBarUnreadCount } = require('../../utils/tabbar')
+const { syncTabBar, refreshTabBadges } = require('../../utils/tabbar')
 
 var CATEGORIES = [
   { key: 'all', label: '全部', types: '' },
@@ -53,7 +53,7 @@ Page({
         categoryUnread: 0,
         detail: null,
       })
-      setTabBarUnreadCount(this, 0)
+      refreshTabBadges(this, 0)
       return
     }
     this.setData({ needLogin: false, detail: null })
@@ -72,6 +72,9 @@ Page({
         syncTabBar(self)
         self._setNavTitle(self.data.activeCategory || 'all')
         self.loadList()
+        try {
+          require('../../utils/subscribe').requestSignalSubscribe()
+        } catch (e) {}
       })
       .catch(function (e) {
         wx.hideLoading()
@@ -148,7 +151,7 @@ Page({
           unreadCount: unread,
           categoryUnread: categoryUnread,
         })
-        setTabBarUnreadCount(self, unread)
+        refreshTabBadges(self, unread)
       })
       .catch(function (e) {
         self.setData({ loading: false })
@@ -193,7 +196,7 @@ Page({
             categoryUnread: categoryUnread,
             detail: detail,
           })
-          setTabBarUnreadCount(self, unread)
+          refreshTabBadges(self, unread)
         })
         .catch(function () {
           self.setData({ detail: item })
@@ -212,7 +215,7 @@ Page({
     markAllNotificationsRead()
       .then(function () {
         wx.showToast({ title: '已全部已读', icon: 'success' })
-        setTabBarUnreadCount(self, 0)
+        refreshTabBadges(self, 0)
         self.loadList()
       })
       .catch(function () {

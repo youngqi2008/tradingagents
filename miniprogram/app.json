@@ -1,9 +1,10 @@
 {
   "pages": [
-    "pages/index/index",
+    "pages/signals/signals",
     "pages/notifications/notifications",
     "pages/risk-message/risk-message",
     "pages/profile/profile",
+    "pages/index/index",
     "pages/membership/membership",
     "pages/recharge/recharge"
   ],
@@ -21,8 +22,8 @@
     "borderStyle": "black",
     "list": [
       {
-        "pagePath": "pages/index/index",
-        "text": "首页"
+        "pagePath": "pages/signals/signals",
+        "text": "关注信号"
       },
       {
         "pagePath": "pages/notifications/notifications",

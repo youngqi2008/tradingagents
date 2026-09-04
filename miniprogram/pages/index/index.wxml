@@ -9,8 +9,8 @@
   <view class="feature-card" bindtap="goNotify">
     <view class="feature-icon">讯</view>
     <view class="feature-body">
-      <text class="feature-title">站内通知</text>
-      <text class="feature-desc">查看平台公告与个人消息，及时了解服务动态。</text>
+      <text class="feature-title">关注信号</text>
+      <text class="feature-desc">打开即可看到关注信号；登录后可接收微信提醒。</text>
     </view>
     <text class="feature-arrow">›</text>
   </view>

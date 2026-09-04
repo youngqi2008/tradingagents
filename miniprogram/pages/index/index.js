@@ -45,7 +45,7 @@ Page({
   },
 
   goNotify() {
-    wx.switchTab({ url: '/pages/notifications/notifications' })
+    wx.switchTab({ url: '/pages/signals/signals' })
   },
 
   goProfile() {

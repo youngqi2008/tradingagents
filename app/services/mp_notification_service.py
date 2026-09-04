@@ -1,5 +1,6 @@
 """小程序站内通知服务"""
 
+import asyncio
 from datetime import timedelta
 from typing import List, Optional, Tuple
 
@@ -11,6 +12,7 @@ from app.core.mysql_db import get_mysql_session, parse_int_id
 from app.models.mp_notification import MpNotificationCreate, MpNotificationResponse
 from app.models.sql.models import MpNotificationORM, MpNotificationReadORM, UserORM
 from app.utils.timezone import now_tz
+from app.services.wechat_service import wechat_service
 
 try:
     from tradingagents.utils.logging_manager import get_logger
@@ -21,6 +23,8 @@ except ImportError:
         return logging.getLogger(name)
 
 logger = get_logger("mp_notification_service")
+
+SIGNAL_NOTICE_TYPES = ("buy_signal", "sell_signal")
 
 
 class MpNotificationService:
@@ -87,6 +91,27 @@ class MpNotificationService:
         elif target_type == "users" and target_user_ids:
             stmt = stmt.where(UserORM.id.in_(target_user_ids))
         return (await session.execute(stmt)).scalar() or 0
+
+    async def _list_recipient_openids(
+        self,
+        session: AsyncSession,
+        *,
+        target_type: str,
+        target_membership_level_id: Optional[int],
+        target_user_ids: Optional[list],
+    ) -> List[str]:
+        stmt = select(UserORM.openid).where(
+            UserORM.user_type == "mp_user",
+            UserORM.is_active.is_(True),
+            UserORM.openid.isnot(None),
+            UserORM.openid != "",
+        )
+        if target_type == "membership" and target_membership_level_id:
+            stmt = stmt.where(UserORM.membership_level_id == target_membership_level_id)
+        elif target_type == "users" and target_user_ids:
+            stmt = stmt.where(UserORM.id.in_(target_user_ids))
+        rows = (await session.execute(stmt)).scalars().all()
+        return [oid for oid in rows if oid and not str(oid).startswith("dev_")]
 
     async def _read_count(self, session: AsyncSession, notification_id: int) -> int:
         stmt = select(func.count(MpNotificationReadORM.id)).where(
@@ -169,13 +194,35 @@ class MpNotificationService:
             session.add(row)
             await session.flush()
             await session.refresh(row)
+            openids: List[str] = []
+            notice_type = data.notice_type or "announcement"
+            if notice_type in SIGNAL_NOTICE_TYPES:
+                openids = await self._list_recipient_openids(
+                    session,
+                    target_type=data.target_type,
+                    target_membership_level_id=target_level_id,
+                    target_user_ids=target_user_ids,
+                )
             logger.info(
                 "站内通知已发布 id=%s target=%s recipients=%s",
                 row.id,
                 data.target_type,
                 recipient_count,
             )
-            return self._to_response(row, read_count=0, is_read=False)
+            resp = self._to_response(row, read_count=0, is_read=False)
+
+        if notice_type in SIGNAL_NOTICE_TYPES and openids:
+            title = data.title.strip()
+            content = data.content.strip()
+            try:
+                asyncio.create_task(
+                    wechat_service.notify_signal_subscribers(
+                        openids, title, content, notice_type
+                    )
+                )
+            except Exception:
+                logger.exception("调度微信信号提醒失败")
+        return resp
 
     async def list_admin(
         self,
@@ -223,7 +270,9 @@ class MpNotificationService:
             row.updated_at = now_tz()
             return True
 
-    async def get_unread_count(self, user_id: str) -> int:
+    async def get_unread_count(
+        self, user_id: str, notice_types: Optional[List[str]] = None
+    ) -> int:
         uid = parse_int_id(user_id)
         if not uid:
             return 0
@@ -236,10 +285,14 @@ class MpNotificationService:
                 .where(MpNotificationReadORM.user_id == uid)
                 .scalar_subquery()
             )
-            stmt = select(func.count(MpNotificationORM.id)).where(
+            filters = [
                 self._user_target_filter(user),
                 MpNotificationORM.id.not_in(read_subq),
-            )
+            ]
+            cleaned_types = [t.strip() for t in (notice_types or []) if t and t.strip()]
+            if cleaned_types:
+                filters.append(MpNotificationORM.notice_type.in_(cleaned_types))
+            stmt = select(func.count(MpNotificationORM.id)).where(*filters)
             return (await session.execute(stmt)).scalar() or 0
 
     async def list_for_user(

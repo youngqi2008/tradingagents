@@ -97,13 +97,17 @@ async def _build_mp_user_payload(user) -> dict:
 
 
 async def _issue_tokens(username: str) -> dict:
-    token = AuthService.create_access_token(sub=username, token_type="access")
+    token = AuthService.create_access_token(
+        sub=username,
+        expires_minutes=settings.MP_ACCESS_TOKEN_EXPIRE_MINUTES,
+        token_type="access",
+    )
     refresh_token = AuthService.create_refresh_token(sub=username)
     return {
         "access_token": token,
         "refresh_token": refresh_token,
         "token_type": "Bearer",
-        "expires_in": settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        "expires_in": settings.MP_ACCESS_TOKEN_EXPIRE_MINUTES * 60,
     }
 
 

@@ -242,8 +242,15 @@ async def refresh_token(payload: RefreshTokenRequest):
 
         logger.debug(f"✅ Token验证成功，用户: {token_data.sub}")
 
-        # 生成新的 tokens
-        new_token = AuthService.create_access_token(sub=token_data.sub, token_type="access")
+        expires_minutes = settings.ACCESS_TOKEN_EXPIRE_MINUTES
+        if getattr(user, "user_type", None) == "mp_user":
+            expires_minutes = settings.MP_ACCESS_TOKEN_EXPIRE_MINUTES
+
+        new_token = AuthService.create_access_token(
+            sub=token_data.sub,
+            expires_minutes=expires_minutes,
+            token_type="access",
+        )
         new_refresh_token = AuthService.create_refresh_token(sub=token_data.sub)
 
         logger.debug(f"🎉 新token生成成功")
@@ -253,7 +260,7 @@ async def refresh_token(payload: RefreshTokenRequest):
             "data": {
                 "access_token": new_token,
                 "refresh_token": new_refresh_token,
-                "expires_in": settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+                "expires_in": expires_minutes * 60,
             },
             "message": "Token刷新成功"
         }

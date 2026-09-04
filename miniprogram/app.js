@@ -1,10 +1,12 @@
-const { checkServer, getMe } = require('./utils/api')
-const { isLoggedIn, getUserInfo, getUser, setAuth, getToken } = require('./utils/auth')
+const { checkServer, restoreSession } = require('./utils/api')
+const { isLoggedIn, getUserInfo } = require('./utils/auth')
+const { refreshTabBadges } = require('./utils/tabbar')
 
 App({
   globalData: {
     isLoggedIn: false,
     userInfo: null,
+    signalSubscribeAsked: false,
   },
 
   onLaunch: function () {
@@ -12,21 +14,12 @@ App({
     that.globalData.isLoggedIn = isLoggedIn()
     that.globalData.userInfo = getUserInfo()
 
-    if (isLoggedIn()) {
-      getMe()
-        .then(function (u) {
-          if (!u) return
-          var cached = getUser() || {}
-          var next = Object.assign({}, cached, {
-            role: u.role || 'normal',
-            role_name: u.role_name || '普通',
-            id: u.id || cached.id,
-            nickname: u.nickname || cached.nickname,
-          })
-          setAuth(getToken(), next)
-        })
-        .catch(function () {})
-    }
+    restoreSession()
+      .then(function (ok) {
+        that.globalData.isLoggedIn = !!ok || isLoggedIn()
+        that.globalData.userInfo = getUserInfo()
+      })
+      .catch(function () {})
 
     checkServer().catch(function (e) {
       console.error('健康检查失败', e)
@@ -39,5 +32,11 @@ App({
         })
       }
     })
+  },
+
+  onShow: function () {
+    var pages = getCurrentPages() || []
+    var page = pages.length ? pages[pages.length - 1] : null
+    if (page) refreshTabBadges(page)
   },
 })
