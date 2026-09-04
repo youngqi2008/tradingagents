@@ -16,13 +16,13 @@
       <input
         class="custom-input"
         type="digit"
-        placeholder="请输入 {{minAmount}}～{{maxAmount}} 元"
+        placeholder="请输入 {{minAmount}}～{{maxAmount}} 整数元"
         value="{{customAmount}}"
         bindinput="onCustomInput"
         focus="{{custom}}"
       />
     </view>
-    <view class="hint">支持自定义金额，范围 {{minAmount}}～{{maxAmount}} 元</view>
-    <button class="btn-primary" bindtap="pay" loading="{{paying}}">微信支付 ¥{{payAmount}}</button>
+    <view class="hint">金额须为整数元（iOS 最低 1 元）。安卓走微信支付，iOS 走 Apple 支付。</view>
+    <button class="btn-primary" bindtap="pay" loading="{{paying}}">确认支付 ¥{{payAmount}}</button>
   </view>
 </view>

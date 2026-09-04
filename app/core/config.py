@@ -102,7 +102,19 @@ class Settings(BaseSettings):
         description="开发模式：未配置微信或 code 以 dev: 开头时使用模拟 openid 登录",
     )
 
-    # 微信支付（JSAPI）
+    # 小程序虚拟支付（代币充值，wx.requestVirtualPayment）
+    WECHAT_XPAY_OFFER_ID: str = Field(default="", description="虚拟支付 offerId，公众平台「虚拟支付 → 基础配置」")
+    WECHAT_XPAY_APP_KEY: str = Field(default="", description="虚拟支付现网 AppKey")
+    WECHAT_XPAY_SANDBOX_APP_KEY: str = Field(default="", description="虚拟支付沙箱 AppKey")
+    WECHAT_XPAY_ENV: int = Field(default=0, description="0=现网 1=沙箱；iOS 仅支持现网")
+    WECHAT_XPAY_COIN_RATIO: int = Field(
+        default=1,
+        description="1 元人民币兑换的代币数量，必须与公众平台代币兑换比例一致",
+    )
+    WECHAT_XPAY_PUSH_TOKEN: str = Field(default="", description="虚拟支付消息推送 Token（URL 校验）")
+    WECHAT_XPAY_ENCODING_AES_KEY: str = Field(default="", description="虚拟支付消息推送 EncodingAESKey")
+
+    # 微信支付（JSAPI，仅历史订单回调兼容）
     WECHAT_PAY_ENABLED: bool = Field(default=False, description="是否启用真实微信支付")
     WECHAT_PAY_MOCK: bool = Field(default=True, description="开发模式：模拟支付成功")
     WECHAT_MCH_ID: str = Field(default="", description="微信支付商户号")

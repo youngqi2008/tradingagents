@@ -1,11 +1,13 @@
 """微信支付服务 - MySQL"""
 
 import base64
+import hashlib
+import hmac
 import json
 import secrets
 import time
 from decimal import Decimal, ROUND_HALF_UP
-from typing import Optional
+from typing import Any, Optional
 
 import httpx
 from sqlalchemy import func, select
@@ -32,17 +34,29 @@ logger = get_logger("payment_service")
 RECHARGE_AMOUNTS = [Decimal("10"), Decimal("30"), Decimal("50"), Decimal("100"), Decimal("200")]
 RECHARGE_MIN = Decimal("1")
 RECHARGE_MAX = Decimal("5000")
+XPAY_CLIENT_URI = "requestVirtualPayment"
+XPAY_QUERY_URI = "/xpay/query_order"
+XPAY_PAID_STATUS = {2, 3}  # 已支付 / 已发货
 
 
 def normalize_recharge_amount(amount: Decimal) -> Decimal:
-    value = Decimal(str(amount)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    value = Decimal(str(amount)).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
     if value < RECHARGE_MIN or value > RECHARGE_MAX:
-        raise ValueError(f"充值金额须在 {RECHARGE_MIN}～{RECHARGE_MAX} 元之间")
+        raise ValueError(f"充值金额须为 {int(RECHARGE_MIN)}～{int(RECHARGE_MAX)} 的整数元")
     return value
+
+
+def _hmac_sha256_hex(key: str, message: str) -> str:
+    return hmac.new(key.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
+
+
+def _json_compact(payload: dict) -> str:
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 
 
 class PaymentService:
     JSAPI_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi"
+    XPAY_QUERY_URL = "https://api.weixin.qq.com/xpay/query_order"
 
     @staticmethod
     def _generate_order_no() -> str:
@@ -51,7 +65,34 @@ class PaymentService:
     def _is_mock_mode(self) -> bool:
         if settings.WECHAT_PAY_MOCK and settings.DEBUG:
             return True
-        return not settings.WECHAT_PAY_ENABLED
+        return not settings.WECHAT_PAY_ENABLED and not self._xpay_configured()
+
+    def _xpay_configured(self) -> bool:
+        offer = (settings.WECHAT_XPAY_OFFER_ID or "").strip()
+        return bool(offer and self._xpay_app_key())
+
+    def _xpay_env(self) -> int:
+        return 1 if int(settings.WECHAT_XPAY_ENV or 0) == 1 else 0
+
+    def _xpay_app_key(self) -> str:
+        if self._xpay_env() == 1:
+            return (settings.WECHAT_XPAY_SANDBOX_APP_KEY or settings.WECHAT_XPAY_APP_KEY or "").strip()
+        return (settings.WECHAT_XPAY_APP_KEY or "").strip()
+
+    def _coin_ratio(self) -> int:
+        ratio = int(settings.WECHAT_XPAY_COIN_RATIO or 1)
+        return ratio if ratio > 0 else 1
+
+    def recharge_options(self) -> dict:
+        return {
+            "mode": "short_series_coin",
+            "amounts": [float(a) for a in RECHARGE_AMOUNTS],
+            "min_amount": float(RECHARGE_MIN),
+            "max_amount": float(RECHARGE_MAX),
+            "integer_only": True,
+            "coin_ratio": self._coin_ratio(),
+            "xpay_enabled": self._xpay_configured(),
+        }
 
     async def create_recharge_order(self, user_id: str, openid: str, amount: Decimal) -> dict:
         amount = normalize_recharge_amount(amount)
@@ -69,7 +110,7 @@ class PaymentService:
                 openid=openid,
                 amount=amount,
                 status=PaymentStatus.PENDING.value,
-                description=f"账户充值 {amount} 元",
+                description=f"代币充值 {int(amount)} 元",
                 created_at=now,
                 updated_at=now,
             )
@@ -81,18 +122,201 @@ class PaymentService:
             return {
                 "order_no": order_no,
                 "amount": float(amount),
+                "buy_quantity": int(amount) * self._coin_ratio(),
                 "mock": True,
+                "mode": "short_series_coin",
                 "message": "开发模式：充值已自动到账",
                 "pay_params": None,
             }
 
-        pay_params = await self._create_jsapi_prepay(order_no, openid, amount)
+        if not self._xpay_configured():
+            raise ValueError("未配置小程序虚拟支付，请在公众平台开通并填写 WECHAT_XPAY_OFFER_ID / WECHAT_XPAY_APP_KEY")
+
+        from app.services.user_service import user_service
+
+        session_key = await user_service.get_wx_session_key(user_id)
+        if not session_key:
+            raise ValueError("登录态已失效，请重新登录后再支付")
+
+        buy_quantity = int(amount) * self._coin_ratio()
+        sign_data_obj = {
+            "offerId": str(settings.WECHAT_XPAY_OFFER_ID).strip(),
+            "buyQuantity": buy_quantity,
+            "env": self._xpay_env(),
+            "currencyType": "CNY",
+            "outTradeNo": order_no,
+            "attach": str(uid),
+        }
+        sign_data = _json_compact(sign_data_obj)
+        pay_sig = _hmac_sha256_hex(self._xpay_app_key(), f"{XPAY_CLIENT_URI}&{sign_data}")
+        signature = _hmac_sha256_hex(session_key, sign_data)
         return {
             "order_no": order_no,
             "amount": float(amount),
+            "buy_quantity": buy_quantity,
             "mock": False,
-            "pay_params": pay_params,
+            "mode": "short_series_coin",
+            "pay_params": {
+                "mode": "short_series_coin",
+                "signData": sign_data,
+                "paySig": pay_sig,
+                "signature": signature,
+            },
         }
+
+    async def confirm_recharge_order(self, order_no: str, user_id: str) -> dict:
+        order = await self.get_order(order_no, user_id=user_id)
+        if not order:
+            raise ValueError("订单不存在")
+        if order.status == PaymentStatus.PAID.value:
+            return {"order_no": order_no, "status": "paid", "amount": order.amount}
+        paid = await self._query_and_complete(order_no, order.user_id)
+        return {
+            "order_no": order_no,
+            "status": "paid" if paid else "pending",
+            "amount": order.amount,
+        }
+
+    async def _query_and_complete(self, order_no: str, user_id: str) -> bool:
+        if not self._xpay_configured():
+            return False
+        async with get_mysql_session() as session:
+            result = await session.execute(
+                select(PaymentOrderORM).where(PaymentOrderORM.order_no == order_no)
+            )
+            row = result.scalar_one_or_none()
+            if not row:
+                return False
+            if row.status == PaymentStatus.PAID.value:
+                return True
+            openid = row.openid
+        data = await self._xpay_query_order(openid, order_no)
+        if not data:
+            return False
+        errcode = data.get("errcode", data.get("errCode"))
+        if errcode not in (0, None, "0"):
+            logger.info("虚拟支付查单未成功 order=%s data=%s", order_no, data)
+            return False
+        info = data.get("order") or data.get("Order") or data
+        status = info.get("status", info.get("Status"))
+        try:
+            status_i = int(status)
+        except (TypeError, ValueError):
+            status_i = -1
+        if status_i not in XPAY_PAID_STATUS:
+            return False
+        wx_id = (
+            info.get("wx_order_id")
+            or info.get("wxOrderId")
+            or info.get("transaction_id")
+            or info.get("TransactionId")
+        )
+        return await self._complete_order(order_no, wx_transaction_id=str(wx_id) if wx_id else None)
+
+    async def _xpay_query_order(self, openid: str, order_no: str) -> Optional[dict]:
+        from app.services.wechat_service import wechat_service
+
+        body = {
+            "openid": openid,
+            "env": self._xpay_env(),
+            "order_id": order_no,
+        }
+        body_str = _json_compact(body)
+        pay_sig = _hmac_sha256_hex(self._xpay_app_key(), f"{XPAY_QUERY_URI}&{body_str}")
+        try:
+            token = await wechat_service.get_client_access_token()
+        except ValueError as e:
+            logger.error("虚拟支付查单获取 token 失败: %s", e)
+            return None
+        url = f"{self.XPAY_QUERY_URL}?access_token={token}&pay_sig={pay_sig}"
+        try:
+            async with httpx.AsyncClient(timeout=15) as client:
+                resp = await client.post(
+                    url,
+                    content=body_str.encode("utf-8"),
+                    headers={"Content-Type": "application/json"},
+                )
+                return resp.json()
+        except Exception as e:
+            logger.error("虚拟支付查单失败: %s", e)
+            return None
+
+    def verify_xpay_url(self, signature: str, timestamp: str, nonce: str, echostr: str) -> Optional[str]:
+        token = (settings.WECHAT_XPAY_PUSH_TOKEN or "").strip()
+        if not token:
+            return echostr
+        items = sorted([token, timestamp or "", nonce or ""])
+        digest = hashlib.sha1("".join(items).encode("utf-8")).hexdigest()
+        if digest != (signature or "").lower():
+            return None
+        return echostr
+
+    async def handle_xpay_notify(self, headers: dict, body: bytes) -> dict:
+        try:
+            payload = self._parse_xpay_payload(body)
+        except Exception as e:
+            logger.error("虚拟支付推送解析失败: %s", e)
+            return {"ErrCode": -1, "ErrMsg": "parse error"}
+
+        event = str(payload.get("Event") or payload.get("event") or "")
+        order_no = str(payload.get("OutTradeNo") or payload.get("outTradeNo") or payload.get("MchOrderId") or "")
+        if event in ("xpay_coin_pay_notify", "xpay_goods_deliver_notify") and order_no:
+            wx_info = payload.get("WeChatPayInfo") or payload.get("weChatPayInfo") or {}
+            wx_id = wx_info.get("TransactionId") or wx_info.get("transactionId")
+            try:
+                await self._complete_order(order_no, wx_transaction_id=str(wx_id) if wx_id else None)
+            except Exception as e:
+                logger.error("虚拟支付入账失败 order=%s: %s", order_no, e)
+                return {"ErrCode": -1, "ErrMsg": "deliver fail"}
+        elif event == "xpay_refund_notify":
+            logger.warning("收到虚拟支付退款推送: %s", payload)
+        return {"ErrCode": 0, "ErrMsg": "success"}
+
+    def _parse_xpay_payload(self, body: bytes) -> dict:
+        raw = (body or b"").decode("utf-8", errors="ignore").strip()
+        if not raw:
+            return {}
+        data: dict[str, Any]
+        if raw.startswith("<"):
+            data = self._xml_to_dict(raw)
+        else:
+            data = json.loads(raw)
+        encrypt = data.get("Encrypt") or data.get("encrypt")
+        if encrypt:
+            decrypted = self._decrypt_xpay_message(str(encrypt))
+            if decrypted.startswith("{"):
+                return json.loads(decrypted)
+            return self._xml_to_dict(decrypted)
+        return data
+
+    def _decrypt_xpay_message(self, encrypt: str) -> str:
+        aes_key_b64 = (settings.WECHAT_XPAY_ENCODING_AES_KEY or "").strip()
+        if not aes_key_b64:
+            raise ValueError("未配置 WECHAT_XPAY_ENCODING_AES_KEY")
+        from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+
+        key = base64.b64decode(aes_key_b64 + "=")
+        cipher = Cipher(algorithms.AES(key), modes.CBC(key[:16]))
+        decryptor = cipher.decryptor()
+        plain = decryptor.update(base64.b64decode(encrypt)) + decryptor.finalize()
+        pad = plain[-1]
+        plain = plain[:-pad] if 1 <= pad <= 32 else plain
+        content = plain[16:]
+        msg_len = int.from_bytes(content[:4], "big")
+        return content[4:4 + msg_len].decode("utf-8")
+
+    @staticmethod
+    def _xml_to_dict(xml_text: str) -> dict:
+        import re
+
+        pairs = re.findall(r"<(\w+)><!\[CDATA\[(.*?)\]\]></\1>|<(\w+)>([^<]*)</\3>", xml_text)
+        result = {}
+        for a, b, c, d in pairs:
+            if a:
+                result[a] = b
+            elif c:
+                result[c] = d
+        return result
 
     async def _create_jsapi_prepay(self, order_no: str, openid: str, amount: Decimal) -> dict:
         if not all([
@@ -280,7 +504,7 @@ class PaymentService:
             amount=amount,
             action_type=BillingActionType.RECHARGE,
             order_no=order_no,
-            remark=f"微信充值 {amount} 元",
+            remark=f"虚拟支付充值 {amount} 元",
         )
         await billing_service.ensure_monthly_fee(user_id)
         logger.info(f"✅ 充值成功: {order_no}, 金额 {amount}")

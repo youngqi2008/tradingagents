@@ -1,16 +1,13 @@
 """小程序用户 API"""
 
-from decimal import Decimal
-
 from fastapi import APIRouter, Depends, Query, HTTPException
-from pydantic import BaseModel, Field
 
 from app.routers.mp.deps import get_current_mp_user
 from app.services.user_service import user_service
 from app.services.billing_service import billing_service
 from app.services.membership_service import membership_service
-from app.services.payment_service import payment_service, RECHARGE_AMOUNTS, RECHARGE_MIN, RECHARGE_MAX
-from app.models.payment import RechargeRequest
+from app.services.payment_service import payment_service
+from app.models.payment import RechargeConfirmRequest, RechargeRequest
 from app.models.role import DEFAULT_MP_ROLE, role_display_name
 
 router = APIRouter()
@@ -99,14 +96,7 @@ async def get_billing_records(
 
 @router.get("/payment/recharge-options")
 async def get_recharge_options():
-    return {
-        "success": True,
-        "data": {
-            "amounts": [float(a) for a in RECHARGE_AMOUNTS],
-            "min_amount": float(RECHARGE_MIN),
-            "max_amount": float(RECHARGE_MAX),
-        },
-    }
+    return {"success": True, "data": payment_service.recharge_options()}
 
 
 @router.post("/payment/recharge")
@@ -124,6 +114,18 @@ async def create_recharge(
             amount=payload.amount,
         )
         return {"success": True, "data": result, "message": result.get("message", "订单创建成功")}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/payment/recharge/confirm")
+async def confirm_recharge(
+    payload: RechargeConfirmRequest,
+    user: dict = Depends(get_current_mp_user),
+):
+    try:
+        result = await payment_service.confirm_recharge_order(payload.order_no, user["id"])
+        return {"success": True, "data": result}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

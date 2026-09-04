@@ -125,6 +125,7 @@ async def mp_login(payload: MpLoginRequest):
             unionid=session.get("unionid"),
             nickname=payload.nickname,
             avatar_url=payload.avatar_url,
+            session_key=session.get("session_key"),
         )
         tokens = await _issue_tokens(user.username)
         user_payload = await _build_mp_user_payload(user)

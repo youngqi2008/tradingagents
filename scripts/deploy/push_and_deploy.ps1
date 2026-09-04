@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
   从 Windows 开发机同步代码到 47.95.5.18 并触发远程部署

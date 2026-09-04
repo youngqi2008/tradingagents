@@ -78,6 +78,7 @@ class UserORM(Base):
     role: Mapped[str] = mapped_column(String(32), default="normal", nullable=False)
     openid: Mapped[Optional[str]] = mapped_column(String(64), unique=True, nullable=True)
     unionid: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    wx_session_key: Mapped[Optional[str]] = mapped_column(String(256), nullable=True)
     nickname: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
     avatar_url: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
     phone: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)

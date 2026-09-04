@@ -287,6 +287,7 @@ class UserService:
         unionid: Optional[str] = None,
         nickname: Optional[str] = None,
         avatar_url: Optional[str] = None,
+        session_key: Optional[str] = None,
     ) -> User:
         last_err: Optional[Exception] = None
         for attempt in range(2):
@@ -296,6 +297,7 @@ class UserService:
                     unionid=unionid,
                     nickname=nickname,
                     avatar_url=avatar_url,
+                    session_key=session_key,
                 )
             except Exception as e:
                 last_err = e
@@ -317,6 +319,7 @@ class UserService:
         unionid: Optional[str] = None,
         nickname: Optional[str] = None,
         avatar_url: Optional[str] = None,
+        session_key: Optional[str] = None,
     ) -> User:
         existing = await self.get_user_by_openid(openid)
         if existing:
@@ -334,6 +337,8 @@ class UserService:
                         row.avatar_url = avatar_url
                     if unionid:
                         row.unionid = unionid
+                    if session_key:
+                        row.wx_session_key = session_key
                     await session.flush()
                     await session.refresh(row)
                     return user_orm_to_pydantic(row)
@@ -370,6 +375,7 @@ class UserService:
                 unionid=unionid,
                 nickname=nickname or f"微信用户{openid[-4:]}",
                 avatar_url=avatar_url,
+                wx_session_key=session_key,
                 membership_level_id=level_id,
                 balance=Decimal("0"),
                 preferences=DEFAULT_PREFERENCES.copy(),
@@ -385,6 +391,14 @@ class UserService:
             await session.refresh(row)
             logger.info(f"✅ 小程序用户创建成功: {username}")
             return user_orm_to_pydantic(row)
+
+    async def get_wx_session_key(self, user_id: str) -> Optional[str]:
+        uid = parse_int_id(user_id)
+        if not uid:
+            return None
+        async with get_mysql_session() as session:
+            result = await session.execute(select(UserORM.wx_session_key).where(UserORM.id == uid))
+            return result.scalar_one_or_none()
 
     async def update_mp_profile(
         self,

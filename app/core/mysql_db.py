@@ -58,8 +58,23 @@ async def init_mysql() -> None:
         await conn.run_sync(StockAgentBase.metadata.create_all)
         await conn.run_sync(_migrate_membership_schema)
         await conn.run_sync(_migrate_user_role_schema)
+        await conn.run_sync(_migrate_wx_session_key)
     
     logger.info(f"✅ MySQL 连接成功: {settings.MYSQL_HOST}:{settings.MYSQL_PORT}/{settings.MYSQL_DATABASE}")
+
+
+def _migrate_wx_session_key(connection) -> None:
+    """增量迁移：保存小程序 session_key，供虚拟支付用户态签名使用。"""
+    from sqlalchemy import inspect, text
+
+    insp = inspect(connection)
+    if not insp.has_table("users"):
+        return
+    user_cols = {c["name"] for c in insp.get_columns("users")}
+    if "wx_session_key" not in user_cols:
+        connection.execute(
+            text("ALTER TABLE users ADD COLUMN wx_session_key VARCHAR(256) NULL AFTER unionid")
+        )
 
 
 def _migrate_user_role_schema(connection) -> None:
