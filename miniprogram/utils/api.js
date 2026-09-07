@@ -302,35 +302,15 @@ function request(options) {
 
           var detail = res.data && res.data.detail
 
-          var msg = extractErrorMessage(res.data, '余额不足，请先充值')
-
-          var balance = detail && detail.balance
-
-          var required = detail && detail.required
-
-          var content = msg
-
-          if (balance !== undefined && required !== undefined) {
-
-            content = msg + '\n当前余额 ¥' + balance + '，需要 ¥' + required
-
-          }
-
           wx.showModal({
 
-            title: '余额不足',
+            title: '暂无法继续',
 
-            content: content,
+            content: '当前无法完成该项操作，请联系运营人员处理',
 
-            confirmText: '去充值',
+            showCancel: false,
 
-            cancelText: '知道了',
-
-            success: function (r) {
-
-              if (r.confirm) wx.navigateTo({ url: '/pages/recharge/recharge' })
-
-            },
+            confirmText: '知道了',
 
           })
 

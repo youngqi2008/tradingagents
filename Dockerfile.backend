@@ -3,7 +3,9 @@
 # 支持多架构: amd64, arm64
 
 # 使用 Debian Bookworm (稳定版) 而不是 Trixie (测试版)
-FROM python:3.10-slim-bookworm
+# 国内 ECS 可通过 --build-arg PYTHON_BASE=docker.m.daocloud.io/library/python:3.10-slim-bookworm 避开 Docker Hub
+ARG PYTHON_BASE=python:3.10-slim-bookworm
+FROM ${PYTHON_BASE}
 
 # 获取构建架构信息
 ARG TARGETARCH

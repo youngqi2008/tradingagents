@@ -2,6 +2,7 @@
 
 from fastapi import APIRouter, Depends, Query, HTTPException
 
+from app.core.config import settings
 from app.routers.mp.deps import get_current_mp_user
 from app.services.user_service import user_service
 from app.services.billing_service import billing_service
@@ -96,6 +97,8 @@ async def get_billing_records(
 
 @router.get("/payment/recharge-options")
 async def get_recharge_options():
+    if not settings.MP_VIRTUAL_PURCHASE_ENABLED:
+        raise HTTPException(status_code=403, detail="充值功能暂时关闭")
     return {"success": True, "data": payment_service.recharge_options()}
 
 
@@ -104,6 +107,8 @@ async def create_recharge(
     payload: RechargeRequest,
     user: dict = Depends(get_current_mp_user),
 ):
+    if not settings.MP_VIRTUAL_PURCHASE_ENABLED:
+        raise HTTPException(status_code=403, detail="充值功能暂时关闭，请联系运营人员")
     db_user = await user_service.get_user_by_id(user["id"])
     if not db_user or not db_user.openid:
         raise HTTPException(status_code=400, detail="用户信息异常")
@@ -123,6 +128,8 @@ async def confirm_recharge(
     payload: RechargeConfirmRequest,
     user: dict = Depends(get_current_mp_user),
 ):
+    if not settings.MP_VIRTUAL_PURCHASE_ENABLED:
+        raise HTTPException(status_code=403, detail="充值功能暂时关闭")
     try:
         result = await payment_service.confirm_recharge_order(payload.order_no, user["id"])
         return {"success": True, "data": result}

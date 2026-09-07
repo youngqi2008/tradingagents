@@ -5,8 +5,7 @@
     "pages/risk-message/risk-message",
     "pages/profile/profile",
     "pages/index/index",
-    "pages/membership/membership",
-    "pages/recharge/recharge"
+    "pages/membership/membership"
   ],
   "window": {
     "navigationBarTitleText": "Ares",

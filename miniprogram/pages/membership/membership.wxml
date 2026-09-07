@@ -2,21 +2,14 @@
   <view class="card current-card" wx:if="{{profile}}">
     <view class="current-label">当前会员</view>
     <view class="current-name">{{profile.membership_level_name}}</view>
-    <view class="current-balance">账户余额 ¥{{profile.balance}}</view>
     <view class="quota-row">
       <text>额度一剩余 {{profile.report_free_remaining}}</text>
       <text>额度二剩余 {{profile.ask_free_remaining}}</text>
       <text wx:if="{{profile.push_benefit_remaining > 0}}">专项额度 {{profile.push_benefit_remaining}}</text>
     </view>
-    <view class="fee-hint" wx:if="{{profile.monthly_fee > 0}}">
-      月费 ¥{{profile.monthly_fee}}
-      <text class="{{profile.membership_fee_paid ? 'paid' : 'unpaid'}}">
-        {{profile.membership_fee_paid ? '（本月已扣）' : '（本月未扣）'}}
-      </text>
-    </view>
   </view>
 
-  <view class="section-title">选择会员等级</view>
+  <view class="section-title">会员等级说明</view>
 
   <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
 
@@ -28,33 +21,19 @@
     <view class="level-header">
       <text class="level-name">{{item.name}}</text>
       <text wx:if="{{item.isCurrent}}" class="badge-current">当前</text>
-      <text wx:elif="{{item.action === 'upgrade'}}" class="badge-upgrade">可升级</text>
-      <text wx:elif="{{item.action === 'downgrade'}}" class="badge-downgrade">可降级</text>
     </view>
-    <view class="level-fee">月费 ¥{{item.monthly_price_text}}</view>
     <view class="level-benefits">
       <text wx:if="{{item.hasMonthlyBenefit}}">每月：额度一 {{item.benefit_monthly_report_text}} · 额度二 {{item.benefit_monthly_ask}} · 专项 {{item.benefit_monthly_push}}</text>
-      <text wx:else>无每月免费额度，按次付费</text>
+      <text wx:else>无每月免费额度</text>
       <text wx:if="{{item.hasOnceBenefit}}">入门：额度一 {{item.benefit_once_report}} · 额度二 {{item.benefit_once_ask}} · 专项 {{item.benefit_once_push}}</text>
-      <text>超限单价：额度一 ¥{{item.per_generation_price_text}} · 额度二 ¥{{item.per_ask_price_text}}</text>
     </view>
     <view class="level-desc" wx:if="{{item.description}}">{{item.description}}</view>
-    <button
-      class="level-btn {{item.isCurrent ? 'btn-disabled' : (item.action === 'upgrade' ? 'btn-primary' : 'btn-outline')}}"
-      disabled="{{item.isCurrent || changing}}"
-      data-id="{{item.id}}"
-      bindtap="onSelectLevel"
-    >
-      {{item.actionText}}
-    </button>
   </view>
 
   <view class="card tip-card">
     <view class="tip-title">说明</view>
-    <text class="tip-line">· 体验/银卡及以上含每月免费额度，普通会员按次付费无免费额度</text>
-    <text class="tip-line">· 升级至含月费的等级时，将自动从余额扣除当月会员费</text>
-    <text class="tip-line">· 降级立即生效，已扣月费不退还</text>
+    <text class="tip-line">· 以上为会员等级权益说明，仅供查看</text>
+    <text class="tip-line">· 如需调整会员等级，请联系运营人员处理</text>
     <text class="tip-line">· 周期性免费额度按自然月重置；入门权益为一次性发放</text>
-    <button class="btn-outline recharge-btn" bindtap="goRecharge">去充值</button>
   </view>
 </view>

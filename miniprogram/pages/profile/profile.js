@@ -46,7 +46,6 @@ Page({
       return
     }
     this.loadProfile()
-    this.loadRecords()
     this.loadUnreadCount()
     getMe()
       .then(function (u) {
@@ -183,14 +182,6 @@ Page({
         refreshTabBadges(this)
       }.bind(this))
       .catch(function () {})
-  },
-
-  goRecharge() {
-    if (!isLoggedIn()) {
-      this.onLoginTap()
-      return
-    }
-    wx.navigateTo({ url: '/pages/recharge/recharge' })
   },
 
   goMembership() {

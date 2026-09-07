@@ -101,6 +101,10 @@ class Settings(BaseSettings):
         default=False,
         description="开发模式：未配置微信或 code 以 dev: 开头时使用模拟 openid 登录",
     )
+    MP_VIRTUAL_PURCHASE_ENABLED: bool = Field(
+        default=False,
+        description="小程序是否开放会员自助升降级与充值；过审期间保持 false，由运营后台手工改等级",
+    )
 
     # 小程序虚拟支付（代币充值，wx.requestVirtualPayment）
     WECHAT_XPAY_OFFER_ID: str = Field(default="", description="虚拟支付 offerId，公众平台「虚拟支付 → 基础配置」")

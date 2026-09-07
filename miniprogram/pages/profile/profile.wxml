@@ -29,11 +29,6 @@
 
     <view class="asset-card" wx:if="{{profile}}">
       <view class="asset-item">
-        <text class="asset-label">余额</text>
-        <text class="asset-value">¥{{profile.balance}}</text>
-      </view>
-      <view class="asset-divider"></view>
-      <view class="asset-item">
         <text class="asset-label">会员等级</text>
         <text class="asset-value sm">{{profile.membership_level_name || '普通'}}</text>
       </view>
@@ -87,21 +82,6 @@
         <view class="menu-icon gold">控</view>
         <text class="menu-text">风控消息</text>
         <text class="menu-arrow">›</text>
-      </view>
-      <view class="menu-item" bindtap="goRecharge">
-        <view class="menu-icon red">充</view>
-        <text class="menu-text">账户充值</text>
-        <text class="menu-arrow">›</text>
-      </view>
-    </view>
-
-    <view class="records-card" wx:if="{{records.length > 0}}">
-      <text class="records-title">最近流水</text>
-      <view wx:for="{{records}}" wx:key="id" class="record-row">
-        <text class="record-remark">{{item.remark}}</text>
-        <text class="record-amount {{item.amount >= 0 ? 'plus' : 'minus'}}">
-          {{item.amount >= 0 ? '+' : ''}}{{item.amount}}
-        </text>
       </view>
     </view>
 

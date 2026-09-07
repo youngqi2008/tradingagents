@@ -5,6 +5,7 @@ from decimal import Decimal
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
+from app.core.config import settings
 from app.routers.mp.deps import get_current_mp_user
 from app.services.billing_service import billing_service
 from app.services.membership_service import membership_service
@@ -19,7 +20,7 @@ class ChangeMembershipRequest(BaseModel):
 
 @router.get("/membership/levels")
 async def list_mp_membership_levels(user: dict = Depends(get_current_mp_user)):
-    """可选购的会员等级列表"""
+    """会员等级列表（过审期间仅展示权益，不含价格）"""
     from app.services.benefit_service import get_level_benefit_templates
 
     levels = await membership_service.list_levels(active_only=True)
@@ -43,6 +44,10 @@ async def list_mp_membership_levels(user: dict = Depends(get_current_mp_user)):
             item["benefit_monthly_report_text"] = "不限"
         else:
             item["benefit_monthly_report_text"] = str(item["benefit_monthly_report"])
+        if not settings.MP_VIRTUAL_PURCHASE_ENABLED:
+            item["monthly_price"] = 0
+            item["per_generation_price"] = 0
+            item["per_ask_price"] = 0
         level_items.append(item)
 
     return {
@@ -59,7 +64,10 @@ async def change_mp_membership(
     payload: ChangeMembershipRequest,
     user: dict = Depends(get_current_mp_user),
 ):
-    """升级或降级会员等级"""
+    """升级或降级会员等级（过审期间关闭，改由运营后台手工调整）"""
+    if not settings.MP_VIRTUAL_PURCHASE_ENABLED:
+        raise HTTPException(status_code=403, detail="会员等级暂不支持自助调整，请联系运营人员")
+
     target = await membership_service.get_level_by_id(payload.membership_level_id)
     if not target or not target.is_active:
         raise HTTPException(status_code=404, detail="会员等级不存在或已停用")

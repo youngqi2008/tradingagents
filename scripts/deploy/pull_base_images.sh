@@ -48,8 +48,21 @@ pull_frontend_base() {
   fi
 }
 
+pull_python() {
+  if docker image inspect "python:3.10-slim-bookworm" >/dev/null 2>&1; then
+    log "本地已有 python:3.10-slim-bookworm，跳过"
+    return 0
+  fi
+  log "拉取 python:3.10-slim-bookworm（后端构建）..."
+  pull_and_tag "docker.m.daocloud.io/library/python:3.10-slim-bookworm" "python:3.10-slim-bookworm" && return 0
+  docker pull "python:3.10-slim-bookworm" && log "已从 Docker Hub 拉取 python:3.10-slim-bookworm" && return 0
+  echo "[pull] python:3.10-slim-bookworm 未拉取成功，构建 backend 时将尝试 DaoCloud 镜像名" >&2
+  return 0
+}
+
 warn_node=0
 pull_mongo || exit 1
+pull_python
 # 默认预拉前端基础镜像，避免 build 时 metadata 超时；仅需 mongo 时: PULL_NODE_IMAGE=0
 if [[ "${PULL_NODE_IMAGE:-1}" != "0" ]]; then
   pull_frontend_base

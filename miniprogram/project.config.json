@@ -7,7 +7,8 @@
       { "type": "folder", "value": "pages/chat" },
       { "type": "folder", "value": "pages/analysis" },
       { "type": "folder", "value": "pages/report" },
-      { "type": "folder", "value": "pages/favorites" }
+      { "type": "folder", "value": "pages/favorites" },
+      { "type": "folder", "value": "pages/recharge" }
     ],
     "include": [
       {

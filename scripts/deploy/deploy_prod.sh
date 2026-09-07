@@ -95,14 +95,17 @@ ensure_dirs() {
 
 build_services() {
   local target="${1:-all}"
+  # 国内 ECS：backend 基础镜像走 DaoCloud，避免 docker.io metadata 超时
+  local python_base="${PYTHON_BASE:-docker.m.daocloud.io/library/python:3.10-slim-bookworm}"
+  local build_args=(--build-arg "PYTHON_BASE=${python_base}")
   case "$target" in
     all)
       log "构建全部服务（backend + frontend + nginx）..."
-      compose build
+      compose build "${build_args[@]}"
       ;;
     backend)
       log "仅构建 backend..."
-      compose build backend
+      compose build "${build_args[@]}" backend
       ;;
     frontend)
       log "仅构建 frontend..."
