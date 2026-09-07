@@ -9,9 +9,7 @@ ENV NODE_ENV=production \
     YARN_REGISTRY=https://registry.npmmirror.com
 WORKDIR /app/frontend
 
-# node:22-alpine 已带 yarn 入口，需 --force 覆盖；从 npmmirror 安装，避免 yarnpkg.com
-RUN corepack disable 2>/dev/null || true \
-    && npm install -g yarn@1.22.22 --force
+# node:22-alpine 已自带 yarn，勿再 npm -g（会 EEXIST 占 /usr/local/bin/yarn）
 
 # 复制package.json、yarn.lock和.yarnrc（配置国内镜像源）
 COPY frontend/package.json frontend/yarn.lock frontend/.yarnrc ./
