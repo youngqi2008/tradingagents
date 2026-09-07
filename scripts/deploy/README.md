@@ -76,22 +76,27 @@ sudo firewall-cmd --reload
 
 ## 二、日常更新部署
 
-### 在服务器上（已 SSH 登录 47.95.5.18）
+### 推荐：Git 源码目录 → 运行目录 → 发布（47.95.5.18）
+
+源码在 `/root/yangqi/tradingagents`，容器跑在 `/opt/tradingagents`。不要在 `/opt` 里 `git pull`。
 
 ```bash
-cd /opt/tradingagents
+# 全量（前后端都重建）
+bash /root/yangqi/tradingagents/scripts/deploy/update_47.sh all
 
-# 拉代码（若用 Git）
-git pull
+# 只更新后端 API
+bash /root/yangqi/tradingagents/scripts/deploy/update_47.sh backend
 
-# 仅后端/API 变更（最常用，含信号接口、问股 SSE 等）
-./scripts/deploy/deploy_prod.sh backend
+# 只更新运营后台前端
+bash /root/yangqi/tradingagents/scripts/deploy/update_47.sh frontend
+```
 
-# 前端运营后台变更
-./scripts/deploy/deploy_prod.sh frontend
+脚本会：`git pull` → `rsync` 到 `/opt/tradingagents`（**不覆盖** `.env` / `logs` / `data` / `uploads`）→ 调用 `deploy_prod.sh`。
 
-# 全量重建
-./scripts/deploy/deploy_prod.sh all
+指定分支：
+
+```bash
+GIT_BRANCH=cutsimplemp bash /root/yangqi/tradingagents/scripts/deploy/update_47.sh all
 ```
 
 ### 在 Windows 开发机一键推送 + 部署
