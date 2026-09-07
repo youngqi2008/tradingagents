@@ -2,7 +2,7 @@
   <view class="signal-hero">
     <view class="signal-hero-kicker">置顶 · 第一眼看到</view>
     <view class="signal-hero-title">关注信号</view>
-    <view class="signal-hero-sub">登录后可接收微信服务通知，无需点进小程序也能看到新信号</view>
+    <view class="signal-hero-sub">点「开启微信提醒」并勾选后，新信号会立刻出现在微信服务通知里，点开即可查看该条</view>
   </view>
 
   <view wx:if="{{needLogin}}" class="empty login-empty">

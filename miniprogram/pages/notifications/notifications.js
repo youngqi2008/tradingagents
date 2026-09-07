@@ -73,7 +73,7 @@ Page({
         self._setNavTitle(self.data.activeCategory || 'all')
         self.loadList()
         try {
-          require('../../utils/subscribe').requestSignalSubscribe()
+          require('../../utils/subscribe').askSignalSubscribeWithModal()
         } catch (e) {}
       })
       .catch(function (e) {

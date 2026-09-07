@@ -1,0 +1,6 @@
+.wrap {
+  padding: 80rpx 40rpx;
+  text-align: center;
+  color: #8b8b93;
+  font-size: 28rpx;
+}

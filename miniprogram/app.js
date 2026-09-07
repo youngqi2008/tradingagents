@@ -1,18 +1,20 @@
 const { checkServer, restoreSession } = require('./utils/api')
 const { isLoggedIn, getUserInfo } = require('./utils/auth')
 const { refreshTabBadges } = require('./utils/tabbar')
+const { pickQueryId, savePendingSignalId } = require('./utils/subscribe')
 
 App({
   globalData: {
     isLoggedIn: false,
     userInfo: null,
-    signalSubscribeAsked: false,
+    pendingSignalId: '',
   },
 
-  onLaunch: function () {
+  onLaunch: function (options) {
     var that = this
     that.globalData.isLoggedIn = isLoggedIn()
     that.globalData.userInfo = getUserInfo()
+    that.captureSignalQuery(options)
 
     restoreSession()
       .then(function (ok) {
@@ -34,9 +36,16 @@ App({
     })
   },
 
-  onShow: function () {
+  onShow: function (options) {
+    this.captureSignalQuery(options)
     var pages = getCurrentPages() || []
     var page = pages.length ? pages[pages.length - 1] : null
     if (page) refreshTabBadges(page)
+  },
+
+  captureSignalQuery: function (options) {
+    var id = pickQueryId(options)
+    if (!id) return
+    savePendingSignalId(id)
   },
 })

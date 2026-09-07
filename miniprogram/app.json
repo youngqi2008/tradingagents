@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/signals/signals",
+    "pages/signal-open/signal-open",
     "pages/notifications/notifications",
     "pages/risk-message/risk-message",
     "pages/profile/profile",

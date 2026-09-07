@@ -902,6 +902,14 @@ function listNotifications(params) {
   })
 }
 
+function getNotification(notificationId) {
+  return request({
+    url: '/api/mp/notifications/' + notificationId,
+  }).then(function (res) {
+    return (res && res.data) || null
+  })
+}
+
 function markNotificationRead(notificationId) {
   return request({
     url: '/api/mp/notifications/' + notificationId + '/read',
@@ -1053,6 +1061,8 @@ module.exports = {
   restoreSession,
 
   listNotifications,
+
+  getNotification,
 
   markNotificationRead,
 

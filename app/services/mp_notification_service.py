@@ -1,6 +1,5 @@
 """小程序站内通知服务"""
 
-import asyncio
 from datetime import timedelta
 from typing import List, Optional, Tuple
 
@@ -215,13 +214,15 @@ class MpNotificationService:
             title = data.title.strip()
             content = data.content.strip()
             try:
-                asyncio.create_task(
-                    wechat_service.notify_signal_subscribers(
-                        openids, title, content, notice_type
-                    )
+                await wechat_service.notify_signal_subscribers(
+                    openids,
+                    title,
+                    content,
+                    notice_type,
+                    notice_id=str(resp.id),
                 )
             except Exception:
-                logger.exception("调度微信信号提醒失败")
+                logger.exception("发送微信信号提醒失败 notice=%s", resp.id)
         return resp
 
     async def list_admin(

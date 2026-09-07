@@ -74,7 +74,7 @@ Page({
         wx.showToast({ title: '登录成功', icon: 'success' })
         this.checkLoginStatus()
         try {
-          require('../../utils/subscribe').requestSignalSubscribe()
+          require('../../utils/subscribe').askSignalSubscribeWithModal()
         } catch (e) {}
       }.bind(this))
       .catch(function (e) {

@@ -88,7 +88,10 @@ class Settings(BaseSettings):
     WECHAT_SUBSCRIBE_FIELD_TITLE: str = Field(default="thing1")
     WECHAT_SUBSCRIBE_FIELD_TIME: str = Field(default="time2")
     WECHAT_SUBSCRIBE_FIELD_TIP: str = Field(default="thing3")
-    WECHAT_SUBSCRIBE_PAGE: str = Field(default="pages/signals/signals")
+    WECHAT_SUBSCRIBE_PAGE: str = Field(
+        default="pages/signal-open/signal-open",
+        description="订阅消息点击落地页（非 tabBar，再跳转到关注信号并打开该条）",
+    )
     WECHAT_MINI_PROGRAM_STATE: str = Field(
         default="formal",
         description="订阅消息跳转版本：developer / trial / formal",

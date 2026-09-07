@@ -1,5 +1,6 @@
 """微信服务 - 小程序登录（仿 akang_lg 流程）"""
 
+import asyncio
 import time
 from datetime import datetime
 from typing import Iterable, Optional
@@ -99,7 +100,7 @@ class WeChatService:
         return {
             "enabled": bool(tmpl and settings.WECHAT_MINI_APP_ID),
             "template_ids": [tmpl] if tmpl else [],
-            "page": settings.WECHAT_SUBSCRIBE_PAGE or "pages/signals/signals",
+            "page": settings.WECHAT_SUBSCRIBE_PAGE or "pages/signal-open/signal-open",
         }
 
     async def get_client_access_token(self) -> str:
@@ -131,14 +132,20 @@ class WeChatService:
         return s[: max(0, limit - 1)] + "…"
 
     def _build_subscribe_data(self, title: str, content: str, notice_type: str) -> dict:
-        tip = "关注" if notice_type == "buy_signal" else ("提醒" if notice_type == "sell_signal" else "通知")
+        default_tip = "点击查看关注详情" if notice_type == "buy_signal" else "点击查看信号详情"
+        tip = (content or "").replace("\n", " ").strip() or default_tip
         now = datetime.now().strftime("%Y年%m月%d日 %H:%M")
         payload = {
             settings.WECHAT_SUBSCRIBE_FIELD_TITLE: {"value": self._clip(title, 20)},
             settings.WECHAT_SUBSCRIBE_FIELD_TIME: {"value": now},
-            settings.WECHAT_SUBSCRIBE_FIELD_TIP: {"value": self._clip(content or tip, 20)},
+            settings.WECHAT_SUBSCRIBE_FIELD_TIP: {"value": self._clip(tip, 20)},
         }
         return {k: v for k, v in payload.items() if k}
+
+    def _subscribe_jump_page(self, notice_id: Optional[str], page: Optional[str] = None) -> str:
+        base = (page or settings.WECHAT_SUBSCRIBE_PAGE or "pages/signal-open/signal-open").split("?")[0]
+        nid = str(notice_id or "").strip()
+        return f"{base}?id={nid}" if nid else base
 
     async def send_subscribe_message(
         self,
@@ -148,15 +155,17 @@ class WeChatService:
         content: str,
         notice_type: str,
         page: Optional[str] = None,
+        notice_id: Optional[str] = None,
     ) -> bool:
         tmpl = (settings.WECHAT_SUBSCRIBE_TEMPLATE_SIGNAL or "").strip()
         if not tmpl or not openid or str(openid).startswith("dev_"):
             return False
         token = await self.get_client_access_token()
+        jump = self._subscribe_jump_page(notice_id, page)
         body = {
             "touser": openid,
             "template_id": tmpl,
-            "page": page or settings.WECHAT_SUBSCRIBE_PAGE or "pages/signals/signals",
+            "page": jump,
             "miniprogram_state": settings.WECHAT_MINI_PROGRAM_STATE or "formal",
             "lang": "zh_CN",
             "data": self._build_subscribe_data(title, content, notice_type),
@@ -167,6 +176,7 @@ class WeChatService:
             data = resp.json()
         errcode = data.get("errcode", 0)
         if errcode == 0:
+            logger.info("订阅消息已送达 openid=%s notice=%s page=%s", openid[-8:], notice_id or "", jump)
             return True
         # 43101 用户未订阅 / 拒绝；不视为系统故障
         if errcode in (43101, 43108, 47003):
@@ -181,27 +191,49 @@ class WeChatService:
         title: str,
         content: str,
         notice_type: str,
+        notice_id: Optional[str] = None,
     ) -> int:
         tmpl = (settings.WECHAT_SUBSCRIBE_TEMPLATE_SIGNAL or "").strip()
         if not tmpl:
             logger.info("未配置 WECHAT_SUBSCRIBE_TEMPLATE_SIGNAL，跳过微信服务通知")
             return 0
-        sent = 0
-        seen = set()
+        seen = []
+        dup = set()
         for openid in openids or []:
             oid = (openid or "").strip()
-            if not oid or oid in seen:
+            if not oid or oid in dup:
                 continue
-            seen.add(oid)
-            try:
-                ok = await self.send_subscribe_message(
-                    oid, title=title, content=content, notice_type=notice_type
-                )
-                if ok:
+            dup.add(oid)
+            seen.append(oid)
+        sent = 0
+        batch_size = 8
+        for i in range(0, len(seen), batch_size):
+            chunk = seen[i : i + batch_size]
+            results = await asyncio.gather(
+                *[
+                    self.send_subscribe_message(
+                        oid,
+                        title=title,
+                        content=content,
+                        notice_type=notice_type,
+                        notice_id=notice_id,
+                    )
+                    for oid in chunk
+                ],
+                return_exceptions=True,
+            )
+            for oid, result in zip(chunk, results):
+                if result is True:
                     sent += 1
-            except Exception:
-                logger.exception("订阅消息发送异常 openid=%s", oid[-8:])
-        logger.info("关注信号微信提醒已发送 sent=%s / %s type=%s", sent, len(seen), notice_type)
+                elif isinstance(result, Exception):
+                    logger.error("订阅消息发送异常 openid=%s", oid[-8:], exc_info=result)
+        logger.info(
+            "关注信号微信提醒已发送 sent=%s / %s type=%s notice=%s",
+            sent,
+            len(seen),
+            notice_type,
+            notice_id or "",
+        )
         return sent
 
 

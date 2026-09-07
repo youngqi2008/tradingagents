@@ -1,5 +1,6 @@
 const {
   listNotifications,
+  getNotification,
   markNotificationRead,
   markAllNotificationsRead,
   login,
@@ -7,7 +8,13 @@ const {
 } = require('../../utils/api')
 const { isLoggedIn } = require('../../utils/auth')
 const { syncTabBar, refreshTabBadges } = require('../../utils/tabbar')
-const { requestSignalSubscribe } = require('../../utils/subscribe')
+const {
+  requestSignalSubscribe,
+  askSignalSubscribeWithModal,
+  savePendingSignalId,
+  takePendingSignalId,
+  pickQueryId,
+} = require('../../utils/subscribe')
 
 var SIGNAL_TYPES = 'buy_signal,sell_signal'
 var TYPE_META = {
@@ -24,10 +31,17 @@ Page({
     needLogin: false,
   },
 
+  onLoad(options) {
+    var id = pickQueryId(options)
+    if (id) savePendingSignalId(id)
+  },
+
   onShow() {
     syncTabBar(this)
     wx.setNavigationBarTitle({ title: '关注信号' })
+    var pending = this.takeOpenSignalId()
     if (!isLoggedIn()) {
+      if (pending) savePendingSignalId(pending)
       this.setData({
         loading: false,
         needLogin: true,
@@ -38,37 +52,56 @@ Page({
       refreshTabBadges(this)
       return
     }
-    this.setData({ needLogin: false, detail: null })
-    this.loadList()
-    this.tryAskSubscribe(false)
+    this.setData({ needLogin: false })
+    this.refreshAndOpen(pending)
   },
 
-  tryAskSubscribe(showTip) {
-    var app = getApp()
-    if (!showTip && app && app.globalData && app.globalData.signalSubscribeAsked) {
+  takeOpenSignalId() {
+    var pending = takePendingSignalId()
+    var enter = {}
+    try {
+      enter = (wx.getEnterOptionsSync && wx.getEnterOptionsSync()) || {}
+    } catch (e) {}
+    var enterId = pickQueryId(enter)
+    var key = String((enter.scene || '') + ':' + (pending || enterId || ''))
+    if (key === ':') {
+      return pending
+    }
+    if (this._openedEnterKey && key === this._openedEnterKey) {
+      return ''
+    }
+    var id = pending || enterId
+    if (id) this._openedEnterKey = key
+    return id
+  },
+
+  refreshAndOpen(pendingId) {
+    var self = this
+    this.loadList()
+      .then(function () {
+        if (pendingId) self.openSignalById(pendingId)
+      })
+      .catch(function () {})
+  },
+
+  showSubscribeResult(res) {
+    if (res && res.skipped) {
+      if (res.reason === '未配置模板') {
+        wx.showToast({ title: '请先在后台配置订阅消息模板', icon: 'none' })
+      }
       return
     }
-    requestSignalSubscribe().then(function (res) {
-      if (app && app.globalData) app.globalData.signalSubscribeAsked = true
-      if (!showTip) return
-      if (res && res.skipped) {
-        wx.showToast({ title: '请先在后台配置订阅消息模板', icon: 'none' })
-        return
-      }
-      var result = (res && res.result) || {}
-      var accepted = false
-      Object.keys(result).forEach(function (id) {
-        if (result[id] === 'accept') accepted = true
-      })
-      wx.showToast({
-        title: accepted ? '已开启微信提醒' : '未开启提醒，信号将只在本页展示',
-        icon: 'none',
-      })
+    wx.showToast({
+      title: res && res.accepted ? '已开启微信提醒' : '未开启提醒，信号将只在本页展示',
+      icon: 'none',
     })
   },
 
   onEnablePush() {
-    this.tryAskSubscribe(true)
+    var self = this
+    requestSignalSubscribe().then(function (res) {
+      self.showSubscribeResult(res)
+    })
   },
 
   onLoginTap() {
@@ -78,10 +111,14 @@ Page({
       .then(function () {
         wx.hideLoading()
         wx.showToast({ title: '登录成功', icon: 'success' })
-        self.setData({ needLogin: false, detail: null })
+        self.setData({ needLogin: false })
         syncTabBar(self)
-        self.loadList()
-        self.tryAskSubscribe(true)
+        var pending = takePendingSignalId()
+        self.refreshAndOpen(pending)
+        return askSignalSubscribeWithModal()
+      })
+      .then(function (res) {
+        if (res) self.showSubscribeResult(res)
       })
       .catch(function (e) {
         wx.hideLoading()
@@ -102,8 +139,8 @@ Page({
 
   loadList() {
     var self = this
-    self.setData({ loading: true, detail: null })
-    Promise.all([
+    self.setData({ loading: true })
+    return Promise.all([
       listNotifications({ limit: 50, notice_types: SIGNAL_TYPES }),
       getNotificationUnreadCount({ notice_types: SIGNAL_TYPES }),
     ])
@@ -119,10 +156,12 @@ Page({
           unreadCount: unread,
         })
         refreshTabBadges(self)
+        return list
       })
       .catch(function (e) {
         self.setData({ loading: false })
         wx.showToast({ title: (e && e.message) || '加载失败', icon: 'none' })
+        return []
       })
   },
 
@@ -135,36 +174,65 @@ Page({
     return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes())
   },
 
+  markItemRead(id) {
+    var self = this
+    return markNotificationRead(id)
+      .then(function () {
+        var list = self.data.notifications.map(function (n) {
+          if (String(n.id) === String(id)) {
+            return Object.assign({}, n, { is_read: true })
+          }
+          return n
+        })
+        var unread = Math.max(0, (self.data.unreadCount || 0) - 1)
+        var patch = { notifications: list, unreadCount: unread }
+        if (self.data.detail && String(self.data.detail.id) === String(id)) {
+          patch.detail = Object.assign({}, self.data.detail, { is_read: true })
+        }
+        self.setData(patch)
+        refreshTabBadges(self)
+      })
+      .catch(function () {})
+  },
+
+  showDetail(item, replenishSubscribe) {
+    if (!item) return
+    var detail = this.enrichNotification(item)
+    this.setData({ detail: detail })
+    if (!item.is_read) this.markItemRead(item.id)
+    if (replenishSubscribe) requestSignalSubscribe()
+  },
+
+  openSignalById(id) {
+    if (!id) return
+    var self = this
+    var item = (this.data.notifications || []).find(function (n) {
+      return String(n.id) === String(id)
+    })
+    if (item) {
+      this.showDetail(item, true)
+      return
+    }
+    getNotification(id)
+      .then(function (n) {
+        if (!n) {
+          wx.showToast({ title: '信号不存在或已过期', icon: 'none' })
+          return
+        }
+        self.showDetail(n, true)
+      })
+      .catch(function () {
+        wx.showToast({ title: '信号不存在或已过期', icon: 'none' })
+      })
+  },
+
   onTapItem(e) {
     var id = e.currentTarget.dataset.id
     var item = this.data.notifications.find(function (n) {
       return String(n.id) === String(id)
     })
     if (!item) return
-    var self = this
-    if (!item.is_read) {
-      markNotificationRead(id)
-        .then(function () {
-          var list = self.data.notifications.map(function (n) {
-            if (String(n.id) === String(id)) {
-              return Object.assign({}, n, { is_read: true })
-            }
-            return n
-          })
-          var unread = Math.max(0, (self.data.unreadCount || 0) - 1)
-          self.setData({
-            notifications: list,
-            unreadCount: unread,
-            detail: Object.assign({}, item, { is_read: true }),
-          })
-          refreshTabBadges(self)
-        })
-        .catch(function () {
-          self.setData({ detail: item })
-        })
-      return
-    }
-    self.setData({ detail: item })
+    this.showDetail(item, true)
   },
 
   onCloseDetail() {
