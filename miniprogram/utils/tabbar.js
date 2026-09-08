@@ -2,8 +2,9 @@ const { isRiskOfficer, isLoggedIn } = require('./auth')
 
 var SIGNAL_TYPES = 'buy_signal,sell_signal'
 
-/** 关注信号为首页 Tab，打开小程序第一眼可见 */
+/** 首页为介绍页，打开即可浏览，不要求登录 */
 var BASE_TABS = [
+  { pagePath: '/pages/index/index', text: '首页', icon: 'home' },
   { pagePath: '/pages/signals/signals', text: '动态', icon: 'signal' },
   { pagePath: '/pages/notifications/notifications', text: '消息', icon: 'notify' },
   { pagePath: '/pages/profile/profile', text: '我的', icon: 'me' },

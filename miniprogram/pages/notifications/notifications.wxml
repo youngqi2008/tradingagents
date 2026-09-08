@@ -1,8 +1,17 @@
 <view class="container">
-  <view wx:if="{{needLogin}}" class="empty login-empty">
-    <text class="login-tip">消息为个人服务，登录后可按类型查看通知</text>
-    <button class="btn-primary" bindtap="onLoginTap">登录</button>
-    <text class="login-hint">可先浏览首页介绍与帮助，无需登录</text>
+  <view wx:if="{{needLogin}}" class="guest-panel">
+    <view class="card guest-card">
+      <view class="guest-title">消息说明</view>
+      <text class="guest-desc">消息中心用于查看公告、风控与个人通知。打开即可了解分类，登录后可查看属于自己的通知。</text>
+    </view>
+    <view class="card guest-card">
+      <view class="guest-title">消息类型</view>
+      <text class="guest-line">· 广播消息：平台公告</text>
+      <text class="guest-line">· 风控消息：风控相关通知</text>
+      <text class="guest-line">· 服务动态：已订阅的服务更新</text>
+    </view>
+    <button class="btn-outline guest-login" bindtap="onLoginTap">登录后查看我的消息</button>
+    <text class="login-hint">登录为可选项，浏览说明无需授权手机号、头像或昵称</text>
   </view>
 
   <block wx:else>

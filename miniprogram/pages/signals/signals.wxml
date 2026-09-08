@@ -13,10 +13,19 @@
     <text class="member-entry-arrow">›</text>
   </view>
 
-  <view wx:if="{{needLogin}}" class="empty login-empty">
-    <text class="login-tip">登录后查看服务动态，并可开启微信提醒</text>
-    <button class="btn-primary" bindtap="onLoginTap">登录</button>
-    <text class="login-hint">登录一次后会保持登录，下次打开无需再登</text>
+  <view wx:if="{{needLogin}}" class="guest-panel">
+    <view class="card guest-card">
+      <view class="guest-title">服务动态说明</view>
+      <text class="guest-desc">这里用于查看已订阅的服务更新。打开即可了解用途，登录后可查看个人动态并自行开启微信提醒。</text>
+    </view>
+    <view class="card guest-card">
+      <view class="guest-title">如何使用</view>
+      <text class="guest-line">1. 可先浏览本页说明与「会员」权益</text>
+      <text class="guest-line">2. 需要个人动态时，再到「我的」自行登录</text>
+      <text class="guest-line">3. 头像、昵称仅在「我的」自愿填写，进入时不会强制授权</text>
+    </view>
+    <button class="btn-outline guest-login" bindtap="onLoginTap">登录后查看我的动态</button>
+    <text class="login-hint">登录为可选项，浏览说明无需授权手机号、头像或昵称</text>
   </view>
 
   <block wx:else>

@@ -87,7 +87,7 @@ function promptProfileSetupIfNeeded(user) {
   return true
 }
 
-var HOME_TAB = '/pages/signals/signals'
+var HOME_TAB = '/pages/index/index'
 
 /** 登录成功后回到当前页即可，不打断首页浏览 */
 function goHomeAfterLogin(user) {

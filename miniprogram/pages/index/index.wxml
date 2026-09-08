@@ -26,7 +26,7 @@
     <view class="feature-icon dark">我</view>
     <view class="feature-body">
       <text class="feature-title">个人中心</text>
-      <text class="feature-desc">管理头像、昵称等资料，登录后可维护账号信息。</text>
+      <text class="feature-desc">体验后再到「我的」自行选择是否登录。</text>
     </view>
     <text class="feature-arrow">›</text>
   </view>
