@@ -6,9 +6,9 @@
     </view>
     <view class="card guest-card">
       <view class="guest-title">消息类型</view>
+      <text class="guest-line">· 服务动态：已订阅的服务更新</text>
       <text class="guest-line">· 广播消息：平台公告</text>
       <text class="guest-line">· 风控消息：风控相关通知</text>
-      <text class="guest-line">· 服务动态：已订阅的服务更新</text>
     </view>
     <button class="btn-outline guest-login" bindtap="onLoginTap">登录后查看我的消息</button>
     <text class="login-hint">登录为可选项，浏览说明无需授权手机号、头像或昵称</text>

@@ -4,10 +4,10 @@ const { syncTabBar, refreshTabBadges } = require('../../utils/tabbar')
 const { softenCopy } = require('../../utils/copy')
 
 var CATEGORIES = [
+  { key: 'signal', label: '服务动态', types: 'buy_signal,sell_signal' },
   { key: 'all', label: '全部', types: 'announcement,risk_alert,buy_signal,sell_signal' },
   { key: 'broadcast', label: '广播消息', types: 'announcement' },
   { key: 'risk', label: '风控消息', types: 'risk_alert' },
-  { key: 'signal', label: '服务动态', types: 'buy_signal,sell_signal' },
 ]
 
 var TYPE_META = {
@@ -28,13 +28,13 @@ Page({
   data: {
     loading: true,
     categories: CATEGORIES,
-    activeCategory: 'all',
+    activeCategory: 'signal',
     notifications: [],
     unreadCount: 0,
     categoryUnread: 0,
     detail: null,
     needLogin: false,
-    emptyHint: EMPTY_HINT.all,
+    emptyHint: EMPTY_HINT.signal,
   },
 
   onShow() {
@@ -55,7 +55,7 @@ Page({
     if (this.data.activeCategory === 'review' || this.data.activeCategory === 'digest') {
       this.setData({ activeCategory: 'all' })
     }
-    this._setNavTitle(this.data.activeCategory || 'all')
+    this._setNavTitle(this.data.activeCategory || 'signal')
     this.loadList()
   },
 
@@ -68,7 +68,7 @@ Page({
         wx.showToast({ title: '登录成功', icon: 'success' })
         self.setData({ needLogin: false, detail: null })
         syncTabBar(self)
-        self._setNavTitle(self.data.activeCategory || 'all')
+        self._setNavTitle(self.data.activeCategory || 'signal')
         self.loadList()
         try {
           require('../../utils/subscribe').askSignalSubscribeWithModal()

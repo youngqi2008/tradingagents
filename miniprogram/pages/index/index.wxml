@@ -1,95 +1,99 @@
 <view class="page container">
   <view class="hero">
-    <text class="hero-kicker">欢迎使用</text>
+    <text class="hero-kicker">服务动态</text>
     <text class="hero-title">Ares</text>
-    <text class="hero-desc">账号管理与站内通知工具。打开即可浏览介绍与帮助，登录可在体验后自行选择。</text>
+    <text class="hero-desc">打开即可浏览服务动态说明。登录后可查看个人动态并自行开启微信提醒。</text>
   </view>
 
-  <view class="section-hd">服务介绍</view>
-  <view class="feature-card" bindtap="goMembership">
-    <view class="feature-icon">会</view>
-    <view class="feature-body">
-      <text class="feature-title">会员</text>
-      <text class="feature-desc">查看会员等级与权益，登录后可申请开通。</text>
+  <view class="card member-entry" bindtap="goMembership">
+    <view class="member-entry-body">
+      <text class="member-entry-title">会员</text>
+      <text class="member-entry-desc">查看等级权益，登录后可申请开通</text>
     </view>
-    <text class="feature-arrow">›</text>
-  </view>
-  <view class="feature-card" bindtap="goNotify">
-    <view class="feature-icon">讯</view>
-    <view class="feature-body">
-      <text class="feature-title">服务动态</text>
-      <text class="feature-desc">打开即可看到服务动态；登录后可接收微信提醒。</text>
-    </view>
-    <text class="feature-arrow">›</text>
-  </view>
-  <view class="feature-card" bindtap="goProfile">
-    <view class="feature-icon dark">我</view>
-    <view class="feature-body">
-      <text class="feature-title">个人中心</text>
-      <text class="feature-desc">体验后再到「我的」自行选择是否登录。</text>
-    </view>
-    <text class="feature-arrow">›</text>
-  </view>
-  <view class="feature-card" bindtap="goHelp">
-    <view class="feature-icon gray">帮</view>
-    <view class="feature-body">
-      <text class="feature-title">使用帮助</text>
-      <text class="feature-desc">阅读下方指南与常见问题，了解如何使用本小程序。</text>
-    </view>
-    <text class="feature-arrow">›</text>
+    <text class="member-entry-arrow">›</text>
   </view>
 
-  <view class="section-hd">使用指南</view>
-  <view class="guide-card">
-    <view class="guide-item">
-      <text class="guide-num">1</text>
-      <view class="guide-body">
-        <text class="guide-title">浏览首页</text>
-        <text class="guide-desc">无需登录，先了解服务内容与使用方式。</text>
-      </view>
+  <view wx:if="{{needLogin && !detail}}" class="guest-panel">
+    <view class="card guest-card">
+      <view class="guest-title">服务动态说明</view>
+      <text class="guest-desc">这里展示已订阅的服务更新。可先浏览下方示例与帮助，需要个人动态时再到「我的」自行登录。</text>
     </view>
-    <view class="guide-item">
-      <text class="guide-num">2</text>
-      <view class="guide-body">
-        <text class="guide-title">查看消息</text>
-        <text class="guide-desc">在「消息」阅读公告；个人消息需登录后查看。</text>
-      </view>
-    </view>
-    <view class="guide-item">
-      <text class="guide-num">3</text>
-      <view class="guide-body">
-        <text class="guide-title">管理资料</text>
-        <text class="guide-desc">需要时再到「我的」自行登录并完善资料。</text>
-      </view>
-    </view>
-    <view class="guide-item">
-      <text class="guide-num">4</text>
-      <view class="guide-body">
-        <text class="guide-title">开通会员</text>
-        <text class="guide-desc">在「会员」查看等级权益，登录后可申请开通，运营处理后生效。</text>
-      </view>
-    </view>
-  </view>
-
-  <view class="section-hd">常见问题</view>
-  <view class="faq-card">
     <view
-      wx:for="{{faqs}}"
+      wx:for="{{samples}}"
       wx:key="id"
-      class="faq-item"
+      class="card item"
       data-id="{{item.id}}"
-      bindtap="toggleFaq"
+      bindtap="onTapSample"
     >
-      <view class="faq-q">
-        <text>{{item.q}}</text>
-        <text class="faq-toggle">{{item.open ? '−' : '+'}}</text>
+      <view class="item-title">
+        <text class="signal-tag {{item.typeClass}}">{{item.typeLabel}}</text>
+        {{item.title}}
       </view>
-      <text class="faq-a" wx:if="{{item.open}}">{{item.a}}</text>
+      <view class="item-preview">{{item.preview}}</view>
+      <view class="item-time">{{item.timeText}}</view>
     </view>
+    <button class="btn-outline guest-login" bindtap="onLoginTap">登录后查看我的动态</button>
+    <text class="login-hint">登录为可选项，浏览本页无需授权手机号、头像或昵称</text>
   </view>
 
-  <view class="notice-card">
-    <text class="notice-title">服务说明</text>
-    <text class="notice-text">本小程序提供会员、服务动态、站内通知与账号管理。打开即可浏览介绍，登录后可申请会员并管理资料。</text>
+  <block wx:elif="{{!needLogin}}">
+    <view wx:if="{{!detail}}">
+      <view class="toolbar">
+        <text class="unread-tip" wx:if="{{unreadCount > 0}}">未读 {{unreadCount}}</text>
+        <text class="unread-tip muted" wx:else>暂无未读</text>
+        <view class="toolbar-actions">
+          <text class="mark-all" bindtap="onEnablePush">{{pushAlways ? '已记住提醒' : (pushRejected ? '重新开启提醒' : (pushStatusText === '已开启' ? '已开启提醒' : '开启微信提醒'))}}</text>
+          <text class="mark-all" bindtap="onMarkAllRead">全部已读</text>
+        </view>
+      </view>
+      <view wx:if="{{loading}}" class="empty">加载中...</view>
+      <view wx:elif="{{notifications.length === 0}}" class="empty">暂无服务动态</view>
+      <view
+        wx:for="{{notifications}}"
+        wx:key="id"
+        class="card item {{item.is_read ? '' : 'unread'}}"
+        data-id="{{item.id}}"
+        bindtap="onTapItem"
+      >
+        <view class="item-title">
+          <text wx:if="{{item.typeLabel}}" class="signal-tag {{item.typeClass}}">{{item.typeLabel}}</text>
+          <text wx:if="{{!item.is_read}}" class="dot">●</text>
+          {{item.title}}
+        </view>
+        <view class="item-preview">{{item.preview}}</view>
+        <view class="item-time">{{item.timeText}}</view>
+      </view>
+    </view>
+  </block>
+
+  <view wx:if="{{detail}}" class="card detail-card">
+    <view class="detail-title">
+      <text wx:if="{{detail.typeLabel}}" class="signal-tag {{detail.typeClass}}">{{detail.typeLabel}}</text>
+      {{detail.title}}
+    </view>
+    <view class="detail-time">{{detail.timeText}}</view>
+    <view class="detail-content">{{detail.content}}</view>
+    <button wx:if="{{!needLogin && !pushAlways}}" class="btn-primary detail-push" bindtap="onEnablePush">继续接收下一条微信提醒</button>
+    <text wx:if="{{!needLogin && !pushAlways}}" class="detail-push-hint">勾选「总是保持以上选择」后，点开动态就会自动续，不必每次点这里</text>
+    <button class="btn-outline" bindtap="onCloseDetail">返回列表</button>
   </view>
+
+  <block wx:if="{{!detail}}">
+    <view class="section-hd">使用帮助</view>
+    <view class="faq-card">
+      <view
+        wx:for="{{faqs}}"
+        wx:key="id"
+        class="faq-item"
+        data-id="{{item.id}}"
+        bindtap="toggleFaq"
+      >
+        <view class="faq-q">
+          <text>{{item.q}}</text>
+          <text class="faq-toggle">{{item.open ? '−' : '+'}}</text>
+        </view>
+        <text class="faq-a" wx:if="{{item.open}}">{{item.a}}</text>
+      </view>
+    </view>
+  </block>
 </view>
