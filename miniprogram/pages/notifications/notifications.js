@@ -1,32 +1,27 @@
 const { listNotifications, markNotificationRead, markAllNotificationsRead, login } = require('../../utils/api')
 const { isLoggedIn } = require('../../utils/auth')
 const { syncTabBar, refreshTabBadges } = require('../../utils/tabbar')
+const { softenCopy } = require('../../utils/copy')
 
 var CATEGORIES = [
-  { key: 'all', label: '全部', types: '' },
+  { key: 'all', label: '全部', types: 'announcement,risk_alert,buy_signal,sell_signal' },
   { key: 'broadcast', label: '广播消息', types: 'announcement' },
   { key: 'risk', label: '风控消息', types: 'risk_alert' },
-  { key: 'signal', label: '关注信号', types: 'buy_signal,sell_signal' },
-  { key: 'digest', label: '日报', types: 'favorites_digest' },
-  { key: 'review', label: '复盘', types: 'market_review' },
+  { key: 'signal', label: '服务动态', types: 'buy_signal,sell_signal' },
 ]
 
 var TYPE_META = {
-  buy_signal: { label: '关注', cls: 'buy' },
-  sell_signal: { label: '不关注', cls: 'sell' },
+  buy_signal: { label: '订阅', cls: 'buy' },
+  sell_signal: { label: '更新', cls: 'sell' },
   risk_alert: { label: '风控', cls: 'risk' },
   announcement: { label: '广播', cls: 'broadcast' },
-  market_review: { label: '复盘', cls: 'review' },
-  favorites_digest: { label: '日报', cls: 'custom' },
 }
 
 var EMPTY_HINT = {
   all: '暂无消息',
   broadcast: '暂无广播消息',
   risk: '暂无风控消息',
-  signal: '暂无关注信号',
-  digest: '暂无日报',
-  review: '暂无复盘消息',
+  signal: '暂无服务动态',
 }
 
 Page({
@@ -57,6 +52,9 @@ Page({
       return
     }
     this.setData({ needLogin: false, detail: null })
+    if (this.data.activeCategory === 'review' || this.data.activeCategory === 'digest') {
+      this.setData({ activeCategory: 'all' })
+    }
     this._setNavTitle(this.data.activeCategory || 'all')
     this.loadList()
   },
@@ -95,9 +93,7 @@ Page({
       all: '消息',
       broadcast: '广播消息',
       risk: '风控消息',
-      signal: '关注信号',
-      digest: '日报',
-      review: '复盘',
+      signal: '服务动态',
     }
     wx.setNavigationBarTitle({ title: titles[key] || '消息' })
   },
@@ -116,10 +112,13 @@ Page({
 
   enrichNotification(n) {
     var meta = this.resolveTypeMeta(n.notice_type)
+    var title = softenCopy(n.title || '通知')
+    var content = softenCopy(n.content || '')
     return Object.assign({}, n, {
-      title: n.title || '通知',
+      title: title,
+      content: content,
       timeText: this.formatTime(n.created_at),
-      preview: (n.content || '').slice(0, 60) + ((n.content || '').length > 60 ? '...' : ''),
+      preview: content.slice(0, 60) + (content.length > 60 ? '...' : ''),
       typeLabel: meta.label,
       typeClass: meta.cls,
     })
@@ -137,9 +136,13 @@ Page({
     })
     listNotifications(params)
       .then(function (data) {
-        var list = (data.notifications || []).map(function (n) {
-          return self.enrichNotification(n)
-        })
+        var list = (data.notifications || [])
+          .filter(function (n) {
+            return n.notice_type !== 'market_review' && n.notice_type !== 'favorites_digest'
+          })
+          .map(function (n) {
+            return self.enrichNotification(n)
+          })
         var unread = data.unread_count || 0
         var categoryUnread = 0
         for (var i = 0; i < list.length; i++) {

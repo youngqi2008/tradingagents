@@ -7,6 +7,7 @@ const {
   getNotificationUnreadCount,
 } = require('../../utils/api')
 const { isLoggedIn } = require('../../utils/auth')
+const { softenCopy } = require('../../utils/copy')
 const { syncTabBar, refreshTabBadges } = require('../../utils/tabbar')
 const {
   requestSignalSubscribe,
@@ -24,8 +25,8 @@ const {
 
 var SIGNAL_TYPES = 'buy_signal,sell_signal'
 var TYPE_META = {
-  buy_signal: { label: '关注', cls: 'buy' },
-  sell_signal: { label: '不关注', cls: 'sell' },
+  buy_signal: { label: '订阅', cls: 'buy' },
+  sell_signal: { label: '更新', cls: 'sell' },
 }
 
 Page({
@@ -47,7 +48,7 @@ Page({
 
   onShow() {
     syncTabBar(this)
-    wx.setNavigationBarTitle({ title: '关注信号' })
+    wx.setNavigationBarTitle({ title: '服务动态' })
     var pending = this.takeOpenSignalId()
     if (!isLoggedIn()) {
       if (pending) savePendingSignalId(pending)
@@ -143,11 +144,14 @@ Page({
   },
 
   enrichNotification(n) {
-    var meta = TYPE_META[n.notice_type] || { label: '信号', cls: '' }
+    var meta = TYPE_META[n.notice_type] || { label: '动态', cls: '' }
+    var title = softenCopy(n.title || '服务动态')
+    var content = softenCopy(n.content || '')
     return Object.assign({}, n, {
-      title: n.title || '关注信号',
+      title: title,
+      content: content,
       timeText: this.formatTime(n.created_at),
-      preview: (n.content || '').slice(0, 80) + ((n.content || '').length > 80 ? '...' : ''),
+      preview: content.slice(0, 80) + (content.length > 80 ? '...' : ''),
       typeLabel: meta.label,
       typeClass: meta.cls,
     })
@@ -232,13 +236,13 @@ Page({
     getNotification(id)
       .then(function (n) {
         if (!n) {
-          wx.showToast({ title: '信号不存在或已过期', icon: 'none' })
+          wx.showToast({ title: '内容不存在或已过期', icon: 'none' })
           return
         }
         self.showDetail(n)
       })
       .catch(function () {
-        wx.showToast({ title: '信号不存在或已过期', icon: 'none' })
+        wx.showToast({ title: '内容不存在或已过期', icon: 'none' })
       })
   },
 

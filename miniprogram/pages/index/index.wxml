@@ -17,8 +17,8 @@
   <view class="feature-card" bindtap="goNotify">
     <view class="feature-icon">讯</view>
     <view class="feature-body">
-      <text class="feature-title">关注信号</text>
-      <text class="feature-desc">打开即可看到关注信号；登录后可接收微信提醒。</text>
+      <text class="feature-title">服务动态</text>
+      <text class="feature-desc">打开即可看到服务动态；登录后可接收微信提醒。</text>
     </view>
     <text class="feature-arrow">›</text>
   </view>
@@ -90,6 +90,6 @@
 
   <view class="notice-card">
     <text class="notice-title">服务说明</text>
-    <text class="notice-text">本小程序提供会员、关注信号、站内通知与账号管理。打开即可浏览介绍，登录后可申请会员并管理资料。</text>
+    <text class="notice-text">本小程序提供会员、服务动态、站内通知与账号管理。打开即可浏览介绍，登录后可申请会员并管理资料。</text>
   </view>
 </view>

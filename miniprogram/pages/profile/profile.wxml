@@ -65,12 +65,12 @@
     <view class="menu-card">
       <view class="menu-item" bindtap="goSignals">
         <view class="menu-icon gold">号</view>
-        <text class="menu-text">关注信号</text>
+        <text class="menu-text">服务动态</text>
         <text class="menu-arrow">›</text>
       </view>
       <view class="menu-item" bindtap="onEnableWechatPush">
         <view class="menu-icon gold">微</view>
-        <text class="menu-text">微信信号提醒</text>
+        <text class="menu-text">微信提醒</text>
         <text class="menu-sub">{{pushStatusText}}</text>
         <text class="menu-arrow">›</text>
       </view>

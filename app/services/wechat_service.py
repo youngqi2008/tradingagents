@@ -132,11 +132,18 @@ class WeChatService:
         return s[: max(0, limit - 1)] + "…"
 
     def _build_subscribe_data(self, title: str, content: str, notice_type: str) -> dict:
-        default_tip = "点击查看关注详情" if notice_type == "buy_signal" else "点击查看信号详情"
+        default_tip = "点击查看详情"
         tip = (content or "").replace("\n", " ").strip() or default_tip
+        tip = (
+            tip.replace("关注信号", "服务动态")
+            .replace("不关注信号", "服务更新")
+            .replace("股票代码", "编号")
+            .replace("股票", "项目")
+            .replace("复盘", "摘要")
+        )
         now = datetime.now().strftime("%Y年%m月%d日 %H:%M")
         payload = {
-            settings.WECHAT_SUBSCRIBE_FIELD_TITLE: {"value": self._clip(title, 20)},
+            settings.WECHAT_SUBSCRIBE_FIELD_TITLE: {"value": self._clip(title.replace("关注信号", "服务动态").replace("不关注信号", "服务更新"), 20)},
             settings.WECHAT_SUBSCRIBE_FIELD_TIME: {"value": now},
             settings.WECHAT_SUBSCRIBE_FIELD_TIP: {"value": self._clip(tip, 20)},
         }

@@ -51,16 +51,16 @@ class AresSignalService:
 
     def _build_notification(self, parsed: AresSignalParsed) -> Tuple[str, str, str]:
         if parsed.signal_type == "buy":
-            title = f"关注信号 · {parsed.stock_code}"
+            title = f"服务动态 · {parsed.stock_code}"
             notice_type = "buy_signal"
         else:
-            title = f"不关注信号 · {parsed.stock_code}"
+            title = f"服务更新 · {parsed.stock_code}"
             notice_type = "sell_signal"
 
         lines = [parsed.raw_content]
         if parsed.market:
-            lines.append(f"市场: {parsed.market}")
-        lines.append(f"股票代码: {parsed.stock_code}")
+            lines.append(f"分类: {parsed.market}")
+        lines.append(f"编号: {parsed.stock_code}")
         content = "\n".join(lines)
         return title, content, notice_type
 

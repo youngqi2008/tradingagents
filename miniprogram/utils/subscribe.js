@@ -190,7 +190,7 @@ function hintKeepChoiceIfNeeded(res) {
   wx.showModal({
     title: '建议勾选「总是保持以上选择」',
     content:
-      '已开启。当前是一次性订阅，每勾一次大约只能推 1 条。下次请勾选底部「总是保持以上选择」，之后点开信号会自动续额度。',
+      '已开启。当前是一次性订阅，每勾一次大约只能推 1 条。下次请勾选底部「总是保持以上选择」，之后点开动态会自动续额度。',
     showCancel: false,
     confirmText: '知道了',
   })
@@ -204,9 +204,9 @@ function describeSubscribeResult(res) {
     return ''
   }
   if (res.fail) return failMessage(res.error)
-  if (res.always) return '已记住选择，点开信号会自动续提醒'
+  if (res.always) return '已记住选择，点开动态会自动续提醒'
   if (res.accepted || res.opened) return '已开启微信提醒'
-  return '未勾选通知，信号只在本页展示'
+  return '未勾选通知，动态只在本页展示'
 }
 
 function requestSignalSubscribe(options) {
@@ -274,7 +274,7 @@ function askSignalSubscribeWithModal(options) {
         title: opts.title || '开启微信提醒',
         content:
           opts.content ||
-          '下一页请勾选通知，并务必勾选底部「总是保持以上选择」。勾选后点开信号会自动续额度，微信才能连续收到。',
+          '下一页请勾选通知，并务必勾选底部「总是保持以上选择」。勾选后点开动态会自动续额度，微信才能连续收到。',
         confirmText: opts.confirmText || '立即开启',
         cancelText: '以后再说',
         success: function (r) {

@@ -23,7 +23,7 @@
     "list": [
       {
         "pagePath": "pages/signals/signals",
-        "text": "关注信号"
+        "text": "动态"
       },
       {
         "pagePath": "pages/notifications/notifications",
