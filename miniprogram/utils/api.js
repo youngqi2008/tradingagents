@@ -239,7 +239,7 @@ function extractErrorMessage(data, fallback) {
 
 function request(options) {
 
-  var token = getToken()
+  var token = options.skipAuth ? '' : getToken()
 
   var method = options.method || 'GET'
 
@@ -870,6 +870,14 @@ function changeMembership(membershipLevelId) {
   })
 }
 
+function applyMembership(membershipLevelId) {
+  return request({
+    url: '/api/mp/membership/apply',
+    method: 'POST',
+    data: { membership_level_id: String(membershipLevelId) },
+  })
+}
+
 function getNotificationUnreadCount(params) {
   var url = '/api/mp/notifications/unread-count'
   if (params && params.notice_types) {
@@ -883,6 +891,7 @@ function getNotificationUnreadCount(params) {
 function getPushSubscribeConfig() {
   return request({
     url: '/api/mp/push/subscribe-config',
+    skipAuth: true,
     skipAuthRefresh: true,
   }).then(function (res) {
     return (res && res.data) || {}
@@ -1053,6 +1062,8 @@ module.exports = {
   listMembershipLevels,
 
   changeMembership,
+
+  applyMembership,
 
   getNotificationUnreadCount,
 

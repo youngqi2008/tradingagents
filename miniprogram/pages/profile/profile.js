@@ -20,11 +20,23 @@ Page({
     isLoggedIn: false,
     isRiskOfficer: false,
     userInfo: { nickName: '', avatarUrl: '' },
+    pushStatusText: '未开启',
   },
 
   onShow() {
     syncTabBar(this)
     this.checkLoginStatus()
+    this.syncPushStatus()
+  },
+
+  syncPushStatus() {
+    var self = this
+    try {
+      var sub = require('../../utils/subscribe')
+      sub.refreshSubscribeStatus().then(function (status) {
+        self.setData({ pushStatusText: sub.subscribeStatusText(status) })
+      })
+    } catch (e) {}
   },
 
   checkLoginStatus() {
@@ -73,6 +85,7 @@ Page({
         wx.hideLoading()
         wx.showToast({ title: '登录成功', icon: 'success' })
         this.checkLoginStatus()
+        this.syncPushStatus()
         try {
           require('../../utils/subscribe').askSignalSubscribeWithModal()
         } catch (e) {}
@@ -185,10 +198,6 @@ Page({
   },
 
   goMembership() {
-    if (!isLoggedIn()) {
-      this.onLoginTap()
-      return
-    }
     wx.navigateTo({ url: '/pages/membership/membership' })
   },
 
@@ -198,6 +207,22 @@ Page({
 
   goSignals() {
     wx.switchTab({ url: '/pages/signals/signals' })
+  },
+
+  onEnableWechatPush() {
+    var self = this
+    if (!isLoggedIn()) {
+      this.onLoginTap()
+      return
+    }
+    var sub = require('../../utils/subscribe')
+    sub.requestSignalSubscribe().then(function (res) {
+      self.syncPushStatus()
+      var title = sub.describeSubscribeResult(res)
+      if (!title) return
+      if (res && res.accepted && !res.always) return
+      wx.showToast({ title: title, icon: 'none' })
+    })
   },
 
   goRiskMessage() {

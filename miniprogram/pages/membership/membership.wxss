@@ -51,6 +51,9 @@
 .level-current {
   border: 2rpx solid #d4202a;
 }
+.level-selected {
+  box-shadow: 0 0 0 4rpx rgba(212, 32, 42, 0.28);
+}
 .level-header {
   display: flex;
   align-items: center;
@@ -98,6 +101,7 @@
   margin-top: 20rpx;
   border-radius: 12rpx;
   font-weight: 600;
+  width: 100%;
 }
 .btn-disabled {
   background: #f0f0f0 !important;
@@ -122,6 +126,20 @@
   font-size: 24rpx;
   color: #666;
   line-height: 1.8;
+}
+.guest-card {
+  text-align: center;
+  background: linear-gradient(135deg, #111111, #2d2d44);
+  color: #fff;
+}
+.guest-desc {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+.guest-login {
+  margin-top: 28rpx;
 }
 .recharge-btn {
   margin-top: 20rpx;

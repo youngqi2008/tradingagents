@@ -2,7 +2,15 @@
   <view class="signal-hero">
     <view class="signal-hero-kicker">置顶 · 第一眼看到</view>
     <view class="signal-hero-title">关注信号</view>
-    <view class="signal-hero-sub">点「开启微信提醒」并勾选后，新信号会立刻出现在微信服务通知里，点开即可查看该条</view>
+    <view class="signal-hero-sub">一次性订阅请勾选底部「总是保持以上选择」。勾选后点开信号会自动续额度，微信才能连续收到</view>
+  </view>
+
+  <view class="card member-entry" bindtap="goMembership">
+    <view class="member-entry-body">
+      <text class="member-entry-title">会员</text>
+      <text class="member-entry-desc">查看等级权益，登录后可申请开通</text>
+    </view>
+    <text class="member-entry-arrow">›</text>
   </view>
 
   <view wx:if="{{needLogin}}" class="empty login-empty">
@@ -17,7 +25,7 @@
         <text class="unread-tip" wx:if="{{unreadCount > 0}}">未读 {{unreadCount}}</text>
         <text class="unread-tip muted" wx:else>暂无未读</text>
         <view class="toolbar-actions">
-          <text class="mark-all" bindtap="onEnablePush">开启微信提醒</text>
+          <text class="mark-all" bindtap="onEnablePush">{{pushAlways ? '已记住提醒' : (pushRejected ? '重新开启提醒' : (pushStatusText === '已开启' ? '已开启提醒' : '开启微信提醒'))}}</text>
           <text class="mark-all" bindtap="onMarkAllRead">全部已读</text>
         </view>
       </view>
@@ -49,6 +57,8 @@
       </view>
       <view class="detail-time">{{detail.timeText}}</view>
       <view class="detail-content">{{detail.content}}</view>
+      <button wx:if="{{!pushAlways}}" class="btn-primary detail-push" bindtap="onEnablePush">继续接收下一条微信提醒</button>
+      <text wx:if="{{!pushAlways}}" class="detail-push-hint">勾选「总是保持以上选择」后，点开信号就会自动续，不必每次点这里</text>
       <button class="btn-outline" bindtap="onCloseDetail">返回列表</button>
     </view>
   </block>

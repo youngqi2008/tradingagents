@@ -10,7 +10,13 @@ const { isLoggedIn } = require('../../utils/auth')
 const { syncTabBar, refreshTabBadges } = require('../../utils/tabbar')
 const {
   requestSignalSubscribe,
+  replenishSignalSubscribe,
   askSignalSubscribeWithModal,
+  refreshSubscribeStatus,
+  isAlwaysAccept,
+  isAlwaysReject,
+  subscribeStatusText,
+  describeSubscribeResult,
   savePendingSignalId,
   takePendingSignalId,
   pickQueryId,
@@ -29,6 +35,9 @@ Page({
     unreadCount: 0,
     detail: null,
     needLogin: false,
+    pushAlways: false,
+    pushRejected: false,
+    pushStatusText: '未开启',
   },
 
   onLoad(options) {
@@ -53,7 +62,19 @@ Page({
       return
     }
     this.setData({ needLogin: false })
+    this.syncPushStatus()
     this.refreshAndOpen(pending)
+  },
+
+  syncPushStatus() {
+    var self = this
+    refreshSubscribeStatus().then(function (status) {
+      self.setData({
+        pushAlways: isAlwaysAccept(status),
+        pushRejected: isAlwaysReject(status),
+        pushStatusText: subscribeStatusText(status),
+      })
+    })
   },
 
   takeOpenSignalId() {
@@ -85,16 +106,11 @@ Page({
   },
 
   showSubscribeResult(res) {
-    if (res && res.skipped) {
-      if (res.reason === '未配置模板') {
-        wx.showToast({ title: '请先在后台配置订阅消息模板', icon: 'none' })
-      }
-      return
-    }
-    wx.showToast({
-      title: res && res.accepted ? '已开启微信提醒' : '未开启提醒，信号将只在本页展示',
-      icon: 'none',
-    })
+    this.syncPushStatus()
+    var title = describeSubscribeResult(res)
+    if (!title) return
+    if (res && res.accepted && !res.always) return
+    wx.showToast({ title: title, icon: 'none' })
   },
 
   onEnablePush() {
@@ -195,22 +211,22 @@ Page({
       .catch(function () {})
   },
 
-  showDetail(item, replenishSubscribe) {
+  showDetail(item) {
     if (!item) return
     var detail = this.enrichNotification(item)
     this.setData({ detail: detail })
     if (!item.is_read) this.markItemRead(item.id)
-    if (replenishSubscribe) requestSignalSubscribe()
   },
 
   openSignalById(id) {
     if (!id) return
     var self = this
+    replenishSignalSubscribe()
     var item = (this.data.notifications || []).find(function (n) {
       return String(n.id) === String(id)
     })
     if (item) {
-      this.showDetail(item, true)
+      this.showDetail(item)
       return
     }
     getNotification(id)
@@ -219,7 +235,7 @@ Page({
           wx.showToast({ title: '信号不存在或已过期', icon: 'none' })
           return
         }
-        self.showDetail(n, true)
+        self.showDetail(n)
       })
       .catch(function () {
         wx.showToast({ title: '信号不存在或已过期', icon: 'none' })
@@ -227,19 +243,26 @@ Page({
   },
 
   onTapItem(e) {
+    replenishSignalSubscribe()
     var id = e.currentTarget.dataset.id
     var item = this.data.notifications.find(function (n) {
       return String(n.id) === String(id)
     })
     if (!item) return
-    this.showDetail(item, true)
+    this.showDetail(item)
   },
 
   onCloseDetail() {
+    replenishSignalSubscribe()
     this.setData({ detail: null })
   },
 
+  goMembership() {
+    wx.navigateTo({ url: '/pages/membership/membership' })
+  },
+
   onMarkAllRead() {
+    replenishSignalSubscribe()
     var self = this
     markAllNotificationsRead()
       .then(function () {

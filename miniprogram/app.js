@@ -1,7 +1,7 @@
 const { checkServer, restoreSession } = require('./utils/api')
 const { isLoggedIn, getUserInfo } = require('./utils/auth')
 const { refreshTabBadges } = require('./utils/tabbar')
-const { pickQueryId, savePendingSignalId } = require('./utils/subscribe')
+const { pickQueryId, savePendingSignalId, prefetchSubscribeConfig, refreshSubscribeStatus } = require('./utils/subscribe')
 
 App({
   globalData: {
@@ -15,6 +15,8 @@ App({
     that.globalData.isLoggedIn = isLoggedIn()
     that.globalData.userInfo = getUserInfo()
     that.captureSignalQuery(options)
+    prefetchSubscribeConfig()
+    refreshSubscribeStatus()
 
     restoreSession()
       .then(function (ok) {

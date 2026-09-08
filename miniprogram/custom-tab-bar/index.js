@@ -1,5 +1,6 @@
 const { buildTabList } = require('../utils/tabbar')
 const { isRiskOfficer } = require('../utils/auth')
+const { replenishSignalSubscribe } = require('../utils/subscribe')
 
 Component({
   data: {
@@ -62,6 +63,7 @@ Component({
         this.updateForRole(false)
         return
       }
+      replenishSignalSubscribe()
       wx.switchTab({ url: path })
       this.setData({ selected: index })
     },

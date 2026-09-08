@@ -2,13 +2,17 @@
 
 from decimal import Decimal
 
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
 from app.core.config import settings
-from app.routers.mp.deps import get_current_mp_user
+from app.models.mp_notification import MpNotificationCreate
+from app.routers.mp.deps import get_current_mp_user, get_optional_mp_user
 from app.services.billing_service import billing_service
 from app.services.membership_service import membership_service
+from app.services.mp_notification_service import mp_notification_service
 from app.services.user_service import user_service
 
 router = APIRouter()
@@ -18,15 +22,19 @@ class ChangeMembershipRequest(BaseModel):
     membership_level_id: str = Field(..., description="目标会员等级 ID")
 
 
+class ApplyMembershipRequest(BaseModel):
+    membership_level_id: str = Field(..., description="申请开通的会员等级 ID")
+
+
 @router.get("/membership/levels")
-async def list_mp_membership_levels(user: dict = Depends(get_current_mp_user)):
-    """会员等级列表（过审期间仅展示权益，不含价格）"""
+async def list_mp_membership_levels(user: Optional[dict] = Depends(get_optional_mp_user)):
+    """会员等级列表。未登录也可查看，便于审核体验完整流程。"""
     from app.services.benefit_service import get_level_benefit_templates
 
     levels = await membership_service.list_levels(active_only=True)
     benefit_templates = await get_level_benefit_templates()
-    current_id = user.get("membership_level_id")
-    if not current_id:
+    current_id = user.get("membership_level_id") if user else None
+    if user and not current_id:
         default = await membership_service.get_default_level()
         current_id = str(default.id) if default else None
 
@@ -55,6 +63,45 @@ async def list_mp_membership_levels(user: dict = Depends(get_current_mp_user)):
         "data": {
             "current_membership_level_id": current_id,
             "levels": level_items,
+        },
+    }
+
+
+@router.post("/membership/apply")
+async def apply_mp_membership(
+    payload: ApplyMembershipRequest,
+    user: dict = Depends(get_current_mp_user),
+):
+    """申请开通/调整会员等级（过审期间不走支付，提交后由运营处理）。"""
+    target = await membership_service.get_level_by_id(payload.membership_level_id)
+    if not target or not target.is_active:
+        raise HTTPException(status_code=404, detail="会员等级不存在或已停用")
+
+    current_id = user.get("membership_level_id")
+    if current_id and str(target.id) == str(current_id):
+        raise HTTPException(status_code=400, detail="您已是该会员等级")
+
+    data = MpNotificationCreate(
+        title=f"会员申请已提交 · {target.name}",
+        content=(
+            f"您已申请开通「{target.name}」。\n"
+            "运营将在 1 个工作日内处理，处理结果将通过站内消息告知。\n"
+            "当前为申请开通流程，无需在小程序内支付。"
+        ),
+        notice_type="announcement",
+        target_type="users",
+        target_user_ids=[str(user["id"])],
+    )
+    notice = await mp_notification_service.create_notification(
+        data, created_by=f"mp:{user['id']}"
+    )
+    return {
+        "success": True,
+        "message": f"已提交「{target.name}」开通申请",
+        "data": {
+            "membership_level_id": str(target.id),
+            "membership_level_name": target.name,
+            "notification_id": notice.id,
         },
     }
 

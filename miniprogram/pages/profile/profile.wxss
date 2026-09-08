@@ -43,6 +43,15 @@
   line-height: 88rpx;
   border-radius: 44rpx;
 }
+.btn-ghost {
+  margin-top: 16rpx;
+  background: #fff;
+  color: #111111;
+  border: 2rpx solid #e4e4e7;
+}
+.btn-ghost::after {
+  border: none;
+}
 
 .profile-header {
   display: flex;
@@ -240,6 +249,11 @@
   flex: 1;
   font-size: 30rpx;
   color: var(--color-text);
+}
+.menu-sub {
+  font-size: 24rpx;
+  color: var(--color-text-muted);
+  margin-right: 8rpx;
 }
 .menu-badge {
   min-width: 36rpx;

@@ -6,6 +6,14 @@
   </view>
 
   <view class="section-hd">服务介绍</view>
+  <view class="feature-card" bindtap="goMembership">
+    <view class="feature-icon">会</view>
+    <view class="feature-body">
+      <text class="feature-title">会员</text>
+      <text class="feature-desc">查看会员等级与权益，登录后可申请开通。</text>
+    </view>
+    <text class="feature-arrow">›</text>
+  </view>
   <view class="feature-card" bindtap="goNotify">
     <view class="feature-icon">讯</view>
     <view class="feature-body">
@@ -22,12 +30,13 @@
     </view>
     <text class="feature-arrow">›</text>
   </view>
-  <view class="feature-card">
+  <view class="feature-card" bindtap="goHelp">
     <view class="feature-icon gray">帮</view>
     <view class="feature-body">
       <text class="feature-title">使用帮助</text>
       <text class="feature-desc">阅读下方指南与常见问题，了解如何使用本小程序。</text>
     </view>
+    <text class="feature-arrow">›</text>
   </view>
 
   <view class="section-hd">使用指南</view>
@@ -53,6 +62,13 @@
         <text class="guide-desc">需要时再到「我的」自行登录并完善资料。</text>
       </view>
     </view>
+    <view class="guide-item">
+      <text class="guide-num">4</text>
+      <view class="guide-body">
+        <text class="guide-title">开通会员</text>
+        <text class="guide-desc">在「会员」查看等级权益，登录后可申请开通，运营处理后生效。</text>
+      </view>
+    </view>
   </view>
 
   <view class="section-hd">常见问题</view>
@@ -74,6 +90,6 @@
 
   <view class="notice-card">
     <text class="notice-title">服务说明</text>
-    <text class="notice-text">本小程序提供账号管理、站内通知与使用帮助。打开即可浏览首页介绍，登录可在体验后自行选择。</text>
+    <text class="notice-text">本小程序提供会员、关注信号、站内通知与账号管理。打开即可浏览介绍，登录后可申请会员并管理资料。</text>
   </view>
 </view>

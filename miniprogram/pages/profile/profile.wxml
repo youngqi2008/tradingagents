@@ -4,7 +4,8 @@
     <text class="login-title">登录 Ares</text>
     <text class="login-desc">登录后可管理账户、会员与个人消息</text>
     <button class="btn-primary btn-block" bindtap="onLoginTap">登录</button>
-    <text class="login-hint">可先浏览首页介绍与帮助，无需登录</text>
+    <button class="btn-ghost btn-block" bindtap="goMembership">查看会员</button>
+    <text class="login-hint">可先浏览首页介绍、帮助与会员说明，无需登录</text>
   </view>
 
   <block wx:else>
@@ -27,7 +28,7 @@
       </view>
     </view>
 
-    <view class="asset-card" wx:if="{{profile}}">
+    <view class="asset-card" wx:if="{{profile}}" bindtap="goMembership">
       <view class="asset-item">
         <text class="asset-label">会员等级</text>
         <text class="asset-value sm">{{profile.membership_level_name || '普通'}}</text>
@@ -67,9 +68,15 @@
         <text class="menu-text">关注信号</text>
         <text class="menu-arrow">›</text>
       </view>
+      <view class="menu-item" bindtap="onEnableWechatPush">
+        <view class="menu-icon gold">微</view>
+        <text class="menu-text">微信信号提醒</text>
+        <text class="menu-sub">{{pushStatusText}}</text>
+        <text class="menu-arrow">›</text>
+      </view>
       <view class="menu-item" bindtap="goMembership">
         <view class="menu-icon gold">VIP</view>
-        <text class="menu-text">会员中心</text>
+        <text class="menu-text">会员</text>
         <text class="menu-arrow">›</text>
       </view>
       <view class="menu-item" bindtap="goNotifications">

@@ -22,9 +22,15 @@ Page({
         open: false,
       },
       {
+        id: 'member',
+        q: '如何开通会员？',
+        a: '在首页、「关注信号」或「我的」进入「会员」，查看各等级权益后点「申请开通」。登录提交申请，运营将在 1 个工作日内处理，结果发到消息中心。',
+        open: false,
+      },
+      {
         id: 'service',
         q: '本小程序提供哪些服务？',
-        a: '当前提供账号管理、站内通知与使用帮助。打开首页即可浏览介绍，登录后可管理个人资料。',
+        a: '提供会员、关注信号、站内通知与账号管理。打开即可浏览介绍，登录后可申请会员并管理资料。',
         open: false,
       },
     ],
@@ -50,5 +56,13 @@ Page({
 
   goProfile() {
     wx.switchTab({ url: '/pages/profile/profile' })
+  },
+
+  goMembership() {
+    wx.navigateTo({ url: '/pages/membership/membership' })
+  },
+
+  goHelp() {
+    wx.pageScrollTo({ selector: '.faq-card', duration: 280 })
   },
 })

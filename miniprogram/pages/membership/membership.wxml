@@ -9,14 +9,24 @@
     </view>
   </view>
 
-  <view class="section-title">会员等级说明</view>
+  <view class="card guest-card" wx:else>
+    <view class="current-label">会员服务</view>
+    <view class="current-name">查看等级并申请开通</view>
+    <view class="guest-desc">登录后可提交开通申请，运营将在 1 个工作日内处理。</view>
+    <button class="btn-primary guest-login" bindtap="onLoginTap">登录后申请</button>
+  </view>
+
+  <view class="section-title">选择会员等级</view>
 
   <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <view wx:elif="{{levels.length === 0}}" class="loading-tip">暂无会员等级，请稍后重试</view>
 
   <view
     wx:for="{{levels}}"
     wx:key="id"
-    class="card level-card {{item.isCurrent ? 'level-current' : ''}}"
+    class="card level-card {{item.isCurrent ? 'level-current' : ''}} {{selectedId == item.id ? 'level-selected' : ''}}"
+    data-id="{{item.id}}"
+    bindtap="onSelectLevel"
   >
     <view class="level-header">
       <text class="level-name">{{item.name}}</text>
@@ -28,12 +38,23 @@
       <text wx:if="{{item.hasOnceBenefit}}">入门：额度一 {{item.benefit_once_report}} · 额度二 {{item.benefit_once_ask}} · 专项 {{item.benefit_once_push}}</text>
     </view>
     <view class="level-desc" wx:if="{{item.description}}">{{item.description}}</view>
+    <button
+      wx:if="{{item.isCurrent}}"
+      class="btn-outline level-btn"
+      catchtap="onCurrentTap"
+    >当前使用中</button>
+    <button
+      wx:else
+      class="btn-primary level-btn"
+      data-id="{{item.id}}"
+      catchtap="onApplyTap"
+    >申请开通</button>
   </view>
 
   <view class="card tip-card">
     <view class="tip-title">说明</view>
-    <text class="tip-line">· 以上为会员等级权益说明，仅供查看</text>
-    <text class="tip-line">· 如需调整会员等级，请联系运营人员处理</text>
+    <text class="tip-line">· 点选等级后可申请开通，提交后可在「消息」查看回执</text>
+    <text class="tip-line">· 会员等级由运营审核开通，小程序内无需支付</text>
     <text class="tip-line">· 周期性免费额度按自然月重置；入门权益为一次性发放</text>
   </view>
 </view>
