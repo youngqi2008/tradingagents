@@ -210,19 +210,28 @@ class MpNotificationService:
             )
             resp = self._to_response(row, read_count=0, is_read=False)
 
-        if notice_type in SIGNAL_NOTICE_TYPES and openids:
-            title = data.title.strip()
-            content = data.content.strip()
-            try:
-                await wechat_service.notify_signal_subscribers(
-                    openids,
-                    title,
-                    content,
-                    notice_type,
-                    notice_id=str(resp.id),
-                )
-            except Exception:
-                logger.exception("发送微信信号提醒失败 notice=%s", resp.id)
+        if notice_type in SIGNAL_NOTICE_TYPES:
+            if openids:
+                title = data.title.strip()
+                content = data.content.strip()
+                try:
+                    await wechat_service.notify_signal_subscribers(
+                        openids,
+                        title,
+                        content,
+                        notice_type,
+                        notice_id=str(resp.id),
+                    )
+                except Exception:
+                    logger.exception("发送微信信号提醒失败 notice=%s", resp.id)
+            else:
+                logger.warning("关注信号无有效 openid，跳过微信提醒 notice=%s", resp.id)
+        else:
+            logger.info(
+                "notice_type=%s 仅站内信，不发微信订阅消息 notice=%s",
+                notice_type,
+                resp.id,
+            )
         return resp
 
     async def list_admin(

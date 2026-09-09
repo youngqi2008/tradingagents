@@ -5,7 +5,7 @@ Page({
     var id = pickQueryId(options)
     if (id) savePendingSignalId(id)
     wx.switchTab({
-      url: '/pages/signals/signals',
+      url: '/pages/index/index',
     })
   },
 })
